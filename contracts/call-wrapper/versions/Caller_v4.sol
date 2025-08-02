@@ -4,7 +4,7 @@ import "./lib/ReentrancyGuard.sol";
 
 /// @custom:version non-reentrant `callwrap` and additional reentrant function `modifystorage`.
 contract CallWrapper is ReentrancyGuard {
-    uint data;
+    uint data = 0;
 
     function callwrap(address called) public nonReentrant {
         called.call("");

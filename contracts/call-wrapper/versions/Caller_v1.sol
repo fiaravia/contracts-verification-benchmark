@@ -3,7 +3,7 @@ pragma solidity >= 0.8.2;
 
 /// @custom:version reentrant `callwrap`.
 contract CallWrapper {
-    uint data;
+    uint data = 0;
 
     function callwrap(address called) public {
         called.call("");
