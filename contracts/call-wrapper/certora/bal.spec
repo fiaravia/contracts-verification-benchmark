@@ -1,10 +1,10 @@
-rule P1 {
+rule bal {
     env e;
     address called;
 
-    mathint before = getBalance();
+    mathint before = nativeBalances[currentContract];
     callwrap(e, called);
-    mathint after = getBalance();
+    mathint after = nativeBalances[currentContract];
 
     assert before == after;
 }

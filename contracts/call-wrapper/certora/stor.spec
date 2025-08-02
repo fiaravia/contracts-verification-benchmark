@@ -1,10 +1,10 @@
-rule P2 {
+rule stor {
     env e;
     address called;
 
-    mathint before = getData();
+    mathint before = currentContract.data;
     callwrap(e, called);
-    mathint after = getData();
+    mathint after = currentContract.data;
 
     assert before == after;
 }
