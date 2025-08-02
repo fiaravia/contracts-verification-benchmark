@@ -18,6 +18,7 @@ contract Vault {
     // v2
     constructor (address payable recovery_, uint wait_time_) payable {
 	    require(msg.sender != recovery); // ERROR: uses state variable instead of parameter
+        require(wait_time_ > 0);
         owner = msg.sender;
         recovery = recovery_;
         wait_time = wait_time_;

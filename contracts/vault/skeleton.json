@@ -2,7 +2,9 @@
     "name": "Vault",
     "specification": "file:spec.md",
     "properties": {
+        "cancel-not-revert": "a transaction `cancel()` does not abort if the signer uses the recovery key, and the state is REQ.",
         "cancel-revert": "a transaction `cancel()` aborts if the signer uses a key different from the recovery key, or the state is not REQ.",
+        "finalize-assets-transfer": "after a successful `finalize()`, exactly amount units of T pass from the control of the contract to that of the receiver.",
         "fin-canc-twice": "`finalize` and `cancel` cannot be called immediately after `finalize` or `cancel`.",
         "okey-neq-rkey": "the owner key is never equal to the recovery key.",
         "okey-rkey-private-wd": "if an actor holds both the owner and recovery key, and no one else knows the recovery key, the former is able to eventually withdraw all the contract balance with probability 1 (for every fair trace).",

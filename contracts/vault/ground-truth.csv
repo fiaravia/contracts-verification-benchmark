@@ -1,7 +1,13 @@
 property,version,truth,footnote-md
+cancel-not-revert,v1,1,
+cancel-not-revert,v2,1,
+cancel-not-revert,v3,1,
 cancel-revert,v1,1,
 cancel-revert,v2,1,
 cancel-revert,v3,1,
+finalize-assets-transfer,v1,0,
+finalize-assets-transfer,v2,0,
+finalize-assets-transfer,v3,0,
 fin-canc-twice,v1,1,
 fin-canc-twice,v2,1,
 fin-canc-twice,v3,1,
