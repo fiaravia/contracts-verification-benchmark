@@ -16,6 +16,7 @@
         "state-idle-req-inter": "in any blockchain state, the vault state is IDLE or REQ",
         "state-idle-req-intra": "during the execution of a transaction, the vault state is always IDLE or REQ.",
         "state-req-amount-consistent": "if the state is REQ, then the amount to be withdrawn is less than or equal to the contract balance.",
+        "state-update": "the contract implements a state machine with transitions: s -> s upon a receive (for any s), IDLE -> REQ upon a withdraw, REQ -> IDLE upon a finalize or a cancel.",
         "okey-rkey-private-wd": "if an actor holds both the owner and recovery key, and no one else knows the recovery key, the former is able to eventually withdraw all the contract balance with probability 1 (for every fair trace).",
         "rkey-no-wd": "if an actor holds the recovery key, they can always prevent other actors from withdrawing funds from the contract",
         "wd-fin-before": "after a successful `withdraw`, `finalize` cannot be successfully called before `wait_time` blocks have elapsed, with no in-between calls.",
