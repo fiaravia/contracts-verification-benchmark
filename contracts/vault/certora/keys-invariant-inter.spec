@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-// (in any blockchain state) the owner key and the recovery key cannot be changed after the contract is deployed
+// in any blockchain state, the owner key and the recovery key cannot be changed after the contract is deployed
 
 rule keys_invariant_global {
     env e;
