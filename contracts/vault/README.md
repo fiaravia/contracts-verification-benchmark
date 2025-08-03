@@ -42,7 +42,7 @@ Concretely, the keys are represented as addresses: requiring that an action can 
 
 ## Verification data
 
-- [ground_truth.csv](ground_truth.csv)
+- [ground-truth.csv](ground-truth.csv)
 - [solcmc-z3.csv](solcmc-z3.csv)
 - [solcmc-eld.csv](solcmc-eld.csv)
 - [certora.csv](certora.csv)
