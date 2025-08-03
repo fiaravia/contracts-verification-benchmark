@@ -10,6 +10,7 @@
         "finalice-or-cancel-twice-revert": "a `finalize()` or `cancel()` transaction aborts if performed immediately after another `finalize()` or `cancel()`.",
         "finalize-revert": "a transaction `finalize()` aborts if the sender is not the owner, or if the state is not REQ, or wait_time has not passed after request_time.",
         "keys-distinct": "the owner key and the recovery key are distinct.",
+        "keys-invariant-inter": "in any blockchain state, the owner key and the recovery key cannot be changed after the contract is deployed.",
         "okey-rkey-private-wd": "if an actor holds both the owner and recovery key, and no one else knows the recovery key, the former is able to eventually withdraw all the contract balance with probability 1 (for every fair trace).",
         "rkey-no-wd": "if an actor holds the recovery key, they can always prevent other actors from withdrawing funds from the contract",
         "wd-fin-before": "after a successful `withdraw`, `finalize` cannot be successfully called before `wait_time` blocks have elapsed, with no in-between calls.",
