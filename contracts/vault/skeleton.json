@@ -18,13 +18,11 @@
         "state-req-amount-consistent": "if the state is REQ, then the amount to be withdrawn is less than or equal to the contract balance.",
         "state-update": "the contract implements a state machine with transitions: s -> s upon a receive (for any s), IDLE -> REQ upon a withdraw, REQ -> IDLE upon a finalize or a cancel.",
         "withdraw-finalize-not-revert": "a `finalize()` transaction called immediately after a successful `withdraw()` does not abort if sent after wait_time units have elapsed.",
+        "withdraw-finalize-revert-inter": "a `finalize` transaction called before `wait_time` since a successful `withdraw`, possibly with in-between transactions, reverts.",
         "withdraw-not-revert": "a transaction `withdraw(amount)` does not abort if amount is less than or equal to the contract balance, the sender is the owner, and the state is IDLE.",
         "withdraw-revert": "a transaction `withdraw(amount)` aborts if amount is more than the contract balance, or if the sender is not the owner, or if the state is not IDLE.",
-        "okey-rkey-private-wd": "if an actor holds both the owner and recovery key, and no one else knows the recovery key, the former is able to eventually withdraw all the contract balance with probability 1 (for every fair trace).",
-        "rkey-no-wd": "if an actor holds the recovery key, they can always prevent other actors from withdrawing funds from the contract",
-        "wd-fin-before": "after a successful `withdraw`, `finalize` cannot be successfully called before `wait_time` blocks have elapsed, with no in-between calls.",
-        "wd-fin-before-interleave": "after a successful `withdraw`, `finalize` cannot be successfully called before `wait_time` blocks have elapsed, possibly with in-between calls.",
-        "wd-fin-revert": "calling `withdraw` or `finalize` with a key different from the owner key, reverts.",
-        "wd-twice": "`withdraw` cannot be called twice in a row."
+        "withdraw-withdraw-revert": "a transaction `withdraw()` aborts if performed immediately after another `withdraw()`.",
+        "okey-rkey-private-withdraw": "if an actor holds both the owner and recovery key, and no one else knows the recovery key, the former is able to eventually withdraw all the contract balance with probability 1 (for every fair trace).",
+        "rkey-no-withdraw": "if an actor holds the recovery key, they can always prevent other actors from withdrawing funds from the contract."
     }
 }

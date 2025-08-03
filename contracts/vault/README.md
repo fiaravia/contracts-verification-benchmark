@@ -12,51 +12,37 @@ The contract can be in one of two states:
 Concretely, the keys are represented as addresses: requiring that an action can only be performed by someone knowing a certain key corresponds to requiring that a method is called by the corresponding address.
 
 ## Properties
-- **cancel-revert**: calling `cancel` with a key different from the recovery key, reverts.
-- **fin-canc-twice**: `finalize` and `cancel` cannot be called immediately after `finalize` or `cancel`.
-- **okey-neq-rkey**: the owner key is never equal to the recovery key.
-- **okey-rkey-private-wd**: if an actor holds both the owner and recovery key, and no one else knows the recovery key, the former is able to eventually withdraw all the contract balance with probability 1 (for every fair trace).
-- **rkey-no-wd**: if an actor holds the recovery key, they can always prevent other actors from withdrawing funds from the contract
-- **wd-fin-before**: after a successful `withdraw`, `finalize` cannot be successfully called before `wait_time` blocks have elapsed, with no in-between calls.
-- **wd-fin-before-interleave**: after a successful `withdraw`, `finalize` may be successfully called before `wait_time` blocks have elapsed, possibly with in-between calls.
-- **wd-fin-revert**: calling `withdraw` or `finalize` with a key different from the owner key, reverts.
-- **wd-twice**: `withdraw` cannot be called twice in a row.
+- **cancel-not-revert**: a transaction `cancel()` does not abort if the signer uses the recovery key, and the state is REQ.
+- **cancel-revert**: a transaction `cancel()` aborts if the signer uses a key different from the recovery key, or the state is not REQ.
+- **finalice-or-cancel-twice-revert**: a `finalize()` or `cancel()` transaction aborts if performed immediately after another `finalize()` or `cancel()`.
+- **finalize-assets-transfer**: after a successful `finalize()`, exactly amount units of T pass from the control of the contract to that of the receiver.
+- **finalize-before-deadline-revert**: a `finalize()` transaction called immediately after a successful `withdraw()` aborts if sent before wait_time units have elapsed since the `withdraw()`.
+- **finalize-not-revert**: a transaction `finalize()` aborts if the sender is not the owner, or if the state is not REQ, or wait_time has not passed after request_time.
+- **finalize-revert**: a transaction `finalize()` aborts if the sender is not the owner, or if the state is not REQ, or wait_time has not passed after request_time.
+- **keys-distinct**: the owner key and the recovery key are distinct.
+- **keys-invariant-inter**: in any blockchain state, the owner key and the recovery key cannot be changed after the contract is deployed.
+- **keys-invariant-intra**: during the execution of a transaction, the owner key and the recovery key cannot be changed after the contract is deployed.
+- **okey-rkey-private-withdraw**: if an actor holds both the owner and recovery key, and no one else knows the recovery key, the former is able to eventually withdraw all the contract balance with probability 1 (for every fair trace).
+- **receive-not-revert**: anyone can always send tokens to the contract
+- **rkey-no-withdraw**: if an actor holds the recovery key, they can always prevent other actors from withdrawing funds from the contract.
+- **state-idle-req-inter**: in any blockchain state, the vault state is IDLE or REQ
+- **state-idle-req-intra**: during the execution of a transaction, the vault state is always IDLE or REQ.
+- **state-req-amount-consistent**: if the state is REQ, then the amount to be withdrawn is less than or equal to the contract balance.
+- **state-update**: the contract implements a state machine with transitions: s -> s upon a receive (for any s), IDLE -> REQ upon a withdraw, REQ -> IDLE upon a finalize or a cancel.
+- **withdraw-finalize-not-revert**: a `finalize()` transaction called immediately after a successful `withdraw()` does not abort if sent after wait_time units have elapsed.
+- **withdraw-finalize-revert-inter**: a `finalize` transaction called before `wait_time` since a successful `withdraw`, possibly with in-between transactions, reverts.
+- **withdraw-not-revert**: a transaction `withdraw(amount)` does not abort if amount is less than or equal to the contract balance, the sender is the owner, and the state is IDLE.
+- **withdraw-revert**: a transaction `withdraw(amount)` aborts if amount is more than the contract balance, or if the sender is not the owner, or if the state is not IDLE.
+- **withdraw-withdraw-revert**: a transaction `withdraw()` aborts if performed immediately after another `withdraw()`.
 
 ## Versions
 - **v1**: conforming to specification.
 - **v2**: require in constructor wrongly uses state variable instead of parameter.
 - **v3**: removed the time constraint on `finalize`.
 
-## Ground truth
-|        | cancel-revert              | fin-canc-twice           | okey-neq-rkey            | okey-rkey-private-wd     | rkey-no-wd               | wd-fin-before            | wd-fin-before-interleave | wd-fin-revert            | wd-twice                 |
-|--------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|
-| **v1** | 1                        | 0                        | 1                        | 1                        | 1                        | 0                        | 0                        | 1                        | 1                        |
-| **v2** | 1                        | 0                        | 0                        | 1                        | 1                        | 0                        | 0                        | 1                        | 1                        |
-| **v3** | 1                        | 0                        | 1                        | 0                        | 0                        | 1                        | 1                        | 1                        | 1                        |
- 
+## Verification data
 
-## Experiments
-### SolCMC
-#### Z3
-|        | cancel-revert              | fin-canc-twice           | okey-neq-rkey            | okey-rkey-private-wd     | rkey-no-wd               | wd-fin-before            | wd-fin-before-interleave | wd-fin-revert            | wd-twice                 |
-|--------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|
-| **v1** | TP!                      | ND                       | TP!                      | ND                       | ND                       | ND                       | ND                       | TP!                      | ND                       |
-| **v2** | TP!                      | ND                       | TN!                      | ND                       | ND                       | ND                       | ND                       | TP!                      | ND                       |
-| **v3** | TP!                      | ND                       | TP!                      | ND                       | ND                       | ND                       | ND                       | TP!                      | ND                       |
- 
-
-#### Eldarica
-|        | cancel-revert              | fin-canc-twice           | okey-neq-rkey            | okey-rkey-private-wd     | rkey-no-wd               | wd-fin-before            | wd-fin-before-interleave | wd-fin-revert            | wd-twice                 |
-|--------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|
-| **v1** | TP!                      | ND                       | TP!                      | ND                       | ND                       | ND                       | ND                       | TP!                      | ND                       |
-| **v2** | TP!                      | ND                       | TN!                      | ND                       | ND                       | ND                       | ND                       | TP!                      | ND                       |
-| **v3** | TP!                      | ND                       | TP!                      | ND                       | ND                       | ND                       | ND                       | TP!                      | ND                       |
- 
-
-
-### Certora
-|        | cancel-revert              | fin-canc-twice           | okey-neq-rkey            | okey-rkey-private-wd     | rkey-no-wd               | wd-fin-before            | wd-fin-before-interleave | wd-fin-revert            | wd-twice                 |
-|--------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|
-| **v1** | TP!                      | FP!                      | TP!                      | ND                       | ND                       | FP!                      | ND                       | TP!                      | TP!                      |
-| **v2** | TP!                      | FP!                      | TN                       | ND                       | ND                       | FP!                      | ND                       | TP!                      | TP!                      |
-| **v3** | TP!                      | FP!                      | TP!                      | ND                       | ND                       | FN                       | ND                       | TP!                      | TP!                      |
+- [ground_truth.csv](ground_truth.csv)
+- [solcmc-z3.csv](solcmc-z3.csv)
+- [solcmc-eld.csv](solcmc-eld.csv)
+- [certora.csv](certora.csv)

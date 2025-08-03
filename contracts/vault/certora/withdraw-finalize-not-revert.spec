@@ -2,7 +2,7 @@
 
 // a finalize() transaction called immediately after a successful withdraw() does not abort if sent after wait_time units have elapsed
 
-rule finalize_after_withdraw_not_revert {
+rule withdraw_finalize_not_revert {
     env e1;
     
     address addr;

@@ -1,4 +1,8 @@
-rule wd_twice {
+// SPDX-License-Identifier: GPL-3.0-only
+
+// a transaction withdraw() aborts if performed immediately after another withdraw()
+
+rule withdraw_withdraw_revert {
     env e1;
     address addr1;
     uint amt1;
