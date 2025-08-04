@@ -1,9 +1,18 @@
-Vaults are a security mechanism to prevent cryptocurrency from being immediately withdrawn by an adversary who has stolen the owner's private key. To create the vault, the owner specifies a recovery key (distinct from the primary owner key), which can be used to cancel a withdraw request, and a wait time that has to elapse between a withdraw request and the actual currency transfer to the chosen recipient. 
+Vaults are a security mechanism to prevent cryptocurrency from being immediately withdrawn by an adversary who has stolen the owner's private key.
 
-Once the contract has been created, anyone can deposit native cryptocurrency in the vault through an external transaction.
+To create the vault, the owner specifies:
+- itself as the vault's **owner**; 
+- a **recovery key**, which can be used to cancel a withdraw request;
+- a **wait time**, which has to elapse between a withdraw request and the actual finalization of the cryptocurrency transfer.
 
-The contract can be in one of two states:
-- IDLE: the vault is waiting for a withdraw request;
-- REQ: the owner has issued a `withdraw` request that has not been finalized yet. In this state, the owner can choose to `finalize` the request or to `cancel` it. Finalization can only happen after the wait time has passed since the request. During the wait time, the request can be cancelled by using the recovery key.
+The contract has the following entry points:
+- **receive(amount)**, which allows anyone to deposit tokens into the contract;
+- **withdraw(receiver, amount)**, which allows the owner to issue a withdraw request, specifying the receiver and the desired amount;
+- **finalize()**, which allows the owner to finalize the pending withdraw after the wait time has passed since the request;
+- **cancel()**, which allows the owner of the recovery key to cancel the withdraw request during the wait time.
 
-Concretely, the keys are represented as addresses: requiring that an action can only be performed by someone knowing a certain key corresponds to requiring that a method is called by the corresponding address.
+To this purpose, the vault contract implements a state transition system with states IDLE and REQ, and transitions: 
+- IDLE -> IDLE upon a receive action
+- IDLE -> REQ upon a withdraw action
+- REQ -> REQ upon a receive action
+- REQ -> IDLE upon a finalize or a cancel action
