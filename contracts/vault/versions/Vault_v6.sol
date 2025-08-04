@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version conforming to specification.
+/// @custom:version missing balance check in `withdraw`.
 contract Vault {
     enum States{IDLE, REQ}
 
@@ -14,7 +14,7 @@ contract Vault {
     uint amount;
     States state;
     
-    // v1
+    // v6
     constructor (address payable recovery_, uint wait_time_) payable {
     	require(msg.sender != recovery_);
         require(wait_time_ > 0);
@@ -28,7 +28,8 @@ contract Vault {
 
     function withdraw(address receiver_, uint amount_) public {
         require(state == States.IDLE);
-        require(amount_ <= address(this).balance);
+        // v6: missing balance check in withdraw()
+        // require(amount_ <= address(this).balance);
         require(msg.sender == owner);
 
         request_time = block.number;

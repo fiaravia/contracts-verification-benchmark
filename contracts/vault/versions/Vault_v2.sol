@@ -2,7 +2,7 @@
 pragma solidity >= 0.8.2;
 
 
-/// @custom:version require in constructor wrongly uses state variable instead of parameter.
+/// @custom:version require in `constructor` wrongly uses state variable instead of parameter.
 contract Vault {
     enum States{IDLE, REQ}
 

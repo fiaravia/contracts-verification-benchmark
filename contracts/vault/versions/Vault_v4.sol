@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
+import "./lib/ReentrancyGuard.sol";
 
-/// @custom:version conforming to specification.
-contract Vault {
+/// @custom:version `finalize` is non-reentrant.
+contract Vault is ReentrancyGuard {
     enum States{IDLE, REQ}
 
     address owner;
@@ -14,7 +15,7 @@ contract Vault {
     uint amount;
     States state;
     
-    // v1
+    // v4
     constructor (address payable recovery_, uint wait_time_) payable {
     	require(msg.sender != recovery_);
         require(wait_time_ > 0);
@@ -37,12 +38,13 @@ contract Vault {
         state = States.REQ;
     }
 
-    function finalize() public {
+    function finalize() public nonReentrant {
         require(state == States.REQ);
         require(block.number >= request_time + wait_time);
         require(msg.sender == owner);
 
         state = States.IDLE;	
+
         (bool succ,) = receiver.call{value: amount}("");
         require(succ);
     }

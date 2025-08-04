@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version conforming to specification.
+/// @custom:version missing access control in `cancel`. 
 contract Vault {
     enum States{IDLE, REQ}
 
@@ -14,7 +14,7 @@ contract Vault {
     uint amount;
     States state;
     
-    // v1
+    // v5
     constructor (address payable recovery_, uint wait_time_) payable {
     	require(msg.sender != recovery_);
         require(wait_time_ > 0);
@@ -49,7 +49,8 @@ contract Vault {
 
     function cancel() public {
         require(state == States.REQ);
-        require(msg.sender == recovery);
+        // v5: missing accesso control in cancel()
+        // require(msg.sender == recovery);
 
         state = States.IDLE;
     }

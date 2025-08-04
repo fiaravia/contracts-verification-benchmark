@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version conforming to specification.
+/// @custom:version wrong time constraint in `finalize`
 contract Vault {
     enum States{IDLE, REQ}
 
@@ -14,7 +14,7 @@ contract Vault {
     uint amount;
     States state;
     
-    // v1
+    // v7
     constructor (address payable recovery_, uint wait_time_) payable {
     	require(msg.sender != recovery_);
         require(wait_time_ > 0);
@@ -39,7 +39,8 @@ contract Vault {
 
     function finalize() public {
         require(state == States.REQ);
-        require(block.number >= request_time + wait_time);
+        // v7: wrong time constraint in finalize
+        require(block.number <= request_time + wait_time);
         require(msg.sender == owner);
 
         state = States.IDLE;	
