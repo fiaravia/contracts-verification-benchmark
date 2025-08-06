@@ -11,6 +11,7 @@
         "finalize-or-cancel-twice-revert": "a `finalize()` or `cancel()` transaction aborts if performed immediately after another `finalize()` or `cancel()`.",
         "finalize-revert": "a `finalize()` transaction aborts if the sender is not the owner, or if the state is not REQ, or wait_time has not passed since request_time.",
         "finalize-sent-leq-amount": "after a successful `finalize()`, the contract balance is decreased by at most amount units of T.",
+        "finalize-sent-eq-amount": "after a successful `finalize()`, the contract balance is decreased by exactly units of T.",
         "keys-distinct": "the owner key and the recovery key are distinct.",
         "keys-invariant-inter": "in any blockchain state, the owner key and the recovery key cannot be changed after the contract is deployed.",
         "keys-invariant-intra": "during the execution of a transaction, the owner key and the recovery key cannot be changed after the contract is deployed.",

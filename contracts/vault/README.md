@@ -29,6 +29,7 @@ To this purpose, the vault contract implements a state transition system with st
 - **finalize-not-revert**: a `finalize()` transaction does not abort if it is sent by the owner, in state REQ, and at least wait_time time units have elapsed after request_timestamp.
 - **finalize-or-cancel-twice-revert**: a `finalize()` or `cancel()` transaction aborts if performed immediately after another `finalize()` or `cancel()`.
 - **finalize-revert**: a `finalize()` transaction aborts if the sender is not the owner, or if the state is not REQ, or wait_time has not passed since request_time.
+- **finalize-sent-eq-amount**: after a successful `finalize()`, the contract balance is decreased by exactly units of T.
 - **finalize-sent-leq-amount**: after a successful `finalize()`, the contract balance is decreased by at most amount units of T.
 - **keys-distinct**: the owner key and the recovery key are distinct.
 - **keys-invariant-inter**: in any blockchain state, the owner key and the recovery key cannot be changed after the contract is deployed.
@@ -65,7 +66,8 @@ To this purpose, the vault contract implements a state transition system with st
 - **v4**: `finalize` is non-reentrant.
 - **v5**: missing access control in `cancel`. 
 - **v6**: missing balance check in `withdraw`.
-- **v7**: wrong time constraint in `finalize`
+- **v7**: wrong time constraint in `finalize`.
+- **v8**: `finalize` uses transfer instead of low-level call.
 
 ## Verification data
 

@@ -23,8 +23,12 @@ finalize-or-cancel-twice-revert,v3,1,
 finalize-revert,v1,1,
 finalize-revert,v2,1,
 finalize-revert,v3,0,
-finalize-sent-leq-amount,v1,1,
-finalize-sent-leq-amount,v4,0,
+finalize-sent-leq-amount,v1,0,finalize can be re-entered
+finalize-sent-leq-amount,v4,1,finalize is non-reentrant
+finalize-sent-leq-amount,v8,1,transfer does not have enough gas to enable reentrant calls to finalize
+finalize-sent-eq-amount,v1,0,low-level call may have enough gas to enable further transfers
+finalize-sent-eq-amount,v4,1,finalize is non-reentrant
+finalize-sent-eq-amount,v8,1,transfer does not have enough gas to enable further transfers
 keys-distinct,v1,1,
 keys-distinct,v2,0,
 keys-distinct,v3,1,

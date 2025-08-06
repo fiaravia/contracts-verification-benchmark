@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version wrong time constraint in `finalize`.
+/// @custom:version `finalize` uses transfer instead of low-level call.
 contract Vault {
     enum States{IDLE, REQ}
 
@@ -14,7 +14,7 @@ contract Vault {
     uint amount;
     States state;
     
-    // v7
+    // v8
     constructor (address payable recovery_, uint wait_time_) payable {
     	require(msg.sender != recovery_);
         require(wait_time_ > 0);
@@ -39,13 +39,12 @@ contract Vault {
 
     function finalize() public {
         require(state == States.REQ);
-        // v7: wrong time constraint in finalize
-        require(block.number <= request_time + wait_time);
+        require(block.number >= request_time + wait_time);
         require(msg.sender == owner);
 
-        state = States.IDLE;	
-        (bool succ,) = receiver.call{value: amount}("");
-        require(succ);
+        state = States.IDLE;
+        // v8: use transfer instead of low-level call	
+        payable(msg.sender).transfer(amount);
     }
 
     function cancel() public {
@@ -55,3 +54,4 @@ contract Vault {
         state = States.IDLE;
     }
 }
+
