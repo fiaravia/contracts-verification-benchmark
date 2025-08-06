@@ -46,7 +46,7 @@ plain: cleanr $(README)
 $(README): $(VERSIONS_DIR) $(SKELETON) $(GROUND_TRUTH)
 	@echo "Generating plain README..."
 	@$(PYTHON) ../../scripts/readme_gen.py -d . > $(README)
-	@echo "## Experiments" >> $(README)
+	# @echo "## Experiments" >> $(README)
 
 #---------------------------- CLEAN ------------------------------#
 clean: cleanr clean-solcmc clean-certora
