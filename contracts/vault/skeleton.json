@@ -37,6 +37,6 @@
         "tx-tx-assets-transfer": "in state IDLE, someone can fire a sequence of two transactions that transfers the contract balance to the receiver.",
         "tx-tx-assets-transfer-eoa": "if `owner` is an EOA, then in state IDLE, someone can fire a sequence of two transactions that transfers the contract balance to the receiver.",
         "tx-tx-assets-transfer-eoa-receive": "if `owner` is an EOA and the `receive` method of `receiver` just accepts all ETH, then in state IDLE, someone can fire a sequence of two transactions that transfers the contract balance to the receiver.",
-        "tx-tx-assets-transfer-eoa-receive-private": "if `owner` is an EOA, the `receive` method of `receiver` just accepts all ETH, and the adversary does not know the recovery key, then in state IDLE, the owner can fire a sequence of two transactions that transfers the contract balance to the receiver, regardless of possible transactions fired by the adversary before or in between.",
+        "tx-tx-assets-transfer-eoa-receive-private": "if `owner` is an EOA, the `receive` method of `receiver` just accepts all ETH, and the adversary does not know the recovery key, then in state IDLE, the owner can fire a sequence of two transactions that transfers the contract balance to the receiver, regardless of possible transactions fired by the adversary before or in between."
     }
 }
