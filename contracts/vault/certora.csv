@@ -24,6 +24,10 @@ finalize-revert,v2,P!
 finalize-revert,v3,N,
 finalize-sent-leq-amount,v1,P!,
 finalize-sent-leq-amount,v4,P!,
+finalize-sent-leq-amount,v8,P!,
+finalize-sent-eq-amount,v1,N,
+finalize-sent-eq-amount,v4,N,
+finalize-sent-eq-amount,v8,N,
 keys-distinct,v1,P!
 keys-distinct,v2,N
 keys-distinct,v3,P!
