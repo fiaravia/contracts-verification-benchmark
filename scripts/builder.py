@@ -7,8 +7,7 @@ import argparse
 import glob
 import os
 
-
-if __name__ == '__main__':
+def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument(
             '--versions',
@@ -24,10 +23,13 @@ if __name__ == '__main__':
             '--output',
             '-o',
             help='Output directory path.',)
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     versions = Path(args.versions)
     properties = Path(args.properties)
+
+    if args.output:
+        Path(args.output).mkdir(parents=True, exist_ok=True)
 
     versions_paths = (
             glob.glob(f'{args.versions}/*v*.sol')
@@ -44,7 +46,11 @@ if __name__ == '__main__':
     for filename in contracts.keys():
         if args.output:
             output = Path(args.output)
-            with open(output.joinpath(filename), 'w') as f:
+            with open(output.joinpath(filename), 'w+') as f:
                 f.write(contracts[filename])
         else:
             print(contracts[filename])
+
+if __name__ == '__main__':
+        import sys
+        main(sys.argv[1:])

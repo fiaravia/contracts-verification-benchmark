@@ -28,6 +28,14 @@ def write_csv(path, rows):
     with open(path, 'w') as file:
         csv.writer(file).writerows(rows)
 
+def read_csv(path):
+    rows = []
+    if os.path.isfile(path):
+        with open(path, 'r') as file:
+            rows_object = csv.reader(file, delimiter=',')
+            for row in rows_object:
+                rows.append(row)
+    return rows
 
 def remove_comments(file_content):
     # Remove single-line comments
