@@ -12,17 +12,18 @@ Details on the construction of the benchmark and on the comparison between SolCM
 > We are currently updating the contracts to the standard described in the "[extending the benchmark](#extending-the-benchmark)" section. Up-to-date contracts are marked with :white_check_mark:.
 
 The benchmark currently comprises several versions (correct or bugged) of the following use cases:
-- [Call Wrapper](contracts/call-wrapper/) :white_check_mark:
-- [Bet (tokenless)](contracts/zerotoken_bet/) :white_check_mark:
-- [Deposit (ETH)](contracts/deposit_eth/) :white_check_mark:
-- [Deposit (ERC20)](contracts/deposit_erc20/) :white_check_mark:
+- [Call Wrapper](contracts/call-wrapper/) 
+- [Bet (tokenless)](contracts/zerotoken_bet/)
+- [Deposit (ETH)](contracts/deposit_eth/) 
+- [Deposit (ERC20)](contracts/deposit_erc20/)
 - [Bank (tokenless)](contracts/zerotoken_bank/)
-- [Bank (ETH)](contracts/bank/) :white_check_mark:
-- [Escrow](contracts/escrow/) :white_check_mark:
+- [Bank (ETH)](contracts/bank/) 
+- [Escrow](contracts/escrow/) 
 - [Vault](contracts/vault/) :white_check_mark:
-- [Crowdfund](contracts/crowdfund/) :white_check_mark:
-- [Hash Timed Locked Contract](contracts/htlc/) :white_check_mark:
-- [Vesting Wallet](contracts/vesting_wallet/) :white_check_mark:
+- [Price Bet](contracts/price-bet) :white_check_mark:
+- [Crowdfund](contracts/crowdfund/) 
+- [Hash Timed Locked Contract](contracts/htlc/) 
+- [Vesting Wallet](contracts/vesting_wallet/) 
 - [Lottery](contracts/lottery/)
 - [Constant-product AMM](contracts/tinyamm/)
 - [Payment Splitter](contracts/payment_splitter/)
