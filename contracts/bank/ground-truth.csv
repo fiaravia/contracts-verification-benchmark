@@ -1,18 +1,40 @@
 property,version,truth,footnote-md
 deposit-contract-balance,v1,1,
 deposit-contract-balance,v2,1,
+deposit-contract-balance,v3,1,
+deposit-contract-balance,v4,1,
+deposit-contract-balance,v5,1,
+deposit-contract-balance,v6,1,
 deposit-not-revert,v1,1,
 deposit-not-revert,v2,1,
 deposit-not-revert,v3,0,
-deposit-revert-if-low-eth,v1,1,
-deposit-revert-if-low-eth,v2,1,
-deposit-user-balance,v1,1,
-deposit-user-balance,v2,1,
-deposit-user-balance,v4,0,
-user-balance-dec-onlyif-withdraw,v1,0,"A call to withdraw by a user b may lead to a reentrant call to withdraw by a user a." 
-user-balance-dec-onlyif-withdraw,v2,0,
-user-balance-inc-onlyif-deposit,v1,0,"A call to withdraw may lead to a reentrant call to deposit, increasing the user's balance."
-user-balance-inc-onlyif-deposit,v2,0,
+deposit-not-revert,v4,0,"reverts when credits[msg.sender]==0 and msg.value==0",
+deposit-not-revert,v5,0,"reverts after type(uint256).max calls with msg.value == 0."
+deposit-not-revert,v6,1,
+deposit-revert,v1,1,"The ETH in circulation is not enough make the credits overflow."
+deposit-revert,v2,1,
+deposit-revert,v3,1,
+deposit-revert,v4,0,
+deposit-revert,v5,1,
+deposit-revert,v6,1,
+deposit-assets-credit,v1,1,
+deposit-assets-credit,v2,1,
+deposit-assets-credit,v3,1,
+deposit-assets-credit,v4,0,
+deposit-assets-credit,v5,0,
+deposit-assets-credit,v6,1,
+credit-dec-onlyif-withdraw,v1,0,"A call to withdraw by a user b may lead to a reentrant call to withdraw by a user a." 
+credit-dec-onlyif-withdraw,v2,0,
+credit-dec-onlyif-withdraw,v3,1,
+credit-dec-onlyif-withdraw,v4,0,
+credit-dec-onlyif-withdraw,v5,0,
+credit-dec-onlyif-withdraw,v6,0,
+credit-inc-onlyif-deposit,v1,0,"A call to withdraw may lead to a reentrant call to deposit, increasing the user's balance."
+credit-inc-onlyif-deposit,v2,0,
+credit-inc-onlyif-deposit,v3,1,
+credit-inc-onlyif-deposit,v4,0,
+credit-inc-onlyif-deposit,v5,0,
+credit-inc-onlyif-deposit,v6,0,
 withdraw-contract-balance,v1,0,"A reentrancy attack is possible if the recipient address is an untrusted contract."
 withdraw-contract-balance,v2,0,
 withdraw-not-revert,v1,0,"A reentrancy attack is possible if the recipient address is an untrusted contract."

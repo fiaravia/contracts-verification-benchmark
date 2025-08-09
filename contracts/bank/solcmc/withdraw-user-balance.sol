@@ -1,6 +1,6 @@
 /// @custom:preghost function withdraw
-uint old_user_balance = balances[msg.sender];
+uint old_user_credit = credits[msg.sender];
 
 /// @custom:postghost function withdraw
-uint new_user_balance = balances[msg.sender];
-assert(new_user_balance == old_user_balance - amount);
+uint new_user_credit = credits[msg.sender];
+assert(new_user_credit == old_user_credit - amount);

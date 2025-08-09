@@ -1,10 +1,12 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
+/// @custom:version deposit and withdrawal limits for non-owner users, with owner exempt from limits. Withdraw uses `transfer` instead of low-level call. 
+
 contract Bank {
-    mapping (address => uint) private balances;
-    address public immutable owner;
-    uint public immutable opLimit; // deposit & withdrawal limit (does not apply to the owner)
+    mapping (address user => uint credit) private credits;
+    address public immutable owner; // owner of the contract, exempt from limits
+    uint public immutable opLimit;  // deposit & withdrawal limit (does not apply to the owner)
 
     modifier validAmount(uint amount) {
         require(amount > 0, "Amount must be greater than zero");
@@ -21,12 +23,12 @@ contract Bank {
     }
 
     function deposit() public payable validAmount(msg.value) {
-        balances[msg.sender] += msg.value;
+        credits[msg.sender] += msg.value;
     }
 
     function withdraw(uint amount) public validAmount(amount) {
-        require(amount <= balances[msg.sender], "Insufficient credits");
-        balances[msg.sender] -= amount;
+        require(amount <= credits[msg.sender], "Insufficient credits");
+        credits[msg.sender] -= amount;
         payable(msg.sender).transfer(amount);
     }
 }

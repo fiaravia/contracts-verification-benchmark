@@ -3,9 +3,13 @@
 rule deposit_contract_balance {
     env e;
 
-    mathint old_contract_balance = balanceOf(currentContract);
-    deposit(e);
-    mathint new_contract_balance = balanceOf(currentContract);
+    // This require is necessary to ensure that verification succeeds
+    // However, the contract ensures that the sender of a deposit cannot the contract itself
+    require e.msg.sender != currentContract;
 
-    assert new_contract_balance == old_contract_balance + to_mathint(e.msg.value);
+    mathint old_contract_balance = nativeBalances[currentContract];
+    deposit(e);
+    mathint new_contract_balance = nativeBalances[currentContract];
+
+    assert new_contract_balance == old_contract_balance + e.msg.value;
 }

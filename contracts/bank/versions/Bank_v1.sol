@@ -2,18 +2,19 @@
 pragma solidity >= 0.8.2;
 
 /// @custom:version conformant to specification
+
 contract Bank {
-    mapping (address => uint) balances;
+    mapping (address user => uint credit) credits;
 
     function deposit() public payable {
-        balances[msg.sender] += msg.value;
+        credits[msg.sender] += msg.value;
     }
 
     function withdraw(uint amount) public {
         require(amount > 0);
-        require(amount <= balances[msg.sender]);
+        require(amount <= credits[msg.sender]);
 
-        balances[msg.sender] -= amount;
+        credits[msg.sender] -= amount;
 
         (bool success,) = msg.sender.call{value: amount}("");
         require(success);
