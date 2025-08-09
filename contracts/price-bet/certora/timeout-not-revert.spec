@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
-// certoraRun Pricebet.sol --verify Pricebet:timeout-not-revert.spec
-// https://prover.certora.com/output/454304/eb12391ae98148f9bcfb815a9b152279?anonymousKey=8ef063741e76ba65ef0417196b42fc9ce8233e0b
+
+// certoraRun versions/PriceBet_v1.sol:PriceBet --verify PriceBet:certora/timeout-not-revert.spec
 
 // a transaction timeout() does not revert if the deadline has passed
 

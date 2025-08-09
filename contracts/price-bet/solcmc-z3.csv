@@ -1,0 +1,4 @@
+property,version,outcome,footnote
+join-revert,v1,P!
+timeout-postcondition,v1,N!
+timeout-revert,v1,P!

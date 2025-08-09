@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
-// certoraRun Pricebet.sol Oracle.sol --verify Pricebet:win-not-revert.spec --link Pricebet:oracle=Oracle
-// 
+
+// certoraRun versions/PriceBet_v1.sol:PriceBet versions/PriceBet_v1.sol:Oracle --verify PriceBet:certora/win-not-revert.spec --link PriceBet:oracle=Oracle
 
 // a transaction win() does not revert if:
 // 1) the deadline has not expired, and
