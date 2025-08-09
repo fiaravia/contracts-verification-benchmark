@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-// after a successful deposit(amount), the assets controlled by any user but the sender are preserved.
+// after a successful deposit(), the assets controlled by any user but the sender are preserved.
 
 rule deposit_assets_transfer_others {
     env e; 

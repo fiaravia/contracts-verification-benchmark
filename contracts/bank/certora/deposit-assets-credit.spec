@@ -3,9 +3,9 @@
 rule deposit_assets_credit {
     env e;
 
-    mathint old_user_balance = currentContract.credits[e.msg.sender];
+    mathint old_user_credit = currentContract.credits[e.msg.sender];
     deposit(e);
-    mathint new_user_balance = currentContract.credits[e.msg.sender];
+    mathint new_user_credit = currentContract.credits[e.msg.sender];
 
-    assert new_user_balance == old_user_balance + e.msg.value;
+    assert new_user_credit == old_user_credit + e.msg.value;
 }
