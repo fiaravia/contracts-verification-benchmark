@@ -12,7 +12,6 @@ contract Bank {
 
     function withdraw(uint amount) public {
         require(amount > 0);
-        //require(amount <= credits[msg.sender]);
 
         credits[msg.sender] -= amount;
 

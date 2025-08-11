@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity >= 0.8.2;
 
-/// @custom:version no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is decremented by `amount - 1` in `withdraw()`
+/// @custom:version missing `require(success)` after low-level call in `withdraw`
 
 contract Bank {
     mapping (address user => uint credit) credits;
@@ -10,12 +10,14 @@ contract Bank {
         credits[msg.sender] += msg.value;
     }
 
-    function withdraw(uint amount) public {
+    function withdraw(uint amount) public returns (bool) {
         require(amount > 0);
+        require(amount <= credits[msg.sender]);
 
-        credits[msg.sender] -= amount - 1;
+        credits[msg.sender] -= amount;
 
         (bool success,) = msg.sender.call{value: amount}("");
-        require(success);
+        return success;
     }
 }
+

@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity >= 0.8.2;
 
-/// @custom:version no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is incremented by `amount - 1` in `deposit()`
+/// @custom:version in `withdraw()`, no `amount <= credits[msg.sender]` check, unchecked decrement, and no `require(success)` check
 
 contract Bank {
     mapping (address user => uint credit) credits;
@@ -10,12 +10,14 @@ contract Bank {
         credits[msg.sender] += msg.value - 1;
     }
 
-    function withdraw(uint amount) public {
+    function withdraw(uint amount) public returns (bool) {
         require(amount > 0);
 
-        credits[msg.sender] -= amount;
+        unchecked {
+            credits[msg.sender] -= amount;
+        }
 
         (bool success,) = msg.sender.call{value: amount}("");
-        require(success);
+        return(success);
     }
 }

@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version deposit and withdrawal limits for non-owner users, with owner exempt from limits. Withdraw uses `transfer` instead of low-level call. 
+/// @custom:version deposit and withdrawal limits for non-owner users, with owner exempt from limits. Withdraw uses `transfer` instead of low-level `call`. 
 
 contract Bank {
     mapping (address user => uint credit) private credits;
