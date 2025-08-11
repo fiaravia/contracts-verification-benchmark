@@ -17,7 +17,7 @@ The benchmark currently comprises several versions (correct or bugged) of the fo
 - [Deposit (ETH)](contracts/deposit_eth/) 
 - [Deposit (ERC20)](contracts/deposit_erc20/)
 - [Bank (tokenless)](contracts/zerotoken_bank/)
-- [Bank (ETH)](contracts/bank/) 
+- [Bank (ETH)](contracts/bank/) :white_check_mark: 
 - [Escrow](contracts/escrow/) 
 - [Vault](contracts/vault/) :white_check_mark:
 - [Price Bet](contracts/price-bet) :white_check_mark:

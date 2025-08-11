@@ -1,7 +1,9 @@
 # Bank
 
 ## Specification
-The Bank contract stores assets deposited by users, and and pays them out when required. The `deposit` method allows anyone to deposit assets. When a deposit is made, the corresponding amount is added to the account balance of the sender. The `withdraw` method allows the sender to receive any desired amount of assets deposited in their account. The contract checks that the depositor has sufficient funds in their account and then transfers the specified amount to the sender. In this version of the contract, the only asset handled by the contract is the ETH crypto-currency.
+The Bank contract stores assets deposited by users, and and pays them out when required. 
+- the `deposit` method allows anyone to deposit ETH. When a deposit is made, the corresponding amount is added to the account balance of the sender. 
+- the `withdraw` method allows the sender to receive any desired amount of ETH deposited in their account.
 
 ## Properties
 - **assets-dec-onlyif-deposit**: if the ETH balance of a user A are decreased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.
@@ -16,14 +18,14 @@ The Bank contract stores assets deposited by users, and and pays them out when r
 - **deposit-contract-balance**: after a successful `deposit()`, the ETH balance of the contract is increased by `msg.value`.
 - **deposit-not-revert**: a `deposit` transaction never reverts
 - **deposit-revert**: a `deposit` transaction reverts if `msg.value` plus the current credits of `msg.sender` overflows.
-- **exists-at-least-one-balance-change**: after a successful transaction, the credits of at least one account have changed
-- **exists-unique-asset-change**: after a successful transaction to the Bank contract, the ETH balance of exactly one account (except the contract's) have changed
-- **exists-unique-credit-change**: after a successful transaction to the Bank contract, the credit of exactly one address have changed
-- **no-frozen-assets**: if the contract controls some assets, then someone can transfer them from the contract to some user
-- **no-frozen-credits**: if the sum of all the balances is strictly positive, it is possible to reduce them
+- **exists-at-least-one-credit-change**: after a successful `deposit` or `withdraw` transaction to the Bank contract, the credits of at least one address have changed
+- **exists-unique-asset-change**: after a successful `deposit` or `withdraw` transaction to the Bank contract, the ETH balance of exactly one account (except the contract's) have changed
+- **exists-unique-credit-change**: after a successful `deposit` or `withdraw` transaction to the Bank contract, the credit of exactly one address have changed
+- **no-frozen-assets**: if the contract has a strictly positive ETH balance, then someone can transfer them from the contract to some user
+- **no-frozen-credits**: if the sum of all the credits is strictly positive, it is possible to reduce them
 - **withdraw-additivity**: if the same sender can perform two (successful) `withdraw` of n1 and n2 wei, respectively, then the same sender can always obtain an equivalent effect (on the state of the Bank contract and on its own account) through a single `withdraw` of n1+n2 wei. Here equivalence neglects transaction fees.
-- **withdraw-assets-credit-others**: after a successful `withdraw(amount)`, the credit of any user but the sender is preserved.
-- **withdraw-assets-transfer-others**: after a successful `withdraw(amount)`, the ETH balance of any user but the sender are preserved.
+- **withdraw-assets-credit-others**: after a successful `withdraw(amount)`, the credit of any user (except, possibly, the sender) is preserved.
+- **withdraw-assets-transfer-others**: after a successful `withdraw(amount)`, the ETH balance of any user (except, possibly, the sender) are preserved.
 - **withdraw-contract-balance**: after a successful `withdraw(amount)`, the contract balance is decreased by `amount` wei.
 - **withdraw-not-revert**: a `withdraw(amount)` call does not revert if `amount` is bigger than zero and less or equal to the credit of `msg.sender`.
 - **withdraw-revert**: a `withdraw(amount)` call reverts if `amount` is zero or greater than the credit of `msg.sender`.
@@ -35,7 +37,7 @@ The Bank contract stores assets deposited by users, and and pays them out when r
 ## Versions
 - **v1**: minimal implementation according to informal specification
 - **v2**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is decremented by `amount - 1` in `withdraw()`
-- **v3**: `deposit` and `withdraw` limits for non-owner users, with owner exempt from limits; `withdraw` uses `transfer` instead of low-level call. 
+- **v3**: `deposit` and `withdraw` limits for non-owner users, with owner exempt from limits; `withdraw` uses `transfer` instead of low-level call 
 - **v4**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is incremented by `amount - 1` in `deposit`
 - **v5**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is incremented by `amount + 1` in `deposit`
 - **v6**: no `amount <= credits[msg.sender]` check and `amount + 1` is transferred to the msg.sender in `withdraw`
