@@ -63,7 +63,7 @@ def md_version_list(versions: List[str]) -> str:
     Generate a markdown list of versions. 
 
     Args:
-        versiosn (list): list of version descriptions.
+        versionn (list): list of version descriptions.
     """
     return '\n'.join(
         f'- **v{i+1}**: {v}' for i, v in enumerate(versions)
@@ -77,12 +77,47 @@ def get_versions_file_paths(versions_dir: Path) -> List[Path]:
     )
 
 
+# def get_versions_descriptions(versions_dir: Path) -> List[str]:
+#     """ Get versions descriptions from versions directory. """
+#     # could use `solc --devdoc -o . {fname}`
+#     # but it creates a file for each contract which is harder to parse.
+#     versions = []
+#     for v_path in get_versions_file_paths(versions_dir):
+#         try:
+#             with open(versions_dir / v_path, 'r', encoding="utf-8") as f:
+#                 content = f.read()
+#         except FileNotFoundError as e:
+#             msg = f"README generation: {v_path} not found.\n{e}"
+#             logging.error(msg)
+#             sys.exit(1)
+
+#         res = re.search('/// @custom:version (.*)', content)
+#         if res:
+#             versions.append(res.group(1))
+#         else:
+#             msg = f"{v_path} has no version comment."
+#             logging.warning(msg)
+
+#     return versions
+
+
+def natural_sort_key(path: Path) -> List:
+    """
+    Generate a sorting key that handles numerical sequences naturally.
+    Converts 'v10' to be sorted after 'v2' instead of before.
+    """
+    def convert(text):
+        return int(text) if text.isdigit() else text.lower()
+    
+    return [convert(c) for c in re.split('([0-9]+)', str(path.name))]
+
 def get_versions_descriptions(versions_dir: Path) -> List[str]:
-    """ Get versions descriptions from versions directory. """
-    # could use `solc --devdoc -o . {fname}`
-    # but it creates a file for each contract which is harder to parse.
     versions = []
-    for v_path in get_versions_file_paths(versions_dir):
+    
+    # Get all version file paths and sort them naturally
+    version_paths = sorted(get_versions_file_paths(versions_dir), key=natural_sort_key)
+    
+    for v_path in version_paths:
         try:
             with open(versions_dir / v_path, 'r', encoding="utf-8") as f:
                 content = f.read()
@@ -99,7 +134,6 @@ def get_versions_descriptions(versions_dir: Path) -> List[str]:
             logging.warning(msg)
 
     return versions
-
 
 def gen(usecase_dir: Path) -> str:
     """ Generate plain README for the the usecase. """

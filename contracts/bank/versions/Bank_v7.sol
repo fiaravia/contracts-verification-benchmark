@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity >= 0.8.2;
 
-/// @custom:version deposit pays 1 token to the owner
+/// @custom:version `deposit` pays a unit fee to the owner
 
 contract Bank {
     mapping (address user => uint credit) credits;

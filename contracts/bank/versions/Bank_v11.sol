@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity >= 0.8.2;
 
-/// @custom:version owner can pause deposit
+/// @custom:version owner can pause `deposit`
 
 contract Bank {
     mapping (address user => uint credit) credits;

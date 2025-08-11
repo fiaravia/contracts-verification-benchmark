@@ -33,22 +33,22 @@ The Bank contract stores assets deposited by users, and and pays them out when r
 - **withdraw-sender-rcv-EOA-receive**: if the `receive` method of `msg.sender` just accepts all ETH, after a successful `withdraw(amount)` originated by an EOA, the ETH balance of `msg.sender` is increased by `amount` ETH.
 
 ## Versions
-- **v1**: conformant to specification
-- **v2**: owner can pause withdraw
-- **v3**: owner can pause deposit
-- **v4**: missing `require(success)` after low-level call in `withdraw`
-- **v5**: deposit transfers part of msg.value to the owner
-- **v6**: owner can blacklist addresses from deposit and withdraw
-- **v7**: maximum number of operations per block, and uses `transfer` instead of low-level call in `withdraw`.
-- **v8**: in `withdraw()`, no `amount <= credits[msg.sender]` check, unchecked decrement, and no `require(success)` check
-- **v9**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is decremented by `amount - 1` in `withdraw()`
-- **v10**: deposit and withdrawal limits for non-owner users, with owner exempt from limits. Withdraw uses `transfer` instead of low-level `call`. 
-- **v11**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is incremented by `amount - 1` in `deposit()`
-- **v12**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is incremented by `amount + 1` in `deposit()`
-- **v13**: no `amount <= credits[msg.sender]` check and `amount + 1` is transferred to the msg.sender in `withdraw()`
-- **v14**: deposit pays 1 token to the owner
-- **v15**: withdraw is non-reentrant
-- **v16**: deposit and withdraw are non-reentrant
+- **v1**: minimal implementation according to informal specification
+- **v2**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is decremented by `amount - 1` in `withdraw()`
+- **v3**: `deposit` and `withdraw` limits for non-owner users, with owner exempt from limits; `withdraw` uses `transfer` instead of low-level call. 
+- **v4**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is incremented by `amount - 1` in `deposit`
+- **v5**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is incremented by `amount + 1` in `deposit`
+- **v6**: no `amount <= credits[msg.sender]` check and `amount + 1` is transferred to the msg.sender in `withdraw`
+- **v7**: `deposit` pays a unit fee to the owner
+- **v8**: `withdraw` is non-reentrant
+- **v9**: `deposit` and `withdraw` are non-reentrant
+- **v10**: owner can pause `withdraw`
+- **v11**: owner can pause `deposit`
+- **v12**: missing `require(success)` after low-level call in `withdraw`
+- **v13**: `deposit` transfers part of `msg.value` to the owner
+- **v14**: owner can blacklist addresses from `deposit` and `withdraw`
+- **v15**: maximum number of operations per block, and uses `transfer` instead of low-level call in `withdraw`.
+- **v16**: in `withdraw`, no `amount <= credits[msg.sender]` check, unchecked decrement, and no `require(success)` check
 
 ## Verification data
 
@@ -57,4 +57,3 @@ The Bank contract stores assets deposited by users, and and pays them out when r
 - [Solcmc/Eldarica](solcmc-eld.csv)
 - [Certora](certora.csv)
 
-## Experiments

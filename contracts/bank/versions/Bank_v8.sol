@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity >= 0.8.2;
 
-/// @custom:version withdraw is non-reentrant
+/// @custom:version `withdraw` is non-reentrant
 
 import "./lib/ReentrancyGuard.sol";
 

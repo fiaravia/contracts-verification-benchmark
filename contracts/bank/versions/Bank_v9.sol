@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity >= 0.8.2;
 
-/// @custom:version deposit and withdraw are non-reentrant
+/// @custom:version `deposit` and `withdraw` are non-reentrant
 
 import "./lib/ReentrancyGuard.sol";
 
