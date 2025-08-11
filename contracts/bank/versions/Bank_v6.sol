@@ -19,5 +19,4 @@ contract Bank {
         (bool success,) = msg.sender.call{value: amount + 1}("");
         require(success);
     }
-
 }

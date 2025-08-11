@@ -13,6 +13,9 @@
         "deposit-contract-balance": "after a successful `deposit()`, the ETH balance of the contract is increased by `msg.value`.",
         "deposit-not-revert": "a `deposit` transaction never reverts",
         "deposit-revert": "a `deposit` transaction reverts if `msg.value` plus the current credits of `msg.sender` overflows.",
+        "withdraw-additivity": "if the same sender can perform two (successful) `withdraw` of n1 and n2 ETH, respectively, then the same sender can obtain an equivalent effect (on the state of the Bank contract and on its own account) through a single `withdraw` of n1+n2 ETH. Here equivalence neglects transaction fees.",
+        "withdraw-assets-credit-others": "after a successful `withdraw(amount)`, the credit of any user but the sender is preserved.",
+        "withdraw-assets-transfer-others": "after a successful `withdraw(amount)`, the ETH balance of any user but the sender are preserved.",
 
         "withdraw-contract-balance": "after a successful `withdraw(amount)`, the ETH balance the contract is decreased by `amount`.",
         "withdraw-not-revert": "a `withdraw(amount)` call does not revert if  `amount` is bigger than zero and less or equal to the balance entry of `msg.sender`.",
@@ -20,15 +23,12 @@
         "withdraw-sender-rcv": "after a successful `withdraw(amount)`, the ETH balance of the transaction sender is increased by `amount` ETH.",
         "withdraw-sender-rcv-EOA": "after a successful `withdraw(amount)` originated by an EOA, the ETH balance of the transaction sender is increased by `amount` ETH.",
         "withdraw-user-balance": "after a successful `withdraw(amount)`, the balance entry of `msg.sender` is decreased by `amount`.",
-        "withdraw-assets-transfer-others": "after a successful `withdraw(amount)`, the assets controlled by any user but the sender are preserved.",
-        "withdraw-assets-balance-others": "after a successful `withdraw(amount)`, the balance entry of any user but the sender is preserved.",
-        "withdraw-additivity": "two (successful) `withdraw` of n1 and n2 units of T (performed by the same sender) are equivalent to a single `withdraw` of n1+n2 units of T.",
         "userbalances-leq-balance": "the assets controlled by the contract are (at least) equal to the sum of all the user balances", 
         "no-frozen-credits": "if the sum of all the balances is strictly positive, it is possible to reduce them",
         "no-frozen-assets": "if the contract controls some assets, then someone can transfer them from the contract to some user",
         "exists-at-least-one-balance-change": "after a successful transaction, the credits of at least one account have changed",
-        "exists-unique-asset-change": "after a successful transaction, the assets of exactly one account (except the contract’s) have changed",
-        "exists-unique-balance-change": "after a successful transaction, the balances of exactly one account have changed"
+        "exists-unique-asset-change": "after a successful transaction to the Bank contract, the ETH balance of exactly one account (except the contract's) have changed",
+        "exists-unique-credit-change": "after a successful transaction to the Bank contract, the credit of exactly one address have changed"
     }
 
 }
