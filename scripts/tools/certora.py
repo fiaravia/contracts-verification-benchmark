@@ -26,11 +26,11 @@ THREADS = 6     # n of parallel executions
 
 
 COMMAND_TEMPLATE = Template(
-    'certoraRun $contract_path:$name --verify $name:$spec_path --msg "$msg" --wait_for_results'
+    'certoraRun.py $contract_path:$name --verify $name:$spec_path --msg "$msg" --wait_for_results'
 )
 
 CONF_FILE_COMMAND_TEMPLATE = Template(
-    'certoraRun $conf_path --wait_for_results'
+    'certoraRun.py $conf_path --wait_for_results'
 )
 
 # Check if there is an error in the output (Deprec)
@@ -40,13 +40,15 @@ def has_property_error(output, property):
 
 
 def no_errors_found(output):
-    pattern = r'.*No errors found by Prover!.*'
-    return re.search(pattern, output, re.DOTALL)
+    #pattern = r'.*No errors found by Prover!.*'
+    pattern = r'.*Failures summary*'
+    return not re.search(pattern, output, re.DOTALL)
 
 
 def has_critical_error(output):
-    pattern = r'.*CRITICAL.*'
-    return re.search(pattern, output, re.DOTALL)
+    pattern1 = r'.*CRITICAL.*'
+    pattern2 = r'.*solc had an error.*'
+    return re.search(pattern1, output, re.DOTALL) or re.search(pattern2, output, re.DOTALL)
 
 def no_permission(output):
     """ Parse the output looking for a no permission error. """
@@ -174,6 +176,7 @@ def run_log(id, contract_path, spec_path, logs_dir=None):
     '''
     outcome, log = run(contract_path, spec_path)
     if logs_dir:
+        logs_dir.mkdir(parents=True, exist_ok=True)
         utils.write_log(Path(logs_dir).joinpath(id + '.log'), log)
     else:
         print(log)
