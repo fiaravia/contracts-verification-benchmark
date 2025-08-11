@@ -39,6 +39,7 @@ if args.solver:
     run_solcmc.main(args_solcmc)
 else:
     for solver in ['z3','eld']:
+        print(f"\nUsing {solver} as backend SMT-solver:")
         args_solcmc_solv = args_solcmc
         args_solcmc_solv += ["--solver", solver]
         args_solcmc_solv += ["--output", f"../contracts/{args.contract}/solcmc/build/{solver}"]
