@@ -30,7 +30,6 @@
         "exists-unique-asset-change": "after a successful transaction to the Bank contract, the ETH balance of exactly one account (except the contract's) have changed",
         "exists-unique-credit-change": "after a successful transaction to the Bank contract, the credit of exactly one address have changed"
     }
-
 }
 
 

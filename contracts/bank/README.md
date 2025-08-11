@@ -4,57 +4,57 @@
 The Bank contract stores assets deposited by users, and and pays them out when required. The `deposit` method allows anyone to deposit assets. When a deposit is made, the corresponding amount is added to the account balance of the sender. The `withdraw` method allows the sender to receive any desired amount of assets deposited in their account. The contract checks that the depositor has sufficient funds in their account and then transfers the specified amount to the sender. In this version of the contract, the only asset handled by the contract is the ETH crypto-currency.
 
 ## Properties
+- **assets-dec-onlyif-deposit**: if the ETH balance of a user A are decreased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.
+- **assets-inc-onlyif-withdraw**: if the ETH balance of a user A are increased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender.
+- **credit-dec-onlyif-withdraw**: if the credit of a user A is decreased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender
+- **credit-inc-onlyif-deposit**: if the credit of a user A is increased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.
+- **credits-leq-balance**: the wei balance stored in the contract is (at least) equal to the sum of all the user credits
+- **deposit-additivity**: two (successful) `deposit` of n1 and n2 wei (performed by the same sender) are equivalent to a single `deposit` of n1+n2 wei of T.
+- **deposit-assets-credit**: after a successful `deposit()`, the credits of `msg.sender` are increased by `msg.value`.
+- **deposit-assets-credit-others**: after a successful `deposit()`, the credit of any user but the sender is preserved.
+- **deposit-assets-transfer-others**: after a successful `deposit()`, the ETH balance of any user but the sender are preserved.
 - **deposit-contract-balance**: after a successful `deposit()`, the ETH balance of the contract is increased by `msg.value`.
-- **deposit-not-revert**: a `deposit` call does not revert if  `msg.value` is less or equal to the ETH balance of `msg.sender`.
-- **deposit-revert-if-low-eth**: a `deposit` call reverts if `msg.value` is greater than the ETH balance of `msg.sender`.
-- **deposit-user-balance**: after a successful `deposit()`, the balance entry of `msg.sender` is increased by `msg.value`.
-- **user-balance-dec-onlyif-withdraw**: the only way to decrease the balance entry of a user `a` is by calling `withdraw` with `msg.sender = a`.
-- **user-balance-inc-onlyif-deposit**: the only way to increase the balance entry of a user `a` is by calling `deposit` with `msg.sender = a`.
-- **withdraw-contract-balance**: after a successful `withdraw(amount)`, the ETH balance the contract is decreased by `amount`.
-- **withdraw-not-revert**: a `withdraw(amount)` call does not revert if  `amount` is bigger than zero and less or equal to the balance entry of `msg.sender`.
-- **withdraw-revert**: a `withdraw(amount)` call reverts if `amount` is zero or greater than the balance entry of `msg.sender`.
-- **withdraw-sender-rcv**: after a successful `withdraw(amount)`, the ETH balance of the transaction sender is increased by `amount` ETH.
-- **withdraw-sender-rcv-EOA**: after a successful `withdraw(amount)` originated by an EOA, the ETH balance of the transaction sender is increased by `amount` ETH.
-- **withdraw-user-balance**: after a successful `withdraw(amount)`, the balance entry of `msg.sender` is decreased by `amount`.
+- **deposit-not-revert**: a `deposit` transaction never reverts
+- **deposit-revert**: a `deposit` transaction reverts if `msg.value` plus the current credits of `msg.sender` overflows.
+- **exists-at-least-one-balance-change**: after a successful transaction, the credits of at least one account have changed
+- **exists-unique-asset-change**: after a successful transaction to the Bank contract, the ETH balance of exactly one account (except the contract's) have changed
+- **exists-unique-credit-change**: after a successful transaction to the Bank contract, the credit of exactly one address have changed
+- **no-frozen-assets**: if the contract controls some assets, then someone can transfer them from the contract to some user
+- **no-frozen-credits**: if the sum of all the balances is strictly positive, it is possible to reduce them
+- **withdraw-additivity**: if the same sender can perform two (successful) `withdraw` of n1 and n2 wei, respectively, then the same sender can always obtain an equivalent effect (on the state of the Bank contract and on its own account) through a single `withdraw` of n1+n2 wei. Here equivalence neglects transaction fees.
+- **withdraw-assets-credit-others**: after a successful `withdraw(amount)`, the credit of any user but the sender is preserved.
+- **withdraw-assets-transfer-others**: after a successful `withdraw(amount)`, the ETH balance of any user but the sender are preserved.
+- **withdraw-contract-balance**: after a successful `withdraw(amount)`, the contract balance is decreased by `amount` wei.
+- **withdraw-not-revert**: a `withdraw(amount)` call does not revert if `amount` is bigger than zero and less or equal to the credit of `msg.sender`.
+- **withdraw-revert**: a `withdraw(amount)` call reverts if `amount` is zero or greater than the credit of `msg.sender`.
+- **withdraw-sender-credit**: after a successful `withdraw(amount)`, the credit of `msg.sender` is decreased by `amount`.
+- **withdraw-sender-rcv**: after a successful `withdraw(amount)`, the ETH balance of 'msg.sender` is increased by `amount` wei.
+- **withdraw-sender-rcv-EOA**: after a successful `withdraw(amount)` originated by an EOA, the ETH balance of the `msg.sender` is increased by `amount` wei.
+- **withdraw-sender-rcv-EOA-receive**: if the `receive` method of `msg.sender` just accepts all ETH, after a successful `withdraw(amount)` originated by an EOA, the ETH balance of `msg.sender` is increased by `amount` ETH.
 
 ## Versions
 - **v1**: conformant to specification
-- **v2**: no `amount <= balances[msg.sender]` check and `balances[msg.sender]` is decremented by `amount - 1` in `withdraw()`
+- **v2**: owner can pause withdraw
+- **v3**: owner can pause deposit
+- **v4**: missing `require(success)` after low-level call in `withdraw`
+- **v5**: deposit transfers part of msg.value to the owner
+- **v6**: owner can blacklist addresses from deposit and withdraw
+- **v7**: maximum number of operations per block, and uses `transfer` instead of low-level call in `withdraw`.
+- **v8**: in `withdraw()`, no `amount <= credits[msg.sender]` check, unchecked decrement, and no `require(success)` check
+- **v9**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is decremented by `amount - 1` in `withdraw()`
+- **v10**: deposit and withdrawal limits for non-owner users, with owner exempt from limits. Withdraw uses `transfer` instead of low-level `call`. 
+- **v11**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is incremented by `amount - 1` in `deposit()`
+- **v12**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is incremented by `amount + 1` in `deposit()`
+- **v13**: no `amount <= credits[msg.sender]` check and `amount + 1` is transferred to the msg.sender in `withdraw()`
+- **v14**: deposit pays 1 token to the owner
+- **v15**: withdraw is non-reentrant
+- **v16**: deposit and withdraw are non-reentrant
 
-## Ground truth
-|        | deposit-contract-balance         | deposit-not-revert               | deposit-revert-if-low-eth        | deposit-user-balance             | user-balance-dec-onlyif-withdraw | user-balance-inc-onlyif-deposit  | withdraw-contract-balance        | withdraw-not-revert              | withdraw-revert                  | withdraw-sender-rcv              | withdraw-sender-rcv-EOA          | withdraw-user-balance            |
-|--------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|
-| **v1** | 1                                | 1                                | 1                                | 1                                | 0[^1]                            | 0[^2]                            | 0[^3]                            | 0[^4]                            | 1                                | 0[^5]                            | 1                                | 0[^6]                            |
-| **v2** | 1                                | 1                                | 1                                | 1                                | 0                                | 0                                | 0                                | 0                                | 0                                | 0                                | 1                                | 0                                |
- 
-[^1]: A call to withdraw by a user b may lead to a reentrant call to withdraw by a user a. 
-[^2]: A call to withdraw may lead to a reentrant call to deposit, increasing the user's balance.
-[^3]: A reentrancy attack is possible if the recipient address is an untrusted contract.
-[^4]: A reentrancy attack is possible if the recipient address is an untrusted contract.
-[^5]: `msg.sender` can be an untrusted contract that transfer the received ETH to another account.
-[^6]: A reentrancy attack is possible if the recipient address is an untrusted contract.
+## Verification data
+
+- [Ground truth](ground-truth.csv)
+- [Solcmc/z3](solcmc-z3.csv)
+- [Solcmc/Eldarica](solcmc-eld.csv)
+- [Certora](certora.csv)
 
 ## Experiments
-### SolCMC
-#### Z3
-|        | deposit-contract-balance         | deposit-not-revert               | deposit-revert-if-low-eth        | deposit-user-balance             | user-balance-dec-onlyif-withdraw | user-balance-inc-onlyif-deposit  | withdraw-contract-balance        | withdraw-not-revert              | withdraw-revert                  | withdraw-sender-rcv              | withdraw-sender-rcv-EOA          | withdraw-user-balance            |
-|--------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|
-| **v1** | TP!                              | ND                               | ND                               | TP!                              | UNK                              | UNK                              | TN!                              | ND                               | TP!                              | TN!                              | FN!                              | UNK                              |
-| **v2** | TP!                              | ND                               | ND                               | TP!                              | UNK                              | UNK                              | TN!                              | ND                               | TN!                              | TN!                              | FN!                              | TN!                              |
- 
-
-#### Eldarica
-|        | deposit-contract-balance         | deposit-not-revert               | deposit-revert-if-low-eth        | deposit-user-balance             | user-balance-dec-onlyif-withdraw | user-balance-inc-onlyif-deposit  | withdraw-contract-balance        | withdraw-not-revert              | withdraw-revert                  | withdraw-sender-rcv              | withdraw-sender-rcv-EOA          | withdraw-user-balance            |
-|--------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|
-| **v1** | TP!                              | ND                               | ND                               | TP!                              | TN                               | TN!                              | TN!                              | ND                               | TP!                              | TN!                              | FN!                              | TN!                              |
-| **v2** | TP!                              | ND                               | ND                               | TP!                              | TN                               | TN!                              | TN!                              | ND                               | TN!                              | TN!                              | FN!                              | TN!                              |
- 
-
-
-### Certora
-|        | deposit-contract-balance         | deposit-not-revert               | deposit-revert-if-low-eth        | deposit-user-balance             | user-balance-dec-onlyif-withdraw | user-balance-inc-onlyif-deposit  | withdraw-contract-balance        | withdraw-not-revert              | withdraw-revert                  | withdraw-sender-rcv              | withdraw-sender-rcv-EOA          | withdraw-user-balance            |
-|--------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|
-| **v1** | FN                               | FN                               | TP!                              | TP!                              | FP!                              | FP!                              | TN                               | TN                               | TP!                              | TN                               | FN                               | FP!                              |
-| **v2** | FN                               | FN                               | TP!                              | TP!                              | FP!                              | FP!                              | TN                               | TN                               | TN                               | TN                               | FN                               | TN                               |
- 
-
