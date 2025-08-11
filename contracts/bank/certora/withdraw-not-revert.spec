@@ -5,7 +5,7 @@ rule withdraw_not_revert {
     uint amount;
 
     require(0 <= amount);
-    require(amount <= currentContract.balances[e.msg.sender]);
+    require(amount <= currentContract.credits[e.msg.sender]);
 
     withdraw@withrevert(e, amount);
 
