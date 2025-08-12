@@ -66,7 +66,7 @@
         "withdraw-not-revert": "function spec",
         "withdraw-revert": "function spec",
         "withdraw-withdraw-revert": "multiple transition invariant",
-        "okey-rkey-private-withdraw": "TODO?",
+        "okey-rkey-private-withdraw": "TODO",
         "rkey-no-withdraw": "strategic property",
         "tx-idle-req": "strategic property",
         "tx-idle-req-eoa": "strategic property",

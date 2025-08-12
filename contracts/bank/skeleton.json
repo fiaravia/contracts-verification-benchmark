@@ -29,6 +29,35 @@
         "exists-at-least-one-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credits of at least one address have changed",
         "exists-unique-asset-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the ETH balance of exactly one account (except the contract's) have changed",
         "exists-unique-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credit of exactly one address have changed"
+    },
+    "property-types": {
+        "assets-dec-onlyif-deposit": "single-transition invariant",
+        "assets-inc-onlyif-withdraw": "single-transition invariant",
+        "credit-dec-onlyif-withdraw": "single-transition invariant",
+        "credit-inc-onlyif-deposit": "single-transition invariant",
+        "credits-leq-balance": "state invariant",
+        "deposit-additivity": "TODO",
+        "deposit-assets-credit": "function spec",
+        "deposit-assets-credit-others": "function spec",
+        "deposit-assets-transfer-others": "function spec",
+        "deposit-contract-balance": "function spec",
+        "deposit-not-revert": "function spec",
+        "deposit-revert": "function spec",
+        "no-frozen-assets": "strategic property",
+        "no-frozen-credits": "strategic property",
+        "withdraw-additivity": "TODO",
+        "withdraw-assets-credit-others": "function spec",
+        "withdraw-assets-transfer-others": "function spec",
+        "withdraw-contract-balance": "function spec",
+        "withdraw-not-revert": "function spec",
+        "withdraw-revert": "function spec",
+        "withdraw-sender-credit": "function spec",
+        "withdraw-sender-rcv": "function spec",
+        "withdraw-sender-rcv-EOA": "function spec",
+        "withdraw-sender-rcv-EOA-receive": "function spec",
+        "exists-at-least-one-credit-change": "single-transition invariant",
+        "exists-unique-asset-change": "single-transition invariant",
+        "exists-unique-credit-change": "single-transition invariant"
     }
 }
 
