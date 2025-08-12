@@ -138,7 +138,13 @@ def has_ground_truth(contract_path, property_path):
     property = property_path.replace(f"_v{version}","").replace("certora/","").replace(".spec","")
     with open('ground-truth.csv', 'r') as file:
         text = file.read()
-        print(f"{property},v{version},0" )
         res = f"{property},v{version},0" in text or f"{property},v{version},1" in text
-    print(f"{res=}")
     return res
+
+
+def has_rule_or_invariant(property_path):
+    with open(property_path, 'r') as file:
+        spec_code = file.read()
+        res = "rule" in spec_code or "invariant" in spec_code
+    return res
+            
