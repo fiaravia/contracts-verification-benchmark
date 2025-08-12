@@ -101,7 +101,7 @@ def find_paths_with_subpath(dir: str, subpath: str):
     return file_paths
 
 
-def get_properties(version_path: str, properties_paths: list, only_ground_truth: bool):
+def get_properties(version_path: str, properties_paths: list):
     """
     Determine the properties to verify for a given version based on the provided
     version path and a list of property paths. This function returns a list of

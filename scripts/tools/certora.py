@@ -212,7 +212,7 @@ def run_all(contracts_paths, specs_paths, only_ground_truth, logs_dir=None):
 
     for contract_path in contracts_paths:
         # Get list of properties to verify for this contract
-        contract_properties_paths = utils.get_properties(contract_path, specs_paths, only_ground_truth)
+        contract_properties_paths = utils.get_properties(contract_path, specs_paths)
 
         for property_path in contract_properties_paths:
             property_id = Path(property_path).stem.split('_')[0]    # split to eventually remove version
