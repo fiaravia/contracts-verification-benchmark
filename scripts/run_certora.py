@@ -44,7 +44,7 @@ def main(args):
             else [str(contracts)])
 
     if args.version:
-        contracts_paths = [c for c in contracts_paths if args.version in c]
+        contracts_paths = [c for c in contracts_paths if f"v{args.version}.sol" in c]
 
     # Get specs paths
     specs_paths = (
