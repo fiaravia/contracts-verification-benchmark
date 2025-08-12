@@ -1,4 +1,4 @@
-/// @custom:version conforming to specifications
+/// @custom:version minimal implementation conforming to specifications
 
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;

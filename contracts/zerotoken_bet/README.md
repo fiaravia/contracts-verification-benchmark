@@ -36,8 +36,8 @@ The contract involves two players, each owning 1 token, and an oracle. Player A 
 #### Eldarica
 |        | ab-gte0   | ab-lte2   | bb-gte0   | bb-lte2   | candep    | cannotdep | cb-gte0   | cb-lte2   |
 |--------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
-| **v1** | TP!       | TP!       | TP!       | TP!       | TP!       | TP!       | TP!       | TP!       |
-| **v2** | TP!       | TN!       | TN!       | TP!       | TP!       | TN!       | TP!       | TN!       |
+| **v1** | FN        | FN        | FN        | FN        | FN        | FN        | FN        | FN        |
+| **v2** | FN        | TN        | TN        | FN        | FN        | TN        | FN        | TN        |
  
 
 

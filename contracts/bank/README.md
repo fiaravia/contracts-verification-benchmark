@@ -7,7 +7,7 @@ The Bank contract stores assets deposited by users, and and pays them out when r
 
 ## Properties
 - **assets-dec-onlyif-deposit**: if the ETH balance of a user A are decreased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.
-- **assets-inc-onlyif-withdraw**: if the ETH balance of a user A are increased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender.
+- **assets-inc-onlyif-withdraw**: if the ETH balance of a user A is increased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender.
 - **credit-dec-onlyif-withdraw**: if the credit of a user A is decreased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender
 - **credit-inc-onlyif-deposit**: if the credit of a user A is increased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.
 - **credits-leq-balance**: the wei balance stored in the contract is (at least) equal to the sum of all the user credits
@@ -32,7 +32,7 @@ The Bank contract stores assets deposited by users, and and pays them out when r
 - **withdraw-sender-credit**: after a successful `withdraw(amount)`, the credit of `msg.sender` is decreased by `amount`.
 - **withdraw-sender-rcv**: after a successful `withdraw(amount)`, the ETH balance of 'msg.sender` is increased by `amount` wei.
 - **withdraw-sender-rcv-EOA**: after a successful `withdraw(amount)` originated by an EOA, the ETH balance of the `msg.sender` is increased by `amount` wei.
-- **withdraw-sender-rcv-EOA-receive**: if the `receive` method of `msg.sender` just accepts all ETH, after a successful `withdraw(amount)` originated by an EOA, the ETH balance of `msg.sender` is increased by `amount` ETH.
+- **withdraw-sender-rcv-EOA-receive**: if the `receive` method of `msg.sender` just accepts all ETH, after a successful `withdraw(amount)`, the ETH balance of `msg.sender` is increased by `amount` ETH.
 
 ## Versions
 - **v1**: minimal implementation according to informal specification
@@ -51,6 +51,7 @@ The Bank contract stores assets deposited by users, and and pays them out when r
 - **v14**: owner can blacklist addresses from `deposit` and `withdraw`
 - **v15**: maximum number of operations per block, and uses `transfer` instead of low-level call in `withdraw`.
 - **v16**: in `withdraw`, no `amount <= credits[msg.sender]` check, unchecked decrement, and no `require(success)` check
+- **v17**: `withdraw` subtracts credits from `tx.origin`, but sends ETH to `msg.sender`
 
 ## Verification data
 

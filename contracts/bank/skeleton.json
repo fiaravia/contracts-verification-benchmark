@@ -3,7 +3,7 @@
     "specification": "file:spec.md",
     "properties": {
         "assets-dec-onlyif-deposit": "if the ETH balance of a user A are decreased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.",
-        "assets-inc-onlyif-withdraw": "if the ETH balance of a user A are increased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender.",
+        "assets-inc-onlyif-withdraw": "if the ETH balance of a user A is increased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender.",
         "credit-dec-onlyif-withdraw": "if the credit of a user A is decreased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender",
         "credit-inc-onlyif-deposit": "if the credit of a user A is increased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.",
         "credits-leq-balance": "the wei balance stored in the contract is (at least) equal to the sum of all the user credits", 
@@ -14,6 +14,9 @@
         "deposit-contract-balance": "after a successful `deposit()`, the ETH balance of the contract is increased by `msg.value`.",
         "deposit-not-revert": "a `deposit` transaction never reverts",
         "deposit-revert": "a `deposit` transaction reverts if `msg.value` plus the current credits of `msg.sender` overflows.",
+        "exists-at-least-one-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credits of at least one address have changed",
+        "exists-unique-asset-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the ETH balance of exactly one account (except the contract's) have changed",
+        "exists-unique-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credit of exactly one address have changed",
         "no-frozen-assets": "if the contract has a strictly positive ETH balance, then someone can transfer them from the contract to some user",
         "no-frozen-credits": "if the sum of all the credits is strictly positive, it is possible to reduce them",
         "withdraw-additivity": "if the same sender can perform two (successful) `withdraw` of n1 and n2 wei, respectively, then the same sender can always obtain an equivalent effect (on the state of the Bank contract and on its own account) through a single `withdraw` of n1+n2 wei. Here equivalence neglects transaction fees.",
@@ -25,10 +28,7 @@
         "withdraw-sender-credit": "after a successful `withdraw(amount)`, the credit of `msg.sender` is decreased by `amount`.",
         "withdraw-sender-rcv": "after a successful `withdraw(amount)`, the ETH balance of 'msg.sender` is increased by `amount` wei.",
         "withdraw-sender-rcv-EOA": "after a successful `withdraw(amount)` originated by an EOA, the ETH balance of the `msg.sender` is increased by `amount` wei.",
-        "withdraw-sender-rcv-EOA-receive": "if the `receive` method of `msg.sender` just accepts all ETH, after a successful `withdraw(amount)` originated by an EOA, the ETH balance of `msg.sender` is increased by `amount` ETH.",
-        "exists-at-least-one-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credits of at least one address have changed",
-        "exists-unique-asset-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the ETH balance of exactly one account (except the contract's) have changed",
-        "exists-unique-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credit of exactly one address have changed"
+        "withdraw-sender-rcv-EOA-receive": "if the `receive` method of `msg.sender` just accepts all ETH, after a successful `withdraw(amount)`, the ETH balance of `msg.sender` is increased by `amount` ETH."
     }
 }
 
