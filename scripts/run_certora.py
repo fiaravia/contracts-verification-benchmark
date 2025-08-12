@@ -32,6 +32,11 @@ def main(args):
             '--property',
             '-p',
             help='Run experiments on this property only.')
+    parser.add_argument(
+            '--only_ground_truth', 
+            action='store_true', required=False, default=False, 
+            help="limit experiments to verification tasks which have a ground truth in ground-truth.csv")
+
     args = parser.parse_args(args)
 
     contracts = Path(args.contracts)
@@ -59,7 +64,7 @@ def main(args):
         output_dir = Path(args.output)
         logs_dir = output_dir.joinpath('logs/')
 
-        outcomes = run_all(contracts_paths, specs_paths, logs_dir)
+        outcomes = run_all(contracts_paths, specs_paths, args.only_ground_truth, logs_dir)
         
         verification_tasks = []
         out_csv = [utils.OUT_HEADER]
@@ -80,7 +85,7 @@ def main(args):
             
         utils.write_csv(output_dir.joinpath('out.csv'), out_csv)
     else:
-        run_all(contracts_paths, specs_paths)
+        run_all(contracts_paths, specs_paths, args.only_ground_truth)
 
 
 if __name__ == '__main__':

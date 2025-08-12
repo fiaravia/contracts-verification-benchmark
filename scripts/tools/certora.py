@@ -184,7 +184,7 @@ def run_log(id, contract_path, spec_path, logs_dir=None):
     return id, outcome
 
 
-def run_all(contracts_paths, specs_paths, logs_dir=None):
+def run_all(contracts_paths, specs_paths, only_ground_truth, logs_dir=None):
     '''
     Runs certora on all files of a directory.
 
@@ -201,13 +201,14 @@ def run_all(contracts_paths, specs_paths, logs_dir=None):
 
     for contract_path in contracts_paths:
         # Get list of properties to verify for this contract
-        contract_properties_paths = utils.get_properties(contract_path, specs_paths)
+        contract_properties_paths = utils.get_properties(contract_path, specs_paths, only_ground_truth)
 
         for property_path in contract_properties_paths:
             property_id = Path(property_path).stem.split('_')[0]    # split to eventually remove version
             version_id = Path(contract_path).stem.split('_')[1]
             id = f'{property_id}_{version_id}'
-            inputs.append((id, contract_path, property_path, logs_dir))
+            if not only_ground_truth or utils.has_ground_truth(contract_path, property_path):
+                inputs.append((id, contract_path, property_path, logs_dir))
 
     with Pool(processes=THREADS) as pool:
         # [(id, outcome), ...]

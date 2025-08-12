@@ -10,6 +10,8 @@ parser.add_argument('--property', action='store', required=False, type=str,
                     help="property of the contract over which to run the experiments (if not specified, runs over all properties)")
 parser.add_argument('--timeout', action='store', required=False, default="600",
                     help="timeout for each verification task")
+parser.add_argument('--only_ground_truth', action='store_true', required=False, default=False, 
+                    help="limit experiments to verification tasks which have a ground truth in ground-truth.csv")
 
 args = parser.parse_args()
 
@@ -25,6 +27,9 @@ else:
 
 if args.version:
     args_certora += ["--version", args.version]
+
+if args.only_ground_truth:
+    args_certora += ["--only_ground_truth"]
 
 # TODO
 #if args.timeout:

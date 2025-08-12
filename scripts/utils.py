@@ -101,7 +101,7 @@ def find_paths_with_subpath(dir: str, subpath: str):
     return file_paths
 
 
-def get_properties(version_path: str, properties_paths: list):
+def get_properties(version_path: str, properties_paths: list, only_ground_truth: bool):
     """
     Determine the properties to verify for a given version based on the provided
     version path and a list of property paths. This function returns a list of
@@ -132,3 +132,13 @@ def get_properties(version_path: str, properties_paths: list):
                                             if (property_id not in p)]
 
     return version_specific_properties_paths + version_generic_properties_paths
+
+def has_ground_truth(contract_path, property_path):
+    version = re.search(r'v(\d+)\.sol', contract_path).group(1)
+    property = property_path.replace(f"_v{version}","").replace("certora/","").replace(".spec","")
+    with open('ground-truth.csv', 'r') as file:
+        text = file.read()
+        print(f"{property},v{version},0" )
+        res = f"{property},v{version},0" in text or f"{property},v{version},1" in text
+    print(f"{res=}")
+    return res
