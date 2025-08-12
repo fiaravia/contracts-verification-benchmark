@@ -26,7 +26,7 @@ THREADS = 6     # n of parallel executions
 
 
 COMMAND_TEMPLATE = Template(
-    'certoraRun.py $contract_path:$name --verify $name:$spec_path --msg "$msg" --wait_for_results'
+    'certoraRun.py --short_output $contract_path:$name --verify $name:$spec_path --msg "$msg" --wait_for_results'
 )
 
 CONF_FILE_COMMAND_TEMPLATE = Template(
