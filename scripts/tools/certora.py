@@ -217,7 +217,8 @@ def run_all(contracts_paths, specs_paths, only_ground_truth, logs_dir=None):
             property_id = Path(property_path).stem.split('_')[0]    # split to eventually remove version
             version_id = Path(contract_path).stem.split('_')[1]
             id = f'{property_id}_{version_id}'
-            if not only_ground_truth or utils.has_ground_truth(contract_path, property_path):
+            if ((not only_ground_truth or utils.has_ground_truth(contract_path, property_path))
+                    and utils.has_rule_or_invariant(property_path)):
                 inputs.append((id, contract_path, property_path, logs_dir))
 
     with Pool(processes=THREADS) as pool:
