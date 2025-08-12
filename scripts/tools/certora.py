@@ -45,6 +45,11 @@ def no_errors_found(output):
     return not re.search(pattern, output, re.DOTALL)
 
 
+def violations_found(output):
+    pattern = r'.*Violations were found.*'
+    return re.search(pattern, output, re.DOTALL)
+
+
 def has_critical_error(output):
     pattern1 = r'.*CRITICAL.*'
     pattern2 = r'.*solc had an error.*'
@@ -145,15 +150,17 @@ def run(contract_path, spec_path):
                 logging.error('Certora is not installed. Use:\npip install certora-cli.')
                 return ERROR, str(e)
     
+    has_violations = violations_found(log.stdout)
+
     # Handle Certora errors
     if log.stderr:
         print(log.stderr, file=sys.stderr)
 
-    if has_critical_error(log.stdout):
+    if has_critical_error(log.stdout) and not has_violations:
         logging.error(log.stdout)
         return ERROR, log.stdout
 
-    if no_permission(log.stdout):
+    if no_permission(log.stdout) and not has_violations:
         logging.error(log.stdout)
         return ERROR, log.stdout
 
@@ -161,6 +168,9 @@ def run(contract_path, spec_path):
     is_positive = no_errors_found(log.stdout)
     # Negation
     is_positive = not is_positive if negate else is_positive
+
+    if has_violations:
+        is_positive = False 
 
     res = STRONG_POSITIVE if has_assert or has_invariant else WEAK_POSITIVE
     if not is_positive:
