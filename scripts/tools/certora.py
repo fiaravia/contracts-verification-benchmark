@@ -46,8 +46,9 @@ def no_errors_found(output):
 
 
 def violations_found(output):
-    pattern = r'.*Violations were found.*'
-    return re.search(pattern, output, re.DOTALL)
+    pattern1 = r'.*Violations were found.*'
+    pattern2 = r'.*Violated: *'
+    return re.search(pattern1, output, re.DOTALL) or re.search(pattern2, output, re.DOTALL)
 
 
 def has_critical_error(output):
