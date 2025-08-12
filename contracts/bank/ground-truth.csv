@@ -2,6 +2,7 @@ property,version,truth,footnote-md
 assets-dec-onlyif-deposit,v1,0,"The low-level call in `withdraw` could trigger a method of `msg.sender` that decreases its balance."
 assets-dec-onlyif-deposit,v10,0,
 assets-dec-onlyif-deposit,v11,0,
+assets-dec-onlyif-deposit,v12,0,
 assets-dec-onlyif-deposit,v13,0,
 assets-dec-onlyif-deposit,v14,0,
 assets-dec-onlyif-deposit,v15,1,
