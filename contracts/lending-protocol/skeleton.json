@@ -1,0 +1,8 @@
+{
+    "name": "Lending protocol",
+    "specification": "file:spec.md",
+    "properties": {
+        "deposit-post": "TODO",
+        "deposit-additivity": "TODO"
+    }
+}
