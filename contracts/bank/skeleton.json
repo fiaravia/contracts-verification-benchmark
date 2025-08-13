@@ -28,11 +28,7 @@
         "withdraw-sender-credit": "after a successful `withdraw(amount)`, the credit of `msg.sender` is decreased by `amount`.",
         "withdraw-sender-rcv": "after a successful `withdraw(amount)`, the ETH balance of 'msg.sender` is increased by `amount` wei.",
         "withdraw-sender-rcv-EOA": "after a successful `withdraw(amount)` originated by an EOA, the ETH balance of the `msg.sender` is increased by `amount` wei.",
-
-        "withdraw-sender-rcv-EOA-receive": "if the `receive` method of `msg.sender` just accepts all ETH, after a successful `withdraw(amount)`, the ETH balance of `msg.sender` is increased by `amount` ETH.",
-        "exists-at-least-one-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credits of at least one address have changed",
-        "exists-unique-asset-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the ETH balance of exactly one account (except the contract's) have changed",
-        "exists-unique-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credit of exactly one address have changed"
+        "withdraw-sender-rcv-EOA-receive": "if the `receive` method of `msg.sender` just accepts all ETH, after a successful `withdraw(amount)`, the ETH balance of `msg.sender` is increased by `amount` ETH."
     },
     "property-types": {
         "assets-dec-onlyif-deposit": "single-transition invariant",
