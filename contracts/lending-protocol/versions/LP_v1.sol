@@ -3,7 +3,7 @@ pragma solidity >= 0.8.2;
 
 /// @custom:version minimal implementation without liquidation
 
-import "./ERC20.sol";
+import "./lib/ERC20.sol";
 
 contract LP {
     // workaround for bug in solc v0.8.30
@@ -57,7 +57,7 @@ contract LP {
     function _accrueTotInt(address token) internal {
         uint lastTime = lastTotAccrued[token];
         if (lastTime == 0) {    // happens on first deposit
-            lastTotAccrued[token] = block.timestamp;
+            lastTotAccrued[token] = block.number;
             return;
         }
     
@@ -68,14 +68,14 @@ contract LP {
             totDebit[token] += interest;
         }
 
-        lastTotAccrued[token] = block.timestamp;
+        lastTotAccrued[token] = block.number;
     }
 
     // Update debit[token][borrower] by accruing interest for a given borrower
     function _accrueInt(address token, address borrower) internal {
         uint lastTime = lastAccrued[token][borrower];
         if (lastTime == 0) {    // happens on first deposit
-            lastAccrued[token][borrower] = block.timestamp;
+            lastAccrued[token][borrower] = block.number;
             return;
         }
     
@@ -86,7 +86,7 @@ contract LP {
             debit[token][borrower] += interest;
         }
 
-        lastAccrued[token][borrower] = block.timestamp;
+        lastAccrued[token][borrower] = block.number;
     }
 
     function XR_def(uint credits, uint debits, uint res) internal pure returns (uint) {
