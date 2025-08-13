@@ -4,6 +4,7 @@
     "properties": {
         "borrow-additivity": "if a sender A can perform two (successful) `borrow` of n1 and n2 token units (of the same token T), then A can always obtain an equivalent effect (on the state of the contract and on its own token balance) through a single `borrow` of n1+n2 units of token T. Here equivalence neglects transaction fees.",
         "borrow-post": "TODO",
+        "credits-zero": "if the total credits of a token T are zero, then also the debits and the reserves of T are zero.",
         "borrow-reversibility": "if a sender A performs a (successful) `borrow`, then A can fire a transaction that restores the amount of credits and debts of A to the state before the `borrow`. Here, assume that before performing the first transaction, the interests have already been accrued, i.e. `lastAccrue` and `lastTotAccrue` coincide with the block number where the transaction is performed, for all token and users involved in the transaction.",
         "deposit-additivity": "if a sender A can perform two (successful) `deposit` of n1 and n2 token units (of the same token T), then A can always obtain an equivalent effect (on the state of the contract and on its own token balance) through a single `deposit` of n1+n2 units of token T. Here equivalence neglects transaction fees.",
         "deposit-post": "TODO",

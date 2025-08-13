@@ -3,7 +3,7 @@ pragma solidity >= 0.8.2;
 
 /// @custom:version minimal implementation without liquidation
 
-import "./ERC20.sol";
+import "./lib/ERC20.sol";
 
 contract LP {
     // workaround for bug in solc v0.8.30
