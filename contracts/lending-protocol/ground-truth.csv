@@ -1,5 +1,13 @@
 property,version,truth,footnote-md
-foo,v1,1,Footnote foo-v1
-foo,v2,1,
-bar,v1,1,
-bar,v2,1,
+credits-zer0,v1,1,"check"
+credits-zer0,v2,1,"check"
+trace1,v1,1,
+trace1,v2,1,
+trace1,v1,1,"check (unit test)"
+trace1,v2,1,"check (unit test)"
+xr-geq-one,v1,1,"check"
+xr-geq-one,v2,1,"check"
+xr-increasing,v1,1,"verified by Certora"
+xr-increasing,v2,1,"check"
+xr-invariant,v1,1,"check"
+xr-invariant,v2,1,"check"

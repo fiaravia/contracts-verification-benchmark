@@ -1,4 +1,4 @@
-rule xr_invariant(address t) {
+rule xr_increasing(address t) {
     env e;
     method f;
     calldataarg args;
@@ -25,5 +25,5 @@ rule xr_invariant(address t) {
         (f.selector == sig:redeem(uint, address).selector && new_sum_credits > 0)
         ||
         f.selector == sig:liquidate(uint, address, address, address).selector 
-        => new_xr == old_xr); 
+        => new_xr >= old_xr); 
 }
