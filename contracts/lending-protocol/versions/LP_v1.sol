@@ -3,7 +3,7 @@ pragma solidity >= 0.8.2;
 
 /// @custom:version minimal implementation without liquidation
 
-import "./lib/ERC20.sol";
+import "./lib/IERC20.sol";
 
 contract LP {
     // workaround for bug in solc v0.8.30
@@ -40,7 +40,7 @@ contract LP {
     uint public immutable ratePerPeriod = 100_000; // interest rate per tick * 1e6 (10%)
 
     // Constructor accepts arrays of borrow tokens and collateral tokens
-    constructor(ERC20 _tok0, ERC20 _tok1) {
+    constructor(IERC20 _tok0, IERC20 _tok1) {
         tok0 = _tok0;
         tok1 = _tok1;
         require(tok0 != tok1);
@@ -114,12 +114,15 @@ contract LP {
             _isValidToken(token_addr),
             "Deposit: invalid token"
         );
-        ERC20 token = ERC20(token_addr);
+        IERC20 token = IERC20(token_addr);
+
+        // computes XR in the pre-state
+        uint xr = XR(token_addr);
 
         token.transferFrom(msg.sender, address(this), amount);
         reserves[token_addr] += amount;
 
-        uint256 amount_credit = (amount * 1e6) / XR(token_addr);
+        uint amount_credit = (amount * 1e6) / xr;
  
         credit[token_addr][msg.sender] += amount_credit;
         sum_credits[token_addr] += amount_credit;
@@ -141,14 +144,14 @@ contract LP {
         } 
 
         // Transfer tokens to the borrower
-        ERC20 token = ERC20(token_addr);
+        IERC20 token = IERC20(token_addr);
         token.transfer(msg.sender, amount);
 
         reserves[token_addr] -= amount;
         debit[token_addr][msg.sender] += amount;
         sum_debits[token_addr] += amount;
 
-        // Check if the borrower is collateralized
+        // Check if the borrower is collateralized in the post-state
         require(_isCollateralized(msg.sender), "Borrow: user is not collateralized");
     }
 
@@ -164,7 +167,7 @@ contract LP {
             "Repay: insufficient debts"
         );
 
-        ERC20 token = ERC20(token_addr);
+        IERC20 token = IERC20(token_addr);
         token.transferFrom(msg.sender, address(this), amount);
 
         reserves[token_addr] += amount;
@@ -184,20 +187,23 @@ contract LP {
             "Redeem: insufficient credits"
         );
 
-        uint amount_rdm = (amount * XR(token_addr)) / 1e6;
+        // computes XR in the pre-state
+        uint xr = XR(token_addr);
+
+        uint amount_rdm = (amount * xr) / 1e6;
         require(
             reserves[token_addr] >= amount_rdm,
             "Redeem: insufficient reserves"
         );
 
-        ERC20 token = ERC20(token_addr);
+        IERC20 token = IERC20(token_addr);
         token.transfer(msg.sender, amount_rdm);
 
         reserves[token_addr] -= amount_rdm;
         credit[token_addr][msg.sender] -= amount;
         sum_credits[token_addr] -= amount;
     
-        // Check if the user is collateralized
+        // Check if the user is collateralized in the post-state
         require(_isCollateralized(msg.sender), "Redeem: user is not collateralized");
     }
 

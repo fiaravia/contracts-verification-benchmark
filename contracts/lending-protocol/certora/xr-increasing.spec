@@ -15,15 +15,9 @@ rule xr_increasing(address t) {
     uint new_xr = currentContract.XR(e, t);
     uint new_sum_credits = currentContract.sum_credits[t];
 
-    assert (
-        f.selector == sig:deposit(uint, address).selector
-        ||
-        f.selector == sig:borrow(uint, address).selector 
-        ||
-        f.selector == sig:repay(uint, address).selector 
-        ||
-        (f.selector == sig:redeem(uint, address).selector && new_sum_credits > 0)
-        ||
-        f.selector == sig:liquidate(uint, address, address, address).selector 
-        => new_xr >= old_xr); 
+    assert(f.selector == sig:deposit(uint, address).selector => new_xr >= old_xr);
+    assert(f.selector == sig:borrow(uint, address).selector => new_xr >= old_xr);
+    assert(f.selector == sig:repay(uint, address).selector => new_xr >= old_xr);
+    assert(f.selector == sig:redeem(uint, address).selector && new_sum_credits > 0 => new_xr >= old_xr);
+    assert(f.selector == sig:liquidate(uint, address, address, address).selector => new_xr >= old_xr);
 }

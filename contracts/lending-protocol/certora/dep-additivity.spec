@@ -1,4 +1,4 @@
-rule deposit_additivity {
+rule dep_additivity {
     env e1;
     env e2;
     env e3;

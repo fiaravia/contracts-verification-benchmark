@@ -1,4 +1,4 @@
-rule borrow_additivity {
+rule bor_additivity {
     env e1;
     env e2;
     env e3;
