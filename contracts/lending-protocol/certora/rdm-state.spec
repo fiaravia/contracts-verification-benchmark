@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-rule dep_state {
+// import "erc20.spec";
+
+rule rdm_state {
     env e;
     address t0;
     address t1;
     address a;
     address b;
-    uint amt;
+    uint amt_credit;
 
     require(a != b && a!=0 && b!=0 && a!=currentContract && b!=currentContract);
     require(t0 != t1);
@@ -16,54 +18,35 @@ rule dep_state {
 
     uint old_reserves_t0 = currentContract.reserves[t0];   
     uint old_reserves_t1 = currentContract.reserves[t1];
-
     uint old_credit_t0_a = currentContract.credit[t0][a];
     uint old_credit_t1_a = currentContract.credit[t1][a];
     uint old_credit_t0_b = currentContract.credit[t0][b];
     uint old_credit_t1_b = currentContract.credit[t1][b];
-
-    uint old_debit_t0_a = currentContract.debit[t0][a];
-    uint old_debit_t1_a = currentContract.debit[t1][a];
-    uint old_debit_t0_b = currentContract.debit[t0][b];
-    uint old_debit_t1_b = currentContract.debit[t1][b];
-
-    uint old_sum_credits_t0 = currentContract.sum_credits[t0];
-    uint old_sum_debits_t0 = currentContract.sum_debits[t0];
     uint old_xr_t0 = currentContract.XR(e, t0);
 
-    deposit(e, amt, t0);
+    require(old_xr_t0 >= 1000000);
+
+    redeem(e, amt_credit, t0);
 
     uint new_reserves_t0 = currentContract.reserves[t0];   
     uint new_reserves_t1 = currentContract.reserves[t1];
-
     uint new_credit_t0_a = currentContract.credit[t0][a];
     uint new_credit_t1_a = currentContract.credit[t1][a];
     uint new_credit_t0_b = currentContract.credit[t0][b];
     uint new_credit_t1_b = currentContract.credit[t1][b];
     uint new_xr_t0 = currentContract.XR(e, t0);
 
-    uint new_debit_t0_a = currentContract.debit[t0][a];
-    uint new_debit_t1_a = currentContract.debit[t1][a];
-    uint new_debit_t0_b = currentContract.debit[t0][b];
-    uint new_debit_t1_b = currentContract.debit[t1][b];
+    mathint amt = (amt_credit * old_xr_t0) / 1000000;
+    require(old_credit_t0_a < max_uint - amt_credit);
 
-    uint new_sum_credits_t0 = currentContract.sum_credits[t0];
-    uint new_sum_debits_t0 = currentContract.sum_debits[t0];
-
-    assert(new_reserves_t0 == old_reserves_t0 + amt);
+    assert(new_reserves_t0 == old_reserves_t0 - amt);
     assert(new_reserves_t1 == old_reserves_t1);
 
-    assert(new_credit_t0_a == old_credit_t0_a + (amt * 1000000) / old_xr_t0);
+    assert(new_credit_t0_a == old_credit_t0_a - amt_credit);
+    assert(new_xr_t0 >= 1000000);
+
     assert(new_credit_t1_a == old_credit_t1_a);
 
     assert(new_credit_t0_b == old_credit_t0_b);
     assert(new_credit_t1_b == old_credit_t1_b);
-
-    assert(new_sum_credits_t0 == old_sum_credits_t0 + ((amt * 1000000)/old_xr_t0));
-    assert(new_sum_debits_t0 == old_sum_debits_t0);
-
-    assert(new_debit_t0_a == old_debit_t0_a);
-    assert(new_debit_t1_a == old_debit_t1_a);
-    assert(new_debit_t0_b == old_debit_t0_b);
-    assert(new_debit_t1_b == old_debit_t1_b);
 }
