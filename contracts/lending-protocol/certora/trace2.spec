@@ -29,6 +29,9 @@ rule trace1 {
     require (currentContract.debit[t1][a] == 0);
     require (currentContract.debit[t1][b] == 0);
 
+    // Warning: Certora is not able to infer the (constant) value of ratePerPeriod, so we require it 
+    require(currentContract.ratePerPeriod == 100000); // 10% interest rate
+    
     // A:deposit(50:T0)
 
     // require(e1.block.number > 0);
@@ -77,6 +80,30 @@ rule trace1 {
     uint debit_t0_b_3 = currentContract.debit[t0][b];
     uint debit_t1_b_3 = currentContract.debit[t1][b];
 
+    // accrueInt()
+    env e4;
+    accrueInt(e4);
+
+    uint reserve_t0_4 = currentContract.reserves[t0];
+    uint reserve_t1_4 = currentContract.reserves[t1];
+    uint xr_t0_4 = currentContract.XR(e4, t0);
+    uint credit_t0_a_4 = currentContract.credit[t0][a];
+    uint credit_t1_b_4 = currentContract.credit[t1][b];
+    uint debit_t0_b_4 = currentContract.debit[t0][b];
+    uint debit_t1_b_4 = currentContract.debit[t1][b];
+
+    // B:repay(5:T0)
+
+    env e5;
+    require(e5.msg.sender == b);
+    require(e5.msg.value == 0);
+
+    repay(e5, 5, t0);
+
+    uint reserve_t0_5 = currentContract.reserves[t0];
+    uint credit_t0_a_5 = currentContract.credit[t0][a];
+    uint debit_t0_b_5 = currentContract.debit[t0][b];
+
     // Asserts
 
     // A:deposit(50:T0)
@@ -95,4 +122,22 @@ rule trace1 {
     assert(credit_t0_a_3 == credit_t0_a_2);
     assert(credit_t1_b_3 == credit_t1_b_2);
     assert(debit_t0_b_3  == debit_t0_b_2 + 30);
+
+    // int
+    // B:repay(5:T0)
+
+    assert(reserve_t0_4 == reserve_t0_3);
+    assert(reserve_t1_4 == reserve_t1_3);
+
+    // assert(xr_t0_4 == ((20 + (30 + 3)) * 1000000)/50);
+    assert(credit_t1_b_4 == credit_t1_b_3);
+
+    // B's debit before int:  30
+    // B's debit after  int:  33
+    assert(debit_t1_b_4  == debit_t1_b_3); 
+    assert(debit_t0_b_4  == debit_t0_b_3 + 3);
+
+    // B's debit after repay: 28
+    assert(reserve_t0_5 == reserve_t0_4 + 5);
+    assert(debit_t0_b_5  == debit_t0_b_5 - 5); 
 }
