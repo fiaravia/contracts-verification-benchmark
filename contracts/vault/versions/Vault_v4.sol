@@ -3,6 +3,7 @@ pragma solidity >= 0.8.2;
 import "./lib/ReentrancyGuard.sol";
 
 /// @custom:version `finalize` is non-reentrant.
+
 contract Vault is ReentrancyGuard {
     enum States{IDLE, REQ}
 
@@ -15,7 +16,6 @@ contract Vault is ReentrancyGuard {
     uint amount;
     States state;
     
-    // v4
     constructor (address payable recovery_, uint wait_time_) payable {
     	require(msg.sender != recovery_);
         require(wait_time_ > 0);

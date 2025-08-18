@@ -14,7 +14,6 @@ contract Vault {
     uint amount;
     States state;
     
-    // v7
     constructor (address payable recovery_, uint wait_time_) payable {
     	require(msg.sender != recovery_);
         require(wait_time_ > 0);
@@ -39,7 +38,6 @@ contract Vault {
 
     function finalize() public {
         require(state == States.REQ);
-        // v7: wrong time constraint in finalize
         require(block.number <= request_time + wait_time);
         require(msg.sender == owner);
 

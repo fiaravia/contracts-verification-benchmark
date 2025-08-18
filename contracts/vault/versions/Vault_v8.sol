@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version `finalize` uses transfer instead of low-level call.
+/// @custom:version `finalize` uses `transfer` instead of low-level call.
 contract Vault {
     enum States{IDLE, REQ}
 
@@ -43,7 +43,6 @@ contract Vault {
         require(msg.sender == owner);
 
         state = States.IDLE;
-        // v8: use transfer instead of low-level call	
         payable(msg.sender).transfer(amount);
     }
 
