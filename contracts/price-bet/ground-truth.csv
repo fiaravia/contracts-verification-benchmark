@@ -1,18 +1,38 @@
 property,version,truth,footnote-md
+eventually-balance-zero-receive,v1,1,
+eventually-balance-zero,v1,0,
+eventually-win-receive-owner,v1,1,
+eventually-win-receive-player,v1,0,"The oracle exchange rate is not >= the target exchange rate"
+eventually-win,v1,0,"Both owner and player have a receive that always fails"
+join-balance-eq,v1,0,"selfdestruct"
+join-balance-geq,v1,1,
 join-not-revert,v1,1,
+join-only-once,v1,1,
+join-player,v1,1,
 join-revert,v1,1,
-win-not-revert,v1,0,
-win-revert,v1,1,
+no-frozen-funds,v1,0,"Owner has a receive that always fails"
+only-owner-or-player-receive,v1,0,
+owner-cannot-withdraw-before-deadline-not-player,v1,1,
+owner-cannot-withdraw-before-deadline,v1,0,"The owner coincides with the player"
+player-cannot-withdraw-after-deadline-not-owner,v1,1,
+player-cannot-withdraw-after-deadline,v1,"The owner coincides with the player",
+player-immutable,v1,1,
+price-above-player-win-frontrun,v1,0,
+price-above-player-win,v1,1,
+price-below-player-lose-not-owner,v1,1,
+price-below-player-lose,v1,0,"the player and owner addresses could be equal"
+timeout-balance-receive,v1,0,
+timeout-balance,v1,0,
+timeout-not-revert-receive,v1,1,
 timeout-not-revert,v1,0,
 timeout-revert,v1,1,
-timeout-postcondition,v1,0,
-only-owner-or-player-receive,v1,0,
-eventually-win,v1,0,
-no-frozen-funds,v1,0,
-eventually-balance-zero,v1,0,
-owner-cannot-withdraw-before-deadline,v1,?,
-player-cannot-withdraw-after-deadline,v1,?,
-join-only-once,v1,1,
-price-below-player-lose,v1,0,"the player and owner addresses could be equal"
-price-above-player-win,v1,?,
-winner-payout,v1,?,
+transfer-pot-join,v1,1,
+transfer-pot,v1,0,"Nobody has joined"
+win-balance,v1,0,
+win-balance-receive,v1,1,
+win-frontrun,v1,1,
+win-frontrun-not-oracle,v1,0,
+win-not-revert,v1,0,
+win-pot-receive,v1,0,
+win-pot,v1,0,
+win-revert,v1,1,
