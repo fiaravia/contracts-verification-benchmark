@@ -6,23 +6,23 @@ const { ethers } = require("hardhat");
 describe("LP", function () {
 
     async function deployContract() {
-        const [tok_creator, actor_a, actor_b] = await ethers.getSigners();
+        const [owner, actor_a, actor_b] = await ethers.getSigners();
 
         const amount = 1000000000;
-        
+
         const tok0 = await ethers.deployContract("ERC20", [
             amount
         ], {
-            signer: tok_creator 
+            signer: owner 
         });
 
         const tok1 = await ethers.deployContract("ERC20b", [
             amount
         ], {
-            signer: tok_creator 
+            signer: owner 
         });
 
-        const lp = await ethers.deployContract("LP",
+        const lp = await ethers.deployContract("LP_v1",
             [
                 await tok0.getAddress(),
                 await tok1.getAddress(),
@@ -32,11 +32,11 @@ describe("LP", function () {
         await tok0.transfer(actor_a, 50);
         await tok1.transfer(actor_b, 50);
 
-        return { lp, tok0, tok1, actor_a , actor_b };
+        return { lp, tok0, tok1, actor_a , actor_b , owner};
     }
 
     it("trace1", async function () {
-        const { lp, tok0, tok1, actor_a, actor_b } = await loadFixture(deployContract);
+        const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
 
         /* deployment checks */
 
@@ -50,11 +50,11 @@ describe("LP", function () {
         expect(await lp.reserves(tok0_addr)).to.equal(0);
         expect(await lp.reserves(tok1_addr)).to.equal(0);
 
-        expect(await lp.totCredit(tok0_addr)).to.equal(0);
-        expect(await lp.totCredit(tok1_addr)).to.equal(0);
+        expect(await lp.sum_credits(tok0_addr)).to.equal(0);
+        expect(await lp.sum_credits(tok1_addr)).to.equal(0);
 
-        expect(await lp.totDebit(tok0_addr)).to.equal(0);
-        expect(await lp.totDebit(tok1_addr)).to.equal(0);
+        expect(await lp.sum_debits(tok0_addr)).to.equal(0);
+        expect(await lp.sum_debits(tok1_addr)).to.equal(0);
 
 
         /* step 1; A:deposit(50:T0) */
@@ -103,41 +103,29 @@ describe("LP", function () {
         expect(reserve_t1_3).to.equal(reserve_t1_2);
     });
 
-});
+    it("dep-xr-eq", async function() {
 
-/*
-describe("Crowdfund - reclaim reverts", function () {
-    async function deployContract() {
-        const [owner] = await ethers.getSigners();
+        const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
 
-        const nowBlock = await ethers.provider.getBlockNumber();
-        const endDonate = nowBlock + 5;
+        await tok0.connect(actor_a).approve(await lp.getAddress(), 11);
 
-        const goal = ethers.parseEther("1000");
+        const actor_a_conn = lp.connect(actor_a);
+        const tok0_addr = await tok0.getAddress();
 
-        const crowdfund = await ethers.deployContract("Crowdfund", [
-            await owner.getAddress(),
-            endDonate,
-            goal,
-        ]);
+        await actor_a_conn.deposit(10,tok0_addr); // res=10,tot_cred=10,tot_deb=0,xr=1e6
+        await actor_a_conn.borrow(10, tok0_addr); // res=0,tot_cred=10,tot_deb=10,xr=1e6 
 
-        const donor = await ethers.deployContract("RevertOnReceive");
+        const old_xr_t0 = await lp.XR(tok0); //1e6
 
-        await donor.setCrowdfund(await crowdfund.getAddress());
+        await lp.connect(owner).accrueInt(); //res=0,tot_cred=10,tot_deb=11,xr=1.1e6
 
-        await donor.donate({ value: ethers.parseEther("1") });
+        await actor_a_conn.deposit(1, tok0_addr); // rounding error
+            //res=1,tot_cred=floor(1*1e6/1.1e6)= floor(0.9) = 0, tot_deb=11, xr=1.2e6
+            //wasted deposit, not enough to convert to an integer amount of credits
+        const new_xr_t0 = await lp.XR(tok0);
 
-        const current = await ethers.provider.getBlockNumber();
-        const toMine = Math.max(1, endDonate - current + 1);
-        await mine(toMine);
-
-        return { crowdfund, donor, owner};
-    }
-
-    it("reclaim() reverts if the donor's receive() reverts", async function () {
-        const { donor } = await loadFixture(deployContract);
-
-        await expect(donor.reclaim()).to.be.reverted;
+        expect(new_xr_t0).not.to.equal(old_xr_t0);
     });
+
 });
-*/
+

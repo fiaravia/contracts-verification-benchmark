@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version minimal implementation without liquidation
+/// @custom:version compound interests inspired by Aave v1 
 
 import "./lib/IERC20.sol";
 
-contract LP_v1 {
+contract LP_v2_v2 {
     // workaround for bug in solc v0.8.30
     address constant ZERO_ADDRESS = address(0x0000000000000000000000000000000000000000);
 
@@ -16,13 +16,24 @@ contract LP_v1 {
 
     // amount of credit tokens held by each user
     mapping(address => mapping(address => uint256)) public credit; // token -> user -> amount 
-    // amount of debit tokens held by each user (without interests)
+    // amount of debit tokens held by each user
     mapping(address => mapping(address => uint256)) public debit; // token -> user -> amount
 
     // total amount of credit tokens (used to compute exchange rate)
     mapping(address => uint256) public sum_credits; // token -> amount
+
     // total amount of debit tokens (used to compute exchange rate)
-    mapping(address => uint256) public sum_debits; // token -> amount
+    mapping(address token => uint debit) public sum_debits; // token -> amount
+    // borrow index at last borrow/repay (starts at 1e6) 
+    mapping (address token => uint index) public sum_debits_index;
+
+    // global borrow index (starts at 1e6)
+    uint public global_borrow_index = 1e6;
+    // last time when global borrow index was updated 
+    uint public last_global_update = 0;
+
+    // users' borrow index
+    mapping (address token => mapping (address borrower => uint index)) borrow_index;
 
     // token prices
     mapping (address token => uint256 price) prices;
@@ -32,12 +43,8 @@ contract LP_v1 {
 
     address[] public tokens;
 
-    // in this (unrealistic) version, we record borrowers in an array
-    address[] public borrowers;
-    // and we delagate the owner to trigger interest accruals 
-    address owner;
-
-    uint public immutable ratePerPeriod = 100_000; // interest rate per tick * 1e6 (10%)
+    uint public immutable blockPeriod = 1_000_000;
+    uint public immutable ratePerPeriod = 100_000; // interest rate per period * 1e6 (10%)
 
     // Constructor accepts arrays of borrow tokens and collateral tokens
     constructor(IERC20 _tok0, IERC20 _tok1) {
@@ -47,14 +54,14 @@ contract LP_v1 {
         tokens.push(address(tok0));
         tokens.push(address(tok1));
 
-        // in this version of the contract, token prices are constant
+        sum_debits_index[address(tok0)] = 1e6;
+        sum_debits_index[address(tok1)] = 1e6;
+
         prices[address(tok0)] = 1;
         prices[address(tok1)] = 2;
-
-        owner = msg.sender;
     }
 
-    function XR_def(uint credits, uint debits, uint res) internal pure returns (uint) {
+    function _XR(uint credits, uint debits, uint res) internal pure returns (uint) {
         if (credits == 0) {
             return 1e6; // Default exchange rate if no credits
         } else {
@@ -65,7 +72,7 @@ contract LP_v1 {
     // XR(t) returns the exchange rate for token t (multiplied by 1e6)
     function XR(address token) public view returns (uint) {
         require (_isValidToken(token), "Invalid token");
-        return XR_def(sum_credits[token], sum_debits[token], reserves[token]);
+        return _XR(sum_credits[token], sum_debits[token], reserves[token]);
     }
 
     function _valCredit(address a) internal view returns (uint256) {
@@ -84,6 +91,7 @@ contract LP_v1 {
         return val;
     }
 
+    // Assumes that interests on sum_debits and on all debits of borrower a have been accrued
     function _isCollateralized(address a) internal view returns (bool) {
         uint vdA = _valDebit(a); 
         if (vdA == 0) {
@@ -101,11 +109,53 @@ contract LP_v1 {
             }
         }
         return false;
+        // in this version, this is equivalent to:
         // return (token == address(tok0) || token == address(tok1));
     }
 
     function isValidToken(address token) public view returns (bool) {
         return _isValidToken(token);
+    }
+
+    function isInterestAccrued(address token) public view returns (bool) {
+        // should use last_global_update instead?
+        return (sum_debits_index[token] == global_borrow_index);
+    }
+
+    // lazy interest accrual
+    // (disclaimer: this implementation is only for compatibility with v1: here, interests accrue over time)
+    function accrueInt() public view {
+        require(block.number == last_global_update + blockPeriod);
+    }
+
+    function _calculate_linear_interest() internal view returns (uint) {
+        uint elapsed = block.number - last_global_update;
+        uint elapsed_ratio = (elapsed * 1e6) / blockPeriod;
+        uint multiplier = 1 + ratePerPeriod * elapsed_ratio;
+        return multiplier;
+    }
+
+    function _update_global_borrow_index() internal {
+        if (last_global_update == 0) {
+            global_borrow_index = 1e6;
+            last_global_update = block.number;    
+        }
+        else if (block.number > last_global_update) {
+            uint multiplier = _calculate_linear_interest();
+            global_borrow_index *= multiplier / 1e6;
+            last_global_update = block.number;
+        }
+    }
+    
+    modifier updateBorrowIndex() {
+        _update_global_borrow_index();
+        _;
+    }
+
+    function _get_accrued_debt(address token, address borrower) internal view returns (uint) {
+        uint current_debt = debit[token][borrower];
+        uint accrued_debt = (current_debt * global_borrow_index) / borrow_index[token][borrower];
+        return accrued_debt;
     }
 
     function deposit(uint amount, address token_addr) public {
@@ -122,13 +172,13 @@ contract LP_v1 {
         token.transferFrom(msg.sender, address(this), amount);
         reserves[token_addr] += amount;
 
+        // credit tokens for liquidity provider
         uint amount_credit = (amount * 1e6) / xr;
- 
         credit[token_addr][msg.sender] += amount_credit;
         sum_credits[token_addr] += amount_credit;
     }
 
-    function borrow(uint amount, address token_addr) public {
+    function borrow(uint amount, address token_addr) public updateBorrowIndex {
         require(amount > 0, "Borrow: amount must be greater than zero");
         require(
             _isValidToken(token_addr),
@@ -138,24 +188,27 @@ contract LP_v1 {
         // Check if the reserves are sufficient
         require(reserves[token_addr] >= amount, "Borrow: insufficient reserves");
 
-        // records the borrower, if not already present in the array
-        if (debit[token_addr][msg.sender] == 0) {
-            borrowers.push(msg.sender);
-        } 
-
         // Transfer tokens to the borrower
         IERC20 token = IERC20(token_addr);
         token.transfer(msg.sender, amount);
 
         reserves[token_addr] -= amount;
-        debit[token_addr][msg.sender] += amount;
-        sum_debits[token_addr] += amount;
+    
+        // Update user's debt and index
+        uint debt = _get_accrued_debt(token_addr, msg.sender);
+        debit[token_addr][msg.sender] = debt + amount;
+        borrow_index[token_addr][msg.sender] = global_borrow_index;    
+
+        // Update total debt
+        uint tot_debt = (sum_debits[token_addr] * global_borrow_index) / sum_debits_index[token_addr];
+        sum_debits[token_addr] = tot_debt + amount;
+        sum_debits_index[token_addr] = global_borrow_index;
 
         // Check if the borrower is collateralized in the post-state
         require(_isCollateralized(msg.sender), "Borrow: user is not collateralized");
     }
 
-    function repay(uint amount, address token_addr) public {
+    function repay(uint amount, address token_addr) public updateBorrowIndex {
         require(amount > 0, "Repay: amount must be greater than zero");
         require(
             _isValidToken(token_addr),
@@ -171,8 +224,16 @@ contract LP_v1 {
         token.transferFrom(msg.sender, address(this), amount);
 
         reserves[token_addr] += amount;
-        debit[token_addr][msg.sender] -= amount;
-        sum_debits[token_addr] -= amount;
+
+        // Update user's debt and index
+        uint debt = _get_accrued_debt(token_addr, msg.sender);
+        debit[token_addr][msg.sender] = debt - amount;
+        borrow_index[token_addr][msg.sender] = global_borrow_index;    
+
+        // Update total debt
+        uint tot_debt = (sum_debits[token_addr] * global_borrow_index) / sum_debits_index[token_addr];
+        sum_debits[token_addr] = tot_debt - amount;
+        sum_debits_index[token_addr] = global_borrow_index;
     }
 
     function redeem(uint amount, address token_addr) public {
@@ -205,25 +266,6 @@ contract LP_v1 {
     
         // Check if the user is collateralized in the post-state
         require(_isCollateralized(msg.sender), "Redeem: user is not collateralized");
-    }
-
-    function isInterestAccrued(address token) public pure returns (bool) {
-        // in this version, interests are accrued eagerly
-        return true;
-    }
-
-    // eager interest accrual, triggered by the owner
-    // (disclaimer: this implementation is unrealistic, since it iterates over all tokens/borrowers)
-    function accrueInt() public {
-        require (msg.sender == owner);
-
-        for (uint i = 0; i < tokens.length; i++) {
-            for (uint j=0; j<borrowers.length; j++) {
-                uint accrued = (debit[tokens[i]][borrowers[j]] * ratePerPeriod) / 1e6;
-                debit[tokens[i]][borrowers[j]] += accrued;
-                sum_debits[tokens[i]] += accrued;
-            }
-        }
     }
 
     function liquidate(uint amount, address token_debit, address debtor, address token_credit) public pure {
