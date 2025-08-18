@@ -3,7 +3,7 @@ pragma solidity >= 0.8.2;
 
 /// @custom:version minimal implementation without liquidation
 
-import "./lib/IERC20.sol";
+import "./lib/IERC20.sol"; 
 
 contract LP_v1 {
     // workaround for bug in solc v0.8.30

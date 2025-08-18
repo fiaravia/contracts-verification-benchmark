@@ -3,9 +3,9 @@ pragma solidity >= 0.8.2;
 
 /// @custom:version compound interests inspired by Aave v1 
 
-import "./lib/IERC20.sol";
+import "./lib/IERC20.sol"; 
 
-contract LP_v2_v2 {
+contract LP_v2 {
     // workaround for bug in solc v0.8.30
     address constant ZERO_ADDRESS = address(0x0000000000000000000000000000000000000000);
 
