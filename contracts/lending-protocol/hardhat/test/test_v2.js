@@ -1,4 +1,4 @@
-const { loadFixture } =
+const { loadFixture, mine } =
     require("@nomicfoundation/hardhat-toolbox/network-helpers");
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
@@ -153,7 +153,7 @@ describe("LP_v2", function () {
       const reserve_t1_2 = await lp.reserves(tok1_addr);
       const credit_t0_a_2 = await lp.credit(tok0_addr, actor_a);
       const credit_t1_b_2 = await lp.credit(tok1_addr, actor_b);
-      const debit_t0_b_2 = await lp.debit(tok0_addr, actor_b);
+      const debit_t0_b_2 = await lp.getAccruedDebt(tok0_addr, actor_b);
     
       expect(reserve_t0_2).to.equal(reserve_t0_1);
       expect(reserve_t1_2).to.equal(reserve_t1_1 + amountDeposit);
@@ -168,8 +168,8 @@ describe("LP_v2", function () {
       const reserve_t1_3 = await lp.reserves(tok1_addr);
       const credit_t0_a_3 = await lp.credit(tok0_addr, actor_a);
       const credit_t1_b_3 = await lp.credit(tok1_addr, actor_b);
-      const debit_t0_b_3 = await lp.debit(tok0_addr, actor_b);
-      const debit_t1_b_3 = await lp.debit(tok1_addr, actor_b);
+      const debit_t0_b_3 = await lp.getAccruedDebt(tok0_addr, actor_b);
+      const debit_t1_b_3 = await lp.getAccruedDebt(tok1_addr, actor_b);
     
       expect(reserve_t0_3).to.equal(reserve_t0_2 - amountBorrow);
       expect(reserve_t1_3).to.equal(reserve_t1_2);
@@ -181,15 +181,16 @@ describe("LP_v2", function () {
       // snapshot pre-accrual to compare
       const reserve_t0_preAccrue = reserve_t0_3;
       const reserve_t1_preAccrue = reserve_t1_3;
-    
+  
+      await mine(1_000_000);
       await lp.connect(owner).accrueInt();
     
       const reserve_t0_4 = await lp.reserves(tok0_addr);
       const reserve_t1_4 = await lp.reserves(tok1_addr);
       const credit_t0_a_4 = await lp.credit(tok0_addr, actor_a);
       const credit_t1_b_4 = await lp.credit(tok1_addr, actor_b);
-      const debit_t0_b_4 = await lp.debit(tok0_addr, actor_b);
-      const debit_t1_b_4 = await lp.debit(tok1_addr, actor_b);
+      const debit_t0_b_4 = await lp.getAccruedDebt(tok0_addr, actor_b);
+      const debit_t1_b_4 = await lp.getAccruedDebt(tok1_addr, actor_b);
     
       // reserves unchanged by accrual
       expect(reserve_t0_4).to.equal(reserve_t0_preAccrue);
@@ -229,14 +230,15 @@ describe("LP_v2", function () {
         await actor_a_conn.deposit(10,tok0_addr); // res=10,tot_cred=10,tot_deb=0,xr=1e6
         await actor_a_conn.borrow(10, tok0_addr); // res=0,tot_cred=10,tot_deb=10,xr=1e6 
 
-        const old_xr_t0 = await lp.XR(tok0); //1e6
+        const old_xr_t0 = await lp.getUpdatedXR(tok0); //1e6
 
+        await mine(1_000_000);
         await lp.connect(owner).accrueInt(); //res=0,tot_cred=10,tot_deb=11,xr=1.1e6
 
         await actor_a_conn.deposit(1, tok0_addr); // rounding error
             //res=1,tot_cred=floor(1*1e6/1.1e6)= floor(0.9) = 0, tot_deb=11, xr=1.2e6
             //wasted deposit, not enough to convert to an integer amount of credits
-        const new_xr_t0 = await lp.XR(tok0);
+        const new_xr_t0 = await lp.getUpdatedXR(tok0);
 
         expect(new_xr_t0).not.to.equal(old_xr_t0);
     });
