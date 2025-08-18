@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 
 /// @custom:version conformant to specification
 
-contract PaymentSplitter {
+contract PaymentSplitter1 {
 
     uint256 private totalShares;
     uint256 private totalReleased;
@@ -66,10 +66,8 @@ contract PaymentSplitter {
         totalShares = totalShares + shares_;
     }
 
-    // Getters
-
-    function getBalance() public view returns (uint) {
-        return address(this).balance;
+    function balanceOf(address a) public view returns (uint) {
+        return a.balance;
     }
 
     function getTotalReleasable() public view returns (uint) {
@@ -80,36 +78,5 @@ contract PaymentSplitter {
         return _total_releasable;
     }
 
-    function getPayee(uint index) public view returns (address) {
-        require(index < payees.length);
-        return payees[index];
-    }
 
-    function getShares(address addr) public view returns (uint) {
-        return shares[addr];
-    }
-
-    function getReleased(address addr) public view returns (uint) {
-        return released[addr];
-    }
-
-
-    function getSumOfShares() public view returns (uint) {
-        uint sum = 0;
-        for (uint i = 0; i < payees.length; i++) {
-            sum += shares[payees[i]];
-        }
-        return sum;
-    }
-    function getSumOfReleased() public view returns (uint) {
-        uint sum = 0;
-        for (uint i = 0; i < payees.length; i++) {
-            sum += released[payees[i]];
-        }
-        return sum;
-    }
-
-    function getPayeesLength() public view returns (uint) {
-        return payees.length;
-    }
 }
