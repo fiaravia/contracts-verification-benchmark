@@ -70,9 +70,10 @@ def get_contract_name(contract_path):
     matches = re.findall(r'contract\s+([^ ]+)', contract_code)
 
     if matches:
-        # The contract to verify is the last one
-        contract_name = matches[-1]
-        return contract_name
+        for match in matches:
+            if match in contract_path:
+                return match
+        logging.error(f"{contract_path}: Couldn't retrieve contract name.")
     else:
         logging.error(f"{contract_path}: Couldn't retrieve contract name.")
         return
