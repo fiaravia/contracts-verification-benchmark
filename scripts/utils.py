@@ -44,6 +44,11 @@ def remove_comments(file_content):
     file_content = re.sub(r'/\*(.|\n)*?\*/', '', file_content)
     return file_content
 
+def find_custom_run_line(text):
+    lines = text.splitlines()
+    for line in lines:
+        if line.strip().startswith("/// @custom:run"):
+            return line[len("/// @custom:run"):].strip()
 
 def get_contract_name(contract_path):
     """
