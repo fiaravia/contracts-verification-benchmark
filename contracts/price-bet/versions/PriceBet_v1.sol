@@ -1,9 +1,7 @@
-/// @custom:version minimal implementation conforming to specifications
-
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-// import "./Oracle.sol";
+/// @custom:version minimal implementation conforming to specifications
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract

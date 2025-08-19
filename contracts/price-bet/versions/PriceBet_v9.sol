@@ -1,9 +1,5 @@
-/// @custom:version minimal implementation conforming to specifications
-
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
-
-// import "./Oracle.sol";
 
 /// @custom:version `win()` does not check if the oracle exchange rate is greater than the target exchange rate
 
