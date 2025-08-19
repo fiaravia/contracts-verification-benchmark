@@ -53,7 +53,7 @@ def main(args):
         contracts_paths = [c for c in contracts_paths if f"v{args.version}.sol" in c]
 
     if args.property:
-        contracts_paths = [c for c in contracts_paths if args.property in c]
+        contracts_paths = [c for c in contracts_paths if f"{args.property}_v" in c]
 
     timeout = args.timeout if args.timeout else DEFAULT_TIMEOUT
     solver = args.solver if args.solver else DEFAULT_SOLVER
