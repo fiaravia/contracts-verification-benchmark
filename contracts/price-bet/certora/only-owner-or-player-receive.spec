@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-// certoraRun versions/PriceBet_v1.sol:PriceBet --verify PriceBet:certora/only-owner-or-player-receive.spec
+/// @custom:run certoraRun versions/PriceBet_v1.sol:PriceBet --verify PriceBet:certora/only-owner-or-player-receive.spec
 
 // in any state after join(), only the owner or the player can receive ETH from the contract
 

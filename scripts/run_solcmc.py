@@ -54,6 +54,9 @@ def main(args):
 
     if args.property:
         contracts_paths = [c for c in contracts_paths if f"{args.property}_v" in c]
+        
+    # Removes auxiliary contracts (e.g. Oracle.sol in price-bet)
+    contracts_paths = [c for c in contracts_paths if f"_v" in c]
 
     timeout = args.timeout if args.timeout else DEFAULT_TIMEOUT
     solver = args.solver if args.solver else DEFAULT_SOLVER

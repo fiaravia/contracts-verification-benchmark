@@ -97,6 +97,7 @@ def run(contract_path, spec_path):
         has_satisfy = re.search('satisfy', spec_no_comments)
         has_assert = re.search('assert', spec_no_comments)
         has_invariant = re.search('invariant', spec_no_comments)
+        has_custom_run = re.search('/// @custom:run', spec_code)
 
         # Check if there are asserts or satisfy
         if not has_assert and not has_satisfy and not has_invariant:
@@ -142,7 +143,12 @@ def run(contract_path, spec_path):
                 logging.error('Certora is not installed. Use:\npip install certora-cli.')
                 return ERROR, str(e)
     else:
-        command = COMMAND_TEMPLATE.substitute(params)
+        if has_custom_run:
+            command = utils.find_custom_run_line(spec_code)
+            command = command.replace('certoraRun ', 'certoraRun.py ')
+            command = command.replace('_v1.sol', f'_{version_id}.sol')
+        else:
+            command = COMMAND_TEMPLATE.substitute(params)
         # print(command) - substitute with a log that does not go to stdout
         try:
             log = subprocess.run(command.split(), capture_output=True, text=True)
