@@ -139,5 +139,5 @@ rule trace2 {
 
     // B's debit after repay: 28
     assert(reserve_t0_5 == reserve_t0_4 + 5);
-    assert(debit_t0_b_5  == debit_t0_b_5 - 5); 
+    assert(debit_t0_b_5  == debit_t0_b_4 - 5); 
 }
