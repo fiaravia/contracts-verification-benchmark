@@ -50,6 +50,9 @@ def main(args):
 
     if args.version:
         contracts_paths = [c for c in contracts_paths if f"v{args.version}.sol" in c]
+        
+    # Removes auxiliary contracts (e.g. Oracle.sol in price-bet)
+    contracts_paths = [c for c in contracts_paths if f"_v" in c]
 
     # Get specs paths
     specs_paths = (
