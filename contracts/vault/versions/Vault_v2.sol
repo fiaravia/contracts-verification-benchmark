@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-
-/// @custom:version require in `constructor` wrongly uses state variable instead of parameter.
+/// @custom:version the `require` in `constructor` wrongly checks the state variable `recovery` instead of the parameter `recovery_`.
 contract Vault {
     enum States{IDLE, REQ}
 
@@ -15,9 +14,8 @@ contract Vault {
     uint amount;
     States state;
     
-    // v2
     constructor (address payable recovery_, uint wait_time_) payable {
-	    require(msg.sender != recovery); // ERROR: uses state variable instead of parameter
+	    require(msg.sender != recovery);
         require(wait_time_ > 0);
         owner = msg.sender;
         recovery = recovery_;

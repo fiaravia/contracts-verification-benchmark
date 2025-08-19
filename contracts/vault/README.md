@@ -60,14 +60,14 @@ To this purpose, the vault contract implements a state transition system with st
 - **withdraw-withdraw-revert**: a `withdraw()` transaction aborts if performed immediately after another `withdraw()`.
 
 ## Versions
-- **v1**: conforming to specification.
-- **v2**: require in `constructor` wrongly uses state variable instead of parameter.
+- **v1**: minimal implementation conforming to specification.
+- **v2**: the `require` in `constructor` wrongly checks the state variable `recovery` instead of the parameter `recovery_`.
 - **v3**: removed time constraint in `finalize`.
 - **v4**: `finalize` is non-reentrant.
-- **v5**: missing access control in `cancel`. 
-- **v6**: missing balance check in `withdraw`.
+- **v5**: missing access control that `msg.sender == recovery` in `cancel`. 
+- **v6**: missing check `amount_ <= address(this).balance` in `withdraw`.
 - **v7**: wrong time constraint in `finalize`.
-- **v8**: `finalize` uses transfer instead of low-level call.
+- **v8**: `finalize` uses `transfer` instead of low-level call.
 
 ## Verification data
 

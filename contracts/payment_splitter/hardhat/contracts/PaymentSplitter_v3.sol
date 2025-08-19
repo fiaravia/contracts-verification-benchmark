@@ -3,31 +3,55 @@
 
 pragma solidity ^0.8.0;
 
-/// @custom:version conformant to specification
+/// @custom:version this version has a fixed number of payees (3) and does not accept dynamic shares.
 
-contract PaymentSplitter {
+contract PaymentSplitter3 {
 
-    uint256 private totalShares;
-    uint256 private totalReleased;
+    uint256 private constant PAYEES = 3;
+    uint256 private numPayees = 0;
+
+    uint256 private totalShares = 0;
+    uint256 private totalReleased = 0;
 
     mapping(address => uint256) private shares;
     mapping(address => uint256) private released;
-    address[] private payees;
+    address[PAYEES] private payees;
     
-    constructor(address[] memory payees_, uint256[] memory shares_) payable {
-        require(payees_.length == shares_.length, "PaymentSplitter: payees and shares length mismatch");
-        require(payees_.length > 0, "PaymentSplitter: no payees");
 
-        for (uint256 i = 0; i < payees_.length; i++) {
-            addPayee(payees_[i], shares_[i]);
-        }
-    }
+constructor (address payee1, address payee2, address payee3) payable {
+    require(payee1 != address(0), "PaymentSplitter: account is the zero address");
+    require(shares[payee1] == 0, "PaymentSplitter: account already has shares");
+    
+    payees[0] = payee1;
+    shares[payee1] = 1;
+    released[payee1] = 0;
+    totalShares = totalShares + 1;
+    numPayees += 1;
+    
+    require(payee2 != address(0), "PaymentSplitter: account is the zero address");
+    require(shares[payee2] == 0, "PaymentSplitter: account already has shares");
+    
+    payees[1] = payee2;
+    shares[payee2] = 1;
+    released[payee2] = 0;
+    totalShares = totalShares + 1;
+    numPayees += 1;
+    
+    require(payee3 != address(0), "PaymentSplitter: account is the zero address");
+    require(shares[payee3] == 0, "PaymentSplitter: account already has shares");
+    
+    payees[2] = payee3;
+    shares[payee3] = 1;
+    released[payee3] = 0;
+    totalShares = totalShares + 1;
+    numPayees += 1;
+}
 
     receive() external payable virtual { }
 
     function releasable(address account) public view returns (uint256) {
         uint256 totalReceived = address(this).balance + totalReleased;
-        return pendingPayment(account, totalReceived, released[account]);
+        return pendingPayment(totalReceived, released[account]);
     }
 
     function release(address payable account) public virtual {
@@ -49,21 +73,10 @@ contract PaymentSplitter {
     }
 
     function pendingPayment(
-        address account,
         uint256 totalReceived,
         uint256 alreadyReleased
-    ) private view returns (uint256) {
-        return (totalReceived * shares[account]) / totalShares - alreadyReleased;
-    }
-
-    function addPayee(address account, uint256 shares_) private {
-        require(account != address(0), "PaymentSplitter: account is the zero address");
-        require(shares_ > 0, "PaymentSplitter: shares are 0");
-        require(shares[account] == 0, "PaymentSplitter: account already has shares");
-
-        payees.push(account);
-        shares[account] = shares_;
-        totalShares = totalShares + shares_;
+    ) private pure returns (uint256) {
+        return (totalReceived / PAYEES) - alreadyReleased;
     }
 
     // Getters
@@ -74,14 +87,16 @@ contract PaymentSplitter {
 
     function getTotalReleasable() public view returns (uint) {
         uint _total_releasable = 0;
-        for (uint i = 0; i < payees.length; i++) {
-            _total_releasable += releasable(payees[i]);
-        }
+
+        _total_releasable += releasable(payees[0]);
+        _total_releasable += releasable(payees[1]);
+        _total_releasable += releasable(payees[2]);
+
         return _total_releasable;
     }
 
     function getPayee(uint index) public view returns (address) {
-        require(index < payees.length);
+        require(index < 3);
         return payees[index];
     }
 
@@ -93,23 +108,26 @@ contract PaymentSplitter {
         return released[addr];
     }
 
-
     function getSumOfShares() public view returns (uint) {
         uint sum = 0;
-        for (uint i = 0; i < payees.length; i++) {
-            sum += shares[payees[i]];
-        }
+
+        sum += shares[payees[0]];
+        sum += shares[payees[1]];
+        sum += shares[payees[2]];
+
         return sum;
     }
     function getSumOfReleased() public view returns (uint) {
         uint sum = 0;
-        for (uint i = 0; i < payees.length; i++) {
-            sum += released[payees[i]];
-        }
+
+        sum += released[payees[0]];
+        sum += released[payees[1]];
+        sum += released[payees[2]];
+        
         return sum;
     }
 
-    function getPayeesLength() public view returns (uint) {
-        return payees.length;
+    function getPayeesLength() public pure returns (uint) {
+        return 3;
     }
 }
