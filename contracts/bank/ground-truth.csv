@@ -33,7 +33,7 @@ assets-inc-onlyif-withdraw,v6,0,
 assets-inc-onlyif-withdraw,v7,0,
 assets-inc-onlyif-withdraw,v8,0,
 assets-inc-onlyif-withdraw,v9,0,
-credit-dec-onlyif-withdraw,v1,0,"A call to `withdraw` by a user b may lead to a reentrant call to deposit by a user a." 
+credit-dec-onlyif-withdraw,v1,0,"A call to `withdraw` by a user B may lead to a reentrant call to `deposit` by another user A." 
 credit-dec-onlyif-withdraw,v10,0,
 credit-dec-onlyif-withdraw,v11,0,
 credit-dec-onlyif-withdraw,v12,0,
@@ -43,7 +43,7 @@ credit-dec-onlyif-withdraw,v15,1,
 credit-dec-onlyif-withdraw,v16,0,
 credit-dec-onlyif-withdraw,v17,0,"A call to `withdraw` subtracts credits from the transaction originator, which might differ from the sender."
 credit-dec-onlyif-withdraw,v2,0,
-credit-dec-onlyif-withdraw,v3,1,"Withdraw uses transfer, which prevents further calls."
+credit-dec-onlyif-withdraw,v3,1,"Withdraw uses `transfer`, which prevents further calls."
 credit-dec-onlyif-withdraw,v4,0,
 credit-dec-onlyif-withdraw,v5,0,
 credit-dec-onlyif-withdraw,v6,0,

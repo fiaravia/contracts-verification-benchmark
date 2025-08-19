@@ -27,7 +27,7 @@ The benchmark currently comprises several versions (correct or bugged) of the fo
 - [Lottery](contracts/lottery/)
 - [Constant-product AMM](contracts/tinyamm/)
 - [Lending Protocol](contracts/lending-protocol) :white_check_mark:
-- [Payment Splitter](contracts/payment_splitter/)
+- [Payment Splitter](contracts/payment_splitter/) :white_check_mark:
 - [Social Recovery Wallet](contracts/social_recovery_wallet/)
 
 
