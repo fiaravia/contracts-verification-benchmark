@@ -1,4 +1,4 @@
- function getBalance() public view returns (uint) {
+function getBalance() public view returns (uint) {
         return address(this).balance;
 }
 
@@ -18,4 +18,6 @@ function getPayee(uint index) public view returns (address) {
 function getShares(address addr) public view returns (uint) {
         return shares[addr];
 }
+
+
 
