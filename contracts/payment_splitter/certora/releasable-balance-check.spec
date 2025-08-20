@@ -11,7 +11,7 @@ rule releasable_balance_check {
 
     requireInvariant out_of_bounds_payee();
 
-    require currentContract.payees.length == 3;
+    require currentContract.getPayeesLength() == 3;
 
     uint index;
 

@@ -15,7 +15,7 @@ contract PaymentSplitter {
 
     mapping(address => uint256) private shares;
     mapping(address => uint256) private released;
-    address[PAYEES] private payees;
+    address[] private payees;
     
 
 constructor (address payee1, address payee2, address payee3) payable {
