@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version minimal implementation conforming to specifications
+/// @custom:version `join()` does not require the player to deposit an amount corresponding to the initial pot
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
@@ -23,14 +23,13 @@ contract PriceBet {
         exchange_rate = _exchange_rate;
     }
 
-    // join allows a player to join the bet. This requires the player to deposit an amount of ETH equal to the initial pot.
+    // join allows a player to join the bet
     function join() public payable {
-        require(msg.value == initial_pot, "Player must cover the pot to join");
         require(player == ZERO_ADDRESS, "Player already joined");
 
         // we require that join can only be performed before the deadline
         require(block.number < deadline, "Bet has timed out");
-
+        
         player = payable(msg.sender);
     }
 

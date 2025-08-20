@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-/// @custom:version this version has a fixed number of payees (3) and does not accept dynamic shares.
+/// @custom:version loop-free version with a fixed number of payees (set to 3) and equal shares
 
 contract PaymentSplitter {
 

@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-/// @custom:version conformant to specification
+/// @custom:version minimal implementation conformant to specification
 
 contract PaymentSplitter {
 
@@ -92,7 +92,6 @@ contract PaymentSplitter {
     function getReleased(address addr) public view returns (uint) {
         return released[addr];
     }
-
 
     function getSumOfShares() public view returns (uint) {
         uint sum = 0;

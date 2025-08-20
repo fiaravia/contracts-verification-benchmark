@@ -2,15 +2,15 @@
     "name": "Payment Splitter",
     "specification": "file:spec.md" ,
     "properties": {
-        "fair-split": " for every account `a` in `payees`, `released[a] + releasable(a) == (totalReceived * shares[a]) / totalShares`.",
-        "fair-split-for-v3": " for every account `a` in `payees`, `released[a] <= (totalReceived + totalReleased) / 3`.",
-        "funds-get-transferred": " for all accounts `a` in `payees`, if `releasable(a) > 0`, then `release(a)` does not revert.",
-        "non-zero-payees": " for all accounts `a` in `payees`, `a != address(0)`.",
-        "positive-shares": " for all addresses `addr` in `payees`, `shares[addr] > 0`.",
-        "releasable-balance-check": " for all addresses `addr` in `payees`, `releasable(addr)` is less than or equal to the balance of the contract.",
-        "releasable-sum-balance": " the sum of the releasable funds for every accounts is equal to the balance of the contract.",
-        "release-release-revert": " two consecutive calls to `release` for the same account `a`, without there being any transfer to the contract in between calls, should revert on the second call.", 
-        "swappable-call-order": " making two different calls in any order to 'release' should yield the same state as a result.", 
-        "zero-dust": " the contract should always be able to release all funds with no leftovers."
+        "fair-split-eq": "for every address `a` in `payees`, `released[a] + releasable(a) == (totalReceived * shares[a]) / totalShares`.",
+        "fair-split-geq": "for every address `a` in `payees`, `released[a] <= (totalReceived + totalReleased) / totalShares`.",
+        "release-not-revert": "for all addresses `a` in `payees`, if `releasable(a) > 0`, then `release(a)` does not revert.",
+        "non-zero-payees": "for all addresses `a` in `payees`, `a != address(0)`.",
+        "positive-shares": "for all addresses `addr` in `payees`, `shares[addr] > 0`.",
+        "releasable-balance-check": "for all addresses `addr` in `payees`, `releasable(addr)` is less than or equal to the balance of the contract.",
+        "releasable-sum-balance": "the sum of the releasable funds for every addresses is equal to the balance of the contract.",
+        "release-release-revert": "two consecutive calls to `release` for the same address `a`, without there being any transfer to the contract in between calls, revert on the second call.", 
+        "swappable-call-order": "two different calls in any order to `release` yield the same contract state.", 
+        "zero-dust": "?? the contract should always be able to release all funds with no leftovers."
     }
 }

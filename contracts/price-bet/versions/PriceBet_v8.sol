@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version minimal implementation conforming to specifications
+/// @custom:version `win()` only transfers 1 instead of the contract balance  
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
@@ -30,7 +30,7 @@ contract PriceBet {
 
         // we require that join can only be performed before the deadline
         require(block.number < deadline, "Bet has timed out");
-
+        
         player = payable(msg.sender);
     }
 
@@ -44,7 +44,7 @@ contract PriceBet {
         Oracle oracle_instance = Oracle(oracle);
         require(oracle_instance.get_exchange_rate() >= exchange_rate);
 
-        (bool success, ) = player.call{value: address(this).balance}("");
+        (bool success, ) = player.call{value: 1}("");
         require(success);
     }
 

@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version minimal implementation conforming to specifications
+/// @custom:version `win()` can be called also after the deadline  
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
@@ -30,14 +30,13 @@ contract PriceBet {
 
         // we require that join can only be performed before the deadline
         require(block.number < deadline, "Bet has timed out");
-
+        
         player = payable(msg.sender);
     }
 
     // win allows the joined player to withdraw the whole contract balance if the oracle exchange rate is greater than the bet rate. 
     // win can be called multiple times before the deadline. This action is disabled after the deadline
     function win() public {
-        require(block.number < deadline, "Bet has timed out");
         require(msg.sender == player, "Only the player can win");
 
         // Warning: at deployment time, we cannot know for sure that address oracle actually contains a deployment of contract Oracle

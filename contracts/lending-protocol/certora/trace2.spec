@@ -2,7 +2,7 @@
 
 // import "erc20.spec";
 
-rule trace1 {
+rule trace2 {
     env e1;
     address t0;
     address t1;

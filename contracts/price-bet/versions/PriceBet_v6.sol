@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version minimal implementation conforming to specifications
+/// @custom:version `join()` forgets to update the `player` field  
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
@@ -30,8 +30,6 @@ contract PriceBet {
 
         // we require that join can only be performed before the deadline
         require(block.number < deadline, "Bet has timed out");
-
-        player = payable(msg.sender);
     }
 
     // win allows the joined player to withdraw the whole contract balance if the oracle exchange rate is greater than the bet rate. 

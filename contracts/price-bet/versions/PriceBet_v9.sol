@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version minimal implementation conforming to specifications
+/// @custom:version `win()` does not check if the oracle exchange rate is greater than the target exchange rate
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
@@ -30,7 +30,7 @@ contract PriceBet {
 
         // we require that join can only be performed before the deadline
         require(block.number < deadline, "Bet has timed out");
-
+        
         player = payable(msg.sender);
     }
 
@@ -39,10 +39,6 @@ contract PriceBet {
     function win() public {
         require(block.number < deadline, "Bet has timed out");
         require(msg.sender == player, "Only the player can win");
-
-        // Warning: at deployment time, we cannot know for sure that address oracle actually contains a deployment of contract Oracle
-        Oracle oracle_instance = Oracle(oracle);
-        require(oracle_instance.get_exchange_rate() >= exchange_rate);
 
         (bool success, ) = player.call{value: address(this).balance}("");
         require(success);

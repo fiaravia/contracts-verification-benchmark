@@ -1,7 +1,6 @@
 import "helper/methods.spec";
 import "helper/invariants.spec";
 
-
 rule zero_dust {
 
     requireInvariant shares_sum_eq_totalShares();
