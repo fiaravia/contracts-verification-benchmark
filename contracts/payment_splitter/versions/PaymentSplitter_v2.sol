@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-/// @custom:modified version with removal of loops, the number of payees is fixed
+/// @custom:modified loop-free version with a fixed number of payees (set to 3)
 
 contract PaymentSplitter {
 
@@ -55,7 +55,6 @@ contract PaymentSplitter {
     ) private view returns (uint256) {
         return (totalReceived * shares[account]) / totalShares - alreadyReleased;
     }
-
 
     function addPayee(address account, uint256 shares_) private {
 
