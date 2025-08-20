@@ -17,6 +17,7 @@ join-balance-geq,v4,0,
 join-balance-geq,v5,1,
 join-not-revert,v1,1,
 join-not-revert,v5,0,
+join-not-revert,v10,0,"Missing require in `join`"
 join-only-once,v1,1,
 join-only-once,v2,0,
 join-player,v1,1,

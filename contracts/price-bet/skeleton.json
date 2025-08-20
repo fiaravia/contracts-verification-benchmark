@@ -9,7 +9,7 @@
         "eventually-win-receive-player": "if the `receive` method of `player` just accepts all ETH, eventually someone can withdraw the whole pot.",
         "join-balance-eq": "after a successful `join()`, the contract balance is equal to two times the `initial_pot`.",
         "join-balance-geq": "after a successful `join()`, the contract balance is greater than or equal to two times the `initial_pot`.",
-        "join-not-revert": "a transaction `join()` does not revert if the ETH amount sent along with the transaction is equal to `initial_pot` and no player has joined yet",
+        "join-not-revert": "a transaction `join()` does not revert if the ETH amount sent along with the transaction is equal to `initial_pot`, no player has joined yet, and the deadline has not passed yet.",
         "join-only-once": "a `join()` transaction can only be called successfully once.",
         "join-player": "after a successful `join()`, `player` is not the zero address",
         "join-revert": "a transaction `join()` reverts if the amount of ETH sent along with the transaction is different from `initial_pot` or another player has already joined.",

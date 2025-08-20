@@ -27,6 +27,10 @@ contract PriceBet {
     function join() public payable {
         require(msg.value > initial_pot, "Player must deposit an amount greater than the initial pot to join");
         require(player == ZERO_ADDRESS, "Player already joined");
+
+        // we require that join can only be performed before the deadline
+        require(block.number < deadline, "Bet has timed out");
+        
         player = payable(msg.sender);
     }
 

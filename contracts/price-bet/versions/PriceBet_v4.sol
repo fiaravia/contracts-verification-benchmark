@@ -26,6 +26,10 @@ contract PriceBet {
     // join allows a player to join the bet
     function join() public payable {
         require(player == ZERO_ADDRESS, "Player already joined");
+
+        // we require that join can only be performed before the deadline
+        require(block.number < deadline, "Bet has timed out");
+        
         player = payable(msg.sender);
     }
 

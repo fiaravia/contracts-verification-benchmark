@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version no check if player has already joined 
+/// @custom:version `join` can be called after `timeout`
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
@@ -26,10 +26,8 @@ contract PriceBet {
     // join allows a player to join the bet. This requires the player to deposit an amount of ETH equal to the initial pot.
     function join() public payable {
         require(msg.value == initial_pot, "Player must cover the pot to join");
+        require(player == ZERO_ADDRESS, "Player already joined");
 
-        // we require that join can only be performed before the deadline
-        require(block.number < deadline, "Bet has timed out");
-        
         player = payable(msg.sender);
     }
 
