@@ -65,6 +65,7 @@ The contract has the following entry points:
 - **v7**: it is possible to call `win()` also after the deadline  
 - **v8**: `win()` only transfers 1 instead of the contract balance  
 - **v9**: `win()` does not check if the oracle exchange rate is greater than the target exchange rate
+- **v10**: `join` can be called after the deadline
 
 ## Verification data
 
