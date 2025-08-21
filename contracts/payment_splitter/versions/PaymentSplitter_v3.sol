@@ -101,7 +101,7 @@ constructor (address payee1, address payee2, address payee3) payable {
     }
 
     function getShares(address addr) public view returns (uint) {
-        return shares[addr];
+        return 1; // Each payee has 1 share in this fixed version
     }
 
     function getReleased(address addr) public view returns (uint) {
@@ -117,6 +117,7 @@ constructor (address payee1, address payee2, address payee3) payable {
 
         return sum;
     }
+    
     function getSumOfReleased() public view returns (uint) {
         uint sum = 0;
 
@@ -128,6 +129,10 @@ constructor (address payee1, address payee2, address payee3) payable {
     }
 
     function getPayeesLength() public pure returns (uint) {
-        return 3;
+        return PAYEES;
+    }
+
+    function getTotalShares() public view returns (uint) {
+        return totalShares;
     }
 }

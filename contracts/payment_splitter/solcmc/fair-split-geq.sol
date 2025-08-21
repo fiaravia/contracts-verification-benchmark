@@ -3,6 +3,8 @@ function invariant(uint256 index) public view {
 
     address account = payees[index];
     uint256 totalReceived = address(this).balance + totalReleased;
-    assert(getReleased(account) <= 
-        ((getBalance() + totalReleased) / getPayeesLength()));
+    assert (
+        (getBalance() + totalReleased) * getShares(account) /
+        totalShares >= getReleased(account)
+    );
 }

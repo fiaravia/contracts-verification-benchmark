@@ -123,4 +123,8 @@ contract PaymentSplitter {
     function getPayeesLength() public view returns (uint) {
         return payees.length;
     }
+
+    function getTotalShares() public view returns (uint) {
+        return totalShares;
+    }
 }

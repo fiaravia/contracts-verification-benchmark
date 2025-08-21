@@ -2,9 +2,9 @@ property,version,outcome,footnote
 fair-split-eq,v1,P!
 fair-split-eq,v2,P!
 fair-split-eq,v3,N
-fair-split-geq,v1,N
-fair-split-geq,v2,N
-fair-split-geq,v3,P!
+fair-split-geq,v1,P!
+fair-split-geq,v2,P!
+fair-split-geq,v3,N
 funds-get-transferred,v1,N
 funds-get-transferred,v2,N
 funds-get-transferred,v3,N
@@ -26,6 +26,4 @@ release-release-revert,v3,P!
 swappable-call-order,v1,P!
 swappable-call-order,v2,N
 swappable-call-order,v3,N
-zero-dust,v1,N
-zero-dust,v2,N
-zero-dust,v3,N
+

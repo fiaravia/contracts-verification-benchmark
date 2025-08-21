@@ -1,14 +1,15 @@
 import "helper/methods.spec";
 import "helper/invariants.spec";
 
-invariant fair_split (uint index)
+invariant fair_split_eq (env e, uint index)
     
     index < currentContract.getPayeesLength() => 
     
-    getReleased(currentContract.payees[index]) <= (
-        (getBalance() + currentContract.totalReleased) * 
-        currentContract.shares[currentContract.payees[index]] /
-        currentContract.totalShares
+    getReleased(currentContract.payees[index]) + 
+    currentContract.releasable(currentContract.payees[index]) == (
+        ((getBalance() + currentContract.totalReleased) * 
+        currentContract.getShares(currentContract.payees[index])) /
+        currentContract.getTotalShares(e)
     ) 
     {
         preserved {
