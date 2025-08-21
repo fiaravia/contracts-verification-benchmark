@@ -39,6 +39,8 @@ def gen(ground_truth_csv: str, out_csv: str, properties_dir: str) -> list[str]:
         next(out_reader)    # skip header
 
         for row in out_reader:
+            if not row:
+                continue
             p, v, out = row[0], row[1], row[2]
             outputs.update({(p,v): out})
     
