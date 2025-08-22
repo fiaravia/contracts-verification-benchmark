@@ -27,6 +27,7 @@ contract PriceBet {
     function join() public payable {
         require(msg.value == initial_pot, "Player must cover the pot to join");
         require(player == ZERO_ADDRESS, "Player already joined");
+        require(msg.sender != ZERO_ADDRESS, "Sender cannot be the zero address");
 
         // we require that join can only be performed before the deadline
         require(block.number < deadline, "Bet has timed out");
