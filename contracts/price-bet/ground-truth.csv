@@ -104,7 +104,7 @@ join-revert,v2,0,
 join-revert,v3,1,
 join-revert,v4,0,
 join-revert,v5,0,
-join-revert,v6,0,"the `player` field does not get updated (TODO)"
+join-revert,v6,1,"the `player` field can never be set"
 join-revert,v7,1,
 join-revert,v8,1,
 join-revert,v9,1,
@@ -118,7 +118,7 @@ no-frozen-funds,v7,0,
 no-frozen-funds,v8,0,
 no-frozen-funds,v9,0,
 no-frozen-funds,v10,0,
-only-owner-or-player-receive,v1,0,"perché? TODO"
+only-owner-or-player-receive,v1,0,"Low level call can send ETH to any address"
 owner-cannot-withdraw-before-deadline-not-player,v1,1,
 owner-cannot-withdraw-before-deadline-not-player,v3,0,
 owner-cannot-withdraw-before-deadline,v1,0,"The owner coincides with the player"
