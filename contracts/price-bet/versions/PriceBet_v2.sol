@@ -26,6 +26,7 @@ contract PriceBet {
     // join allows a player to join the bet. This requires the player to deposit an amount of ETH equal to the initial pot.
     function join() public payable {
         require(msg.value == initial_pot, "Player must cover the pot to join");
+        require(msg.sender != ZERO_ADDRESS, "Sender cannot be the zero address");
 
         // we require that join can only be performed before the deadline
         require(block.number < deadline, "Bet has timed out");

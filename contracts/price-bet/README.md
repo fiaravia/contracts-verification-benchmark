@@ -19,9 +19,9 @@ The contract has the following entry points:
 ## Properties
 - **eventually-balance-zero**: eventually the contract balance goes to zero (assuming the fairness condition that timeout() is called at least once after the deadline).
 - **eventually-balance-zero-receive**: if the receive method of `owner` just accepts all ETH, eventually the contract balance goes to zero (assuming the fairness condition that `timeout()` is called at least once after the deadline).
-- **eventually-win**: eventually a user can withdraw the whole pot.
-- **eventually-win-receive-owner**: if the receive method of `owner` just accepts all ETH, eventually someone can withdraw the whole pot.
-- **eventually-win-receive-player**: if the receive method of `player` just accepts all ETH, eventually someone can withdraw the whole pot.
+- **eventually-withdraw**: if the player has joined, eventually a user can withdraw at least twice the initial pot.
+- **eventually-withdraw-receive-owner**: if the receive method of `owner` just accepts all ETH, if the player has joined, eventually a user can withdraw at least twice the initial pot.
+- **eventually-withdraw-receive-player**: if the receive method of `player` just accepts all ETH, if the player has joined, eventually a user can withdraw at least twice the initial pot.
 - **join-balance-eq**: after a successful `join()`, the contract balance is equal to two times the `initial_pot`.
 - **join-balance-geq**: after a successful `join()`, the contract balance is greater than or equal to two times the `initial_pot`.
 - **join-not-revert**: a transaction `join()` does not revert if the ETH amount sent along with the transaction is equal to `initial_pot` and no player has joined yet
