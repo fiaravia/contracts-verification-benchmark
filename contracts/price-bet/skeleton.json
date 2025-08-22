@@ -2,7 +2,7 @@
     "name": "PriceBet",
     "specification": "file:spec.md",
     "properties": {
-        "eventually-balance-zero": "eventually the contract balance goes to zero (assuming the fairness condition that timeout() is called at least once after the deadline).",
+        "eventually-balance-zero": "eventually the contract balance goes to zero (assuming the fairness condition that `timeout()` is called at least once after the deadline).",
         "eventually-balance-zero-receive": "if the receive method of `owner` just accepts all ETH, eventually the contract balance goes to zero (assuming the fairness condition that `timeout()` is called at least once after the deadline).",
         "eventually-win": "eventually a user can withdraw the whole pot.",
         "eventually-win-receive-owner": "if the `receive` method of `owner` just accepts all ETH, eventually someone can withdraw the whole pot.",
