@@ -32,13 +32,15 @@ describe("LP_v2", function () {
         await tok0.transfer(actor_a, 50);
         await tok1.transfer(actor_b, 50);
 
+        await tok1.transfer(actor_a, 5);
+
         return { lp, tok0, tok1, actor_a , actor_b , owner};
     }
 
     it("trace1", async function () {
         const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
 
-        /* deployment checks */
+        // deployment checks 
 
         const tok0_addr = await tok0.getAddress();
         const tok1_addr = await tok1.getAddress();
@@ -57,7 +59,7 @@ describe("LP_v2", function () {
         expect(await lp.sum_debits(tok1_addr)).to.equal(0);
 
 
-        /* step 1; A:deposit(50:T0) */
+        // step 1; A:deposit(50:T0) 
         
         
         const amountDeposit = BigInt(50);
@@ -79,7 +81,7 @@ describe("LP_v2", function () {
         expect(reserve_t1_1).to.equal(reserve_t1_0);
         expect(credit_t0_a_1).to.equal(credit_t0_a_0 + amountDeposit);
         
-        /* step 2; B:deposit(50:T1) */
+        // step 2; B:deposit(50:T1) 
  
         await tok1.connect(actor_b).approve(await lp.getAddress(), amountDeposit);
         await lp.connect(actor_b).deposit(amountDeposit, tok1_addr);
@@ -92,7 +94,7 @@ describe("LP_v2", function () {
         expect(reserve_t1_2).to.equal(reserve_t1_1 + amountDeposit);
         expect(credit_t1_b_2).to.equal(credit_t1_b_1 + amountDeposit);
         
-        /* step 3; B:borrow(30:T0) */
+        // step 3; B:borrow(30:T0) 
         
         const amountBorrow = BigInt(30);
         
@@ -108,7 +110,7 @@ describe("LP_v2", function () {
     it("trace2", async function () {
       const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
     
-      /* deployment checks / initial state */
+      // deployment checks / initial state 
       const tok0_addr = await tok0.getAddress();
       const tok1_addr = await tok1.getAddress();
     
@@ -125,7 +127,7 @@ describe("LP_v2", function () {
       expect(await lp.sum_debits(tok1_addr)).to.equal(0);
     
     
-      /* step 1; A:deposit(50:T0) */
+      // step 1; A:deposit(50:T0) 
       const amountDeposit = BigInt(50);
     
       const reserve_t0_0 = await lp.reserves(tok0_addr);
@@ -145,7 +147,7 @@ describe("LP_v2", function () {
       expect(reserve_t1_1).to.equal(reserve_t1_0);
       expect(credit_t0_a_1).to.equal(credit_t0_a_0 + amountDeposit);
     
-      /* step 2; B:deposit(50:T1) */
+      // step 2; B:deposit(50:T1) 
       await tok1.connect(actor_b).approve(await lp.getAddress(), amountDeposit);
       await lp.connect(actor_b).deposit(amountDeposit, tok1_addr);
     
@@ -159,7 +161,7 @@ describe("LP_v2", function () {
       expect(reserve_t1_2).to.equal(reserve_t1_1 + amountDeposit);
       expect(credit_t1_b_2).to.equal(credit_t1_b_1 + amountDeposit);
     
-      /* step 3; B:borrow(30:T0) */
+      // step 3; B:borrow(30:T0) 
       const amountBorrow = BigInt(30);
     
       await lp.connect(actor_b).borrow(amountBorrow, tok0_addr);
@@ -177,7 +179,7 @@ describe("LP_v2", function () {
       expect(credit_t1_b_3).to.equal(credit_t1_b_2);
       expect(debit_t0_b_3).to.equal(debit_t0_b_2 + amountBorrow);
     
-      /* step 4; accrueInt() */
+      // step 4; accrueInt() 
       // snapshot pre-accrual to compare
       const reserve_t0_preAccrue = reserve_t0_3;
       const reserve_t1_preAccrue = reserve_t1_3;
@@ -204,7 +206,7 @@ describe("LP_v2", function () {
       expect(debit_t1_b_4).to.equal(debit_t1_b_3);
       expect(debit_t0_b_4).to.equal(debit_t0_b_3 + BigInt(3));
     
-      /* step 5; B:repay(5:T0) */
+      // step 5; B:repay(5:T0) 
       const repayAmt = BigInt(5);
       await tok0.connect(actor_b).approve(await lp.getAddress(), repayAmt);
       await lp.connect(actor_b).repay(repayAmt, tok0_addr);
@@ -216,7 +218,8 @@ describe("LP_v2", function () {
       expect(reserve_t0_5).to.equal(reserve_t0_4 + BigInt(5));
       expect(debit_t0_b_5).to.equal(debit_t0_b_4 - BigInt(5));
     });
-
+    
+    
 
     it("dep-xr-eq", async function() {
 
@@ -242,6 +245,37 @@ describe("LP_v2", function () {
 
         expect(new_xr_t0).not.to.equal(old_xr_t0);
     });
+    
 
+
+    it("test-repay-state", async function() {
+        const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
+
+        await tok0.connect(actor_a).approve(await lp.getAddress(), 10);
+        await tok1.connect(actor_b).approve(await lp.getAddress(), 10);
+
+        const actor_a_conn = lp.connect(actor_a);
+        const actor_b_conn = lp.connect(actor_b);
+
+        await actor_a_conn.deposit(10, tok0);
+        await actor_b_conn.deposit(10, tok1);
+
+        await actor_a_conn.borrow(1, tok1);
+
+        const debit_before_mine = await lp.getAccruedDebt(tok1, actor_a);
+
+        await mine(20* 1_000_000);
+
+        const debit_after_mine = await lp.getAccruedDebt(tok1, actor_a);
+
+        expect(debit_after_mine).not.to.equal(debit_before_mine);
+
+        await tok1.connect(actor_a).approve(await lp.getAddress(), 3);
+        await actor_a_conn.repay(2, tok1);
+        
+        const debit_after_repay = await lp.getAccruedDebt(tok1, actor_a);
+        
+        expect(debit_after_mine - BigInt(2)).to.equal(debit_after_repay);
+    });
 });
 

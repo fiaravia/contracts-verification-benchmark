@@ -3,7 +3,7 @@ pragma solidity >= 0.8.2;
 
 /// @custom:version compound interests inspired by Aave v1 
 
-import "./lib/IERC20.sol"; 
+import "./lib/IERC20.sol";
 
 contract LP_v2 {
     // workaround for bug in solc v0.8.30
@@ -130,8 +130,6 @@ contract LP_v2 {
 
     function _calculate_linear_interest() internal view returns (uint) {
         uint elapsed = block.number - last_global_update;
-        // uint elapsed_ratio = (elapsed * 1e6) / blockPeriod;
-        //uint multiplier = 1 + ratePerPeriod * elapsed_ratio;
         uint multiplier = 1e6 + (ratePerPeriod * elapsed) / blockPeriod;
         return multiplier;
     }
@@ -158,7 +156,7 @@ contract LP_v2 {
         if (current_debt == 0) {
             return 0; // No debt, so no accrued debt
         }
-        uint accrued_debt = (current_debt * global_borrow_index) / borrow_index[token][borrower]; //division by zero
+        uint accrued_debt = (current_debt * global_borrow_index) / borrow_index[token][borrower];
         return accrued_debt;
     }
 
@@ -219,8 +217,10 @@ contract LP_v2 {
             "Repay: invalid token"
         );
 
+        uint debt = _get_accrued_debt(token_addr, msg.sender);
+
         require(
-            debit[token_addr][msg.sender] >= amount,
+            debt >= amount,
             "Repay: insufficient debts"
         );
 
@@ -230,7 +230,6 @@ contract LP_v2 {
         reserves[token_addr] += amount;
 
         // Update user's debt and index
-        uint debt = _get_accrued_debt(token_addr, msg.sender);
         debit[token_addr][msg.sender] = debt - amount;
         borrow_index[token_addr][msg.sender] = global_borrow_index;    
 
@@ -290,18 +289,21 @@ contract LP_v2 {
             "GetAccruedDebt: invalid token"
         );
 
-        if (last_global_update == 0 || block.number <= last_global_update) {
+        if (borrow_index[token_addr][borrower] == 0) return 0;
+
+        // Update globalBorrowIndex
+        if (last_global_update == 0) {
             return debit[token_addr][borrower]; // No interest accrued yet
         }
 
         uint multiplier = _calculate_linear_interest();
         uint _global_borrow_index = (global_borrow_index * multiplier) / 1e6;
-
+        // _get_accrued_debt
         uint current_debt = debit[token_addr][borrower];
         if (current_debt == 0) {
             return 0; // No debt, so no accrued debt
         }
-        uint accrued_debt = (current_debt * _global_borrow_index) / borrow_index[token_addr][borrower]; //division by zero
+        uint accrued_debt = (current_debt * _global_borrow_index) / borrow_index[token_addr][borrower]; 
         return accrued_debt;
     }
 

@@ -217,8 +217,10 @@ contract LP {
             "Repay: invalid token"
         );
 
+        uint debt = _get_accrued_debt(token_addr, msg.sender);
+
         require(
-            debit[token_addr][msg.sender] >= amount,
+            debt >= amount,
             "Repay: insufficient debts"
         );
 
@@ -228,7 +230,6 @@ contract LP {
         reserves[token_addr] += amount;
 
         // Update user's debt and index
-        uint debt = _get_accrued_debt(token_addr, msg.sender);
         debit[token_addr][msg.sender] = debt - amount;
         borrow_index[token_addr][msg.sender] = global_borrow_index;    
 
@@ -288,18 +289,27 @@ contract LP {
             "GetAccruedDebt: invalid token"
         );
 
-        if (last_global_update == 0 || block.number <= last_global_update) {
-            return debit[token_addr][borrower]; // No interest accrued yet
+        if (borrow_index[token_addr][borrower] == 0) return 0;
+
+        // Update globalBorrowIndex
+        uint _global_borrow_index = 0;
+        if (last_global_update == 0) {
+           _global_borrow_index = 1e6; 
+        }
+        else if (block.number > last_global_update) {
+            uint multiplier = _calculate_linear_interest();
+            _global_borrow_index = (global_borrow_index * multiplier) / 1e6;
+        }
+        else {
+            _global_borrow_index = global_borrow_index;
         }
 
-        uint multiplier = _calculate_linear_interest();
-        uint _global_borrow_index = (global_borrow_index * multiplier) / 1e6;
-
+        // _get_accrued_debt
         uint current_debt = debit[token_addr][borrower];
         if (current_debt == 0) {
             return 0; // No debt, so no accrued debt
         }
-        uint accrued_debt = (current_debt * _global_borrow_index) / borrow_index[token_addr][borrower]; //division by zero
+        uint accrued_debt = (current_debt * _global_borrow_index) / borrow_index[token_addr][borrower]; 
         return accrued_debt;
     }
 
