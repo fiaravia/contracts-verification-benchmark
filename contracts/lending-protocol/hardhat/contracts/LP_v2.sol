@@ -313,6 +313,29 @@ contract LP_v2 {
         return accrued_debt;
     }
 
+    function getUpdatedSumDebits(address token_addr) public view returns (uint) {
+        require(
+            _isValidToken(token_addr),
+            "GetAccruedDebt: invalid token"
+        );
+        // Update globalBorrowIndex
+        uint _global_borrow_index = 0;
+        if (last_global_update == 0) {
+           _global_borrow_index = 1e6; 
+        }
+        else if (block.number > last_global_update) {
+            uint multiplier = _calculate_linear_interest();
+            _global_borrow_index = (global_borrow_index * multiplier) / 1e6;
+        }
+        else {
+            _global_borrow_index = global_borrow_index;
+        }
+
+        uint tot_debt = (sum_debits[token_addr] * _global_borrow_index) / sum_debits_index[token_addr];
+
+        return tot_debt;
+    }
+
     function getUpdatedXR(address token_addr) public view returns (uint) {
         require(
             _isValidToken(token_addr),

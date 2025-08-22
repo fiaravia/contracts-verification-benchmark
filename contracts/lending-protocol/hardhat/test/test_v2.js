@@ -264,18 +264,25 @@ describe("LP_v2", function () {
 
         const debit_before_mine = await lp.getAccruedDebt(tok1, actor_a);
 
+        const sum_debit_before_mine = await lp.getUpdatedSumDebits(tok1);
+
         await mine(20* 1_000_000);
+
+        const sum_debit_after_mine = await lp.getUpdatedSumDebits(tok1);
 
         const debit_after_mine = await lp.getAccruedDebt(tok1, actor_a);
 
-        expect(debit_after_mine).not.to.equal(debit_before_mine);
+        expect(debit_after_mine).to.equal(debit_before_mine + BigInt(2));
+        expect(sum_debit_after_mine).to.equal(sum_debit_before_mine + BigInt(2));
 
         await tok1.connect(actor_a).approve(await lp.getAddress(), 3);
         await actor_a_conn.repay(2, tok1);
         
         const debit_after_repay = await lp.getAccruedDebt(tok1, actor_a);
-        
+        const sum_debit_after_repay = await lp.getUpdatedSumDebits(tok1);
+
         expect(debit_after_mine - BigInt(2)).to.equal(debit_after_repay);
+        expect(sum_debit_after_mine - BigInt(2)).to.equal(sum_debit_after_repay);
     });
 });
 

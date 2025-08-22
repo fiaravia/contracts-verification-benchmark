@@ -245,6 +245,10 @@ contract LP {
         return debit[token][user];
     }
 
+    function getUpdatedSumDebits(address token) public view returns (uint256) {
+        return sum_debits[token];
+    }
+
     function getUpdatedXR(address token) public view returns (uint256) {
         // in this version, we do not update XR
         return XR(token);
