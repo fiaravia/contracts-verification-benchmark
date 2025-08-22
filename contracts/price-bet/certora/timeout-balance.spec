@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-/// @custom:run certoraRun versions/PriceBet_v1.sol:PriceBet --verify PriceBet:certora/timeout-postcondition.spec
-
-rule timeout_postcondition {
+rule timeout_balance {
     env e;
     
     uint prev_contract_balance = nativeBalances[currentContract];
