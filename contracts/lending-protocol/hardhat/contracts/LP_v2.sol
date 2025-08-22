@@ -292,12 +292,18 @@ contract LP_v2 {
         if (borrow_index[token_addr][borrower] == 0) return 0;
 
         // Update globalBorrowIndex
+        uint _global_borrow_index = 0;
         if (last_global_update == 0) {
-            return debit[token_addr][borrower]; // No interest accrued yet
+           _global_borrow_index = 1e6; 
+        }
+        else if (block.number > last_global_update) {
+            uint multiplier = _calculate_linear_interest();
+            _global_borrow_index = (global_borrow_index * multiplier) / 1e6;
+        }
+        else {
+            _global_borrow_index = global_borrow_index;
         }
 
-        uint multiplier = _calculate_linear_interest();
-        uint _global_borrow_index = (global_borrow_index * multiplier) / 1e6;
         // _get_accrued_debt
         uint current_debt = debit[token_addr][borrower];
         if (current_debt == 0) {
