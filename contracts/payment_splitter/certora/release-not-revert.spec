@@ -1,6 +1,6 @@
 import "helper/methods.spec";
 
-rule funds_get_transferred {
+rule release_not_revert {
     env e; 
     address addr;
 

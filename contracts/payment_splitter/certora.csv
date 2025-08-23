@@ -5,9 +5,6 @@ fair-split-eq,v3,N
 fair-split-geq,v1,P!
 fair-split-geq,v2,P!
 fair-split-geq,v3,N
-funds-get-transferred,v1,N
-funds-get-transferred,v2,N
-funds-get-transferred,v3,N
 non-zero-payees,v1,N
 non-zero-payees,v2,N
 non-zero-payees,v3,N
@@ -20,6 +17,9 @@ releasable-balance-check,v3,P!
 releasable-sum-balance,v1,P!
 releasable-sum-balance,v2,N
 releasable-sum-balance,v3,N
+release-not-revert,v1,N
+release-not-revert,v2,N
+release-not-revert,v3,N
 release-release-revert,v1,P!
 release-release-revert,v2,P!
 release-release-revert,v3,P!

@@ -101,7 +101,7 @@ constructor (address payee1, address payee2, address payee3) payable {
     }
 
     function getShares(address addr) public view returns (uint) {
-        return 1; // Each payee has 1 share in this fixed version
+        return shares[addr];
     }
 
     function getReleased(address addr) public view returns (uint) {
