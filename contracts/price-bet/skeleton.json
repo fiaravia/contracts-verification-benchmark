@@ -15,7 +15,7 @@
         "join-revert": "a transaction `join()` reverts if the amount of ETH sent along with the transaction is different from `initial_pot` or the player address has been set",
         "no-frozen-funds": "after the deadline, any user can perform some transaction after which the entire pot is trasferred to the `owner` address.",
         "only-owner-or-player-receive":	"in any state where the player has been set, only the owner or the player can receive ETH from the contract.",
-        "owner-cannot-withdraw-before-deadline": "if the deadline has not passed yet, the `owner` cannot withdraw any ETH.",
+        "owner-cannot-withdraw-before-deadline": "if the deadline has not passed yet, then the `owner` cannot withdraw any ETH.",
         "owner-cannot-withdraw-before-deadline-not-player": "if the deadline has not passed yet and the `owner` is not the `player`, then the `owner` cannot withdraw any ETH.",
         "player-cannot-withdraw-after-deadline": "if the deadline has passed, the `player` cannot withdraw any ETH.",
         "player-cannot-withdraw-after-deadline-not-owner": "if the deadline has passed, and the `player` is not the `owner`, then the `player` cannot withdraw any ETH.",
