@@ -56,6 +56,7 @@ constructor (address payee1, address payee2, address payee3) payable {
 
     function release(address payable account) public virtual {
         require(shares[account] > 0, "PaymentSplitter: account has no shares");
+        require(isPayee(account));
 
         uint256 payment = releasable(account);
 
@@ -81,6 +82,11 @@ constructor (address payee1, address payee2, address payee3) payable {
 
     // Getters
 
+    function isPayee(address a) public view returns (bool) {
+        for (uint i; i<PAYEES; i++) if (payees[i] == a) return true;
+        return false;
+    }
+
     function getBalance() public view returns (uint) {
         return address(this).balance;
     }
@@ -101,7 +107,10 @@ constructor (address payee1, address payee2, address payee3) payable {
     }
 
     function getShares(address addr) public view returns (uint) {
-        return shares[addr];
+        if (isPayee(addr)) {
+            return 1;
+        }
+        return 0;
     }
 
     function getReleased(address addr) public view returns (uint) {
@@ -111,9 +120,9 @@ constructor (address payee1, address payee2, address payee3) payable {
     function getSumOfShares() public view returns (uint) {
         uint sum = 0;
 
-        sum += shares[payees[0]];
-        sum += shares[payees[1]];
-        sum += shares[payees[2]];
+        sum += getShares(payees[0]);
+        sum += getShares(payees[1]);
+        sum += getShares(payees[0]);
 
         return sum;
     }
