@@ -182,12 +182,27 @@ owner-cannot-withdraw-before-deadline,v12,1,"The owner is different from the pla
 player-cannot-withdraw-after-deadline-not-owner,v1,1,
 player-cannot-withdraw-after-deadline-not-owner,v2,1,
 player-cannot-withdraw-after-deadline-not-owner,v3,1,
+player-cannot-withdraw-after-deadline-not-owner,v4,1,
+player-cannot-withdraw-after-deadline-not-owner,v5,1,
+player-cannot-withdraw-after-deadline-not-owner,v6,1,
 player-cannot-withdraw-after-deadline-not-owner,v7,0,
-
+player-cannot-withdraw-after-deadline-not-owner,v8,1,
+player-cannot-withdraw-after-deadline-not-owner,v9,1,
+player-cannot-withdraw-after-deadline-not-owner,v10,1,
+player-cannot-withdraw-after-deadline-not-owner,v11,0,"Anyone can withdraw after second deadline"
+player-cannot-withdraw-after-deadline-not-owner,v12,1,
 player-cannot-withdraw-after-deadline,v1,0,"The owner coincides with the player",
 player-cannot-withdraw-after-deadline,v2,0,
 player-cannot-withdraw-after-deadline,v3,1,"No one can withdraw after the deadline"
+player-cannot-withdraw-after-deadline,v4,0,
+player-cannot-withdraw-after-deadline,v5,0,
+player-cannot-withdraw-after-deadline,v6,1,"The player address cannot be set"
 player-cannot-withdraw-after-deadline,v7,0,
+player-cannot-withdraw-after-deadline,v8,0,
+player-cannot-withdraw-after-deadline,v9,0,
+player-cannot-withdraw-after-deadline,v10,0,
+player-cannot-withdraw-after-deadline,v11,0,
+player-cannot-withdraw-after-deadline,v12,1,
 player-immutable,v1,1,
 player-immutable,v2,0,
 player-immutable,v3,1,
