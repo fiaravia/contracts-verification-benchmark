@@ -27,7 +27,7 @@ The contract has the following entry points:
 - **join-not-revert**: a transaction `join()` does not revert if the ETH amount sent along with the transaction is equal to `initial_pot`, no player has joined yet, and the deadline has not passed yet.
 - **join-only-once**: a `join()` transaction can only be called successfully once.
 - **join-player**: after a successful `join()`, `player` is not the zero address
-- **join-revert**: a transaction `join()` reverts if the amount of ETH sent along with the transaction is different from `initial_pot`, or the player address has already been set to a non-zero address, or the deadline has passed
+- **join-revert**: a transaction `join()` reverts if the amount of ETH sent along with the transaction is different from `initial_pot`, or the player address has already been set to a non-zero address, or the deadline has passed.
 - **no-frozen-funds**: eventually (i.e. at least once after the initial state), any user can perform some transaction after which the entire contract balance is trasferred to the `owner` address.
 - **only-owner-or-player-receive**: in any state where the player has been set, only the owner or the player can receive ETH from the contract.
 - **owner-cannot-withdraw-before-deadline**: if the deadline has not passed yet, then the `owner` cannot withdraw any ETH.
@@ -35,7 +35,7 @@ The contract has the following entry points:
 - **player-cannot-withdraw-after-deadline**: if the deadline has passed, the `player` cannot withdraw any ETH.
 - **player-cannot-withdraw-after-deadline-not-owner**: if the deadline has passed, and the `player` is not the `owner`, then the `player` cannot withdraw any ETH.
 - **player-immutable**: if `player` is not the zero address, then its value does never change
-- **price-above-player-win**: if the `receive` method of `player` just accepts all ETH, and the player has not already fired a successful `win`, then in a state where the oracle exchange rate is above the target `exchange_rate` and the deadline has not passed, the `player` can fire a transaction after which its ETH balance is increased by the contract balance.
+- **price-above-player-win**: if the `receive` method of `player` just accepts all ETH, and the `player` has not already fired a successful `win`, then in a state where the oracle exchange rate is above the target `exchange_rate` and the deadline has not passed, the `player` can fire a transaction after which its ETH balance is increased by the contract balance.
 - **price-above-player-win-frontrun**: if the receive method of `player` just accepts all ETH, the player has not already fired a successful `win`, and in some state before the deadline the oracle exchange rate goes above the target `exchange_rate`, then in any subsequent state before the deadline the `player` can fire a transaction after which its ETH balance is increased by the contract balance.
 - **price-below-player-lose**: if the oracle exchange rate is always below the target `exchange_rate` before the deadline, then `player` cannot fire a transaction after which its ETH balance is increased.
 - **price-below-player-lose-not-owner**: if the oracle exchange rate is always below the target `exchange_rate` before the deadline and the `player` is not the `owner`, then `player` cannot fire a transaction after which its ETH balance is increased.
@@ -51,8 +51,8 @@ The contract has the following entry points:
 - **win-frontrun**: if the `player` can win the bet, there exists an adversary that can frontrun the `player` to prevent him from actually winning.
 - **win-frontrun-not-oracle**: if the `player` can win the bet, there exists an adversary different from the oracle owner who can frontrun the `player` to prevent him from actually winning.
 - **win-not-revert**: a transaction `win()` does not revert if the deadline has not expired, the sender is the `player`, and the call to oracle returns an exchange rate that is greater than or equal to the target `exchange_rate`.
-- **win-pot**: after a successful `win()`, the ETH balance of `player` is increased at least twice the deposited pot.
-- **win-pot-receive**: if the `receive` method of `player` just accepts all ETH, then after a successful `win()`, the ETH balance of `player` increases of at least twice the deposited pot.
+- **win-pot**: after a successful `win()`, the ETH balance of `player` is increased at least twice the initial pot.
+- **win-pot-receive**: if the `receive` method of `player` just accepts all ETH, then after a successful `win()`, the ETH balance of `player` increases of at least twice the initial pot.
 - **win-revert**: a transaction `win()` reverts if the deadline has expired, or the sender is not the player, or the oracle exchange rate is less than the oracle exchange rate. Assume that the address `oracle` actually contains a deployment of contract Oracle.
 
 ## Versions
@@ -71,6 +71,7 @@ The contract has the following entry points:
 - **v13**: `win` uses `block.timestamp` instead of `block.number`
 - **v14**: uses `transfer` instead of low-level `call` to send ETH
 - **v15**: `timeout` can only be called once, if a player has joined
+- **v16**: `join` and `win` use (broken) balance invariants as guards for state transitions
 
 ## Verification data
 
