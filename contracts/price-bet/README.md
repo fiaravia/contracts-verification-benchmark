@@ -28,7 +28,7 @@ The contract has the following entry points:
 - **join-only-once**: a `join()` transaction can only be called successfully once.
 - **join-player**: after a successful `join()`, `player` is not the zero address
 - **join-revert**: a transaction `join()` reverts if the amount of ETH sent along with the transaction is different from `initial_pot`, or the player address has already been set to a non-zero address, or the deadline has passed
-- **no-frozen-funds**: eventually (i.e. at least once after the initial state), any user can perform some transaction after which the entire pot is trasferred to the `owner` address.
+- **no-frozen-funds**: eventually (i.e. at least once after the initial state), any user can perform some transaction after which the entire contract balance is trasferred to the `owner` address.
 - **only-owner-or-player-receive**: in any state where the player has been set, only the owner or the player can receive ETH from the contract.
 - **owner-cannot-withdraw-before-deadline**: if the deadline has not passed yet, then the `owner` cannot withdraw any ETH.
 - **owner-cannot-withdraw-before-deadline-not-player**: if the deadline has not passed yet and the `owner` is not the `player`, then the `owner` cannot withdraw any ETH.
@@ -70,6 +70,7 @@ The contract has the following entry points:
 - **v12**: `join` checks that player is different from owner
 - **v13**: `win` uses `block.timestamp` instead of `block.number`
 - **v14**: uses `transfer` instead of low-level `call` to send ETH
+- **v15**: `timeout` can only be called once, if a player has joined
 
 ## Verification data
 
