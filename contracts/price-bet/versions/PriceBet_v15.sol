@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version `win` uses `block.timestamp` instead of `block.number`
+/// @custom:version `timeout` can only be called once, if a player has joined
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
@@ -38,7 +38,7 @@ contract PriceBet {
     // win allows the joined player to withdraw the whole contract balance if the oracle exchange rate is greater than the bet rate. 
     // win can be called multiple times before the deadline. This action is disabled after the deadline
     function win() public {
-        require(block.timestamp < deadline, "Bet has timed out");
+        require(block.number < deadline, "Bet has timed out");
         require(msg.sender == player, "Only the player can win");
 
         // Warning: at deployment time, we cannot know for sure that address oracle actually contains a deployment of contract Oracle
@@ -52,6 +52,8 @@ contract PriceBet {
     // timeout can be called by anyone after the deadline, and transfers the whole contract balance to the owner
     function timeout() public {
         require(block.number >= deadline, "Bet has not timed out yet");
+        require(player != ZERO_ADDRESS, "Player has not joined yet");
+        player = payable(ZERO_ADDRESS);
 
         (bool success, ) = owner.call{value: address(this).balance}("");
         require(success);
