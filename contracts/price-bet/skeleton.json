@@ -4,9 +4,9 @@
     "properties": {
         "eventually-balance-zero": "eventually the contract balance goes to zero (assuming the fairness condition that `timeout()` is called at least once at a suitable time after the deadline).",
         "eventually-balance-zero-receive": "if the receive method of `owner` just accepts all ETH, eventually the contract balance goes to zero (assuming the fairness condition that `timeout()` is called at least once after the deadline).",
-        "eventually-withdraw": "if the player has joined, eventually a user can withdraw at least twice the initial pot.",
-        "eventually-withdraw-receive-owner": "if the `receive` method of `owner` just accepts all ETH, and the player has joined, eventually a user can withdraw at least twice the initial pot.",
-        "eventually-withdraw-receive-player": "if the `receive` method of `player` just accepts all ETH, and the player has joined, eventually a user can withdraw at least twice the initial pot.",
+        "eventually-withdraw": "if the player has joined, eventually a user can fire a transaction to withdraw at least twice the initial pot.",
+        "eventually-withdraw-receive-owner": "if the `receive` method of `owner` just accepts all ETH, and the player has joined, eventually a user can fire a transaction to withdraw at least twice the initial pot.",
+        "eventually-withdraw-receive-player": "if the `receive` method of `player` just accepts all ETH, and the player has joined, eventually a user can fire a transaction to withdraw at least twice the initial pot.",
         "join-balance-eq": "after a successful `join()`, the contract balance is equal to two times the `initial_pot`.",
         "join-balance-geq": "after a successful `join()`, the contract balance is greater than or equal to two times the `initial_pot`.",
         "join-not-revert": "a transaction `join()` does not revert if the ETH amount sent along with the transaction is equal to `initial_pot`, no player has joined yet, and the deadline has not passed yet.",
@@ -29,16 +29,16 @@
         "timeout-not-revert": "a transaction `timeout()` does not revert if the deadline has passed.",
         "timeout-not-revert-receive": "if the `receive` method of `owner` just accepts all ETH, a transaction `timeout()` does not revert if the deadline has passed.",
         "timeout-revert": "a transaction `timeout()` reverts if the deadline has not passed yet.",
-        "transfer-pot": "if some user manages to withdraw ETH from the contract, then the amount withdrawn by that user is at least twice the initial pot",
-        "transfer-pot-join": "if some user has joined the bet (i.e. `player` is not the zero address) and some user manages to withdraw ETH from the contract, then the amount withdrawn by that user is at least twice the initial pot",
+        "transfer-pot": "if some user manages to withdraw ETH from the contract, then the amount withdrawn by that user is at least twice the initial pot.",
+        "transfer-pot-join": "if some user has joined the bet (i.e. `player` is not the zero address) and some user manages to withdraw ETH from the contract, then the amount withdrawn by that user is at least twice the initial pot.",
         "win-balance": "after a successful `win()`, the ETH balance of `player` is increased by the entire contract balance.",
         "win-balance-receive": "if the `receive` method of `player` just accepts all ETH, then after a successful `win()`, the ETH balance of `player` is increased by the entire contract balance.",
         "win-frontrun": "if the `player` can win the bet, there exists an adversary that can frontrun the `player` to prevent him from actually winning.",
         "win-frontrun-not-oracle": "if the `player` can win the bet, there exists an adversary different from the oracle owner who can frontrun the `player` to prevent him from actually winning.",
-        "win-not-revert": "a transaction `win()` does not revert if the deadline has not expired, the sender is the player, and the call to oracle returns an exchange rate that is greater than or equal to the target `exchange_rate`.",
+        "win-not-revert": "a transaction `win()` does not revert if the deadline has not expired, the sender is the `player`, and the call to oracle returns an exchange rate that is greater than or equal to the target `exchange_rate`.",
         "win-pot": "after a successful `win()`, the ETH balance of `player` is increased at least twice the deposited pot.",
         "win-pot-receive": "if the `receive` method of `player` just accepts all ETH, then after a successful `win()`, the ETH balance of `player` increases of at least twice the deposited pot.",        
-        "win-revert": "a transaction `win()` reverts if the deadline has expired, or the sender is not the player, or the oracle exchange rate is less than the oracle exchange rate. Assume that address oracle actually contains a deployment of contract Oracle."
+        "win-revert": "a transaction `win()` reverts if the deadline has expired, or the sender is not the player, or the oracle exchange rate is less than the oracle exchange rate. Assume that the address `oracle` actually contains a deployment of contract Oracle."
     },    
     "property-types": {
         "eventually-balance-zero": "TODO",
