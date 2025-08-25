@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version `timeout()` callable only before the deadline ('<' instead of '>=')
+/// @custom:version after a second deadline, anyone can withdraw the entire contract balance
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
@@ -31,7 +31,7 @@ contract PriceBet {
 
         // we require that join can only be performed before the deadline
         require(block.number < deadline, "Bet has timed out");
-        
+
         player = payable(msg.sender);
     }
 
@@ -49,11 +49,16 @@ contract PriceBet {
         require(success);
     }
 
-    // timeout can be called by anyone after the deadline, and transfers the whole contract balance to the owner
+    // timeout can be called by anyone after the deadline
     function timeout() public {
-        require(block.number < deadline, "Bet has not timed out yet");
+        require(block.number >= deadline, "Bet has not timed out yet");
 
-        (bool success, ) = owner.call{value: address(this).balance}("");
+        address receiver;
+
+        if (block.number < deadline + 1000) receiver = owner;
+        else receiver = msg.sender;
+
+        (bool success, ) = receiver.call{value: address(this).balance}("");
         require(success);
     }
 }

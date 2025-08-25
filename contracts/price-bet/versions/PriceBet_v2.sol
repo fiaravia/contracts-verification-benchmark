@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version no check if player has already joined 
+/// @custom:version `join` does not check if player has already joined 
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract

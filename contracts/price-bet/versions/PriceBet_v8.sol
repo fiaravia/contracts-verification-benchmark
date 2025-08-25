@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version `win()` only transfers 1 instead of the contract balance  
+/// @custom:version `win()` only transfers 1 instead of the entire contract balance  
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
