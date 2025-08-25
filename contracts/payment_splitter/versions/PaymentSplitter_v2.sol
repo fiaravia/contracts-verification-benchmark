@@ -32,6 +32,7 @@ contract PaymentSplitter {
 
     function release(address payable account) public virtual {
         require(shares[account] > 0, "PaymentSplitter: account has no shares");
+        require(isPayee(account));
 
         uint256 payment = releasable(account);
 
@@ -72,6 +73,10 @@ contract PaymentSplitter {
 
     // Getters
 
+    function isPayee(address a) public view returns (bool) {
+        return (a == getPayee(0) || a == getPayee(1) || a == getPayee(2));
+    }
+
     function getBalance() public view returns (uint) {
         return address(this).balance;
     }
@@ -94,6 +99,7 @@ contract PaymentSplitter {
     }
 
     function getShares(address addr) public view returns (uint) {
+        require(isPayee(addr));
         return shares[addr];
     }
 
@@ -120,8 +126,8 @@ contract PaymentSplitter {
         return sum;
     }
 
-    function getPayeesLength() public view returns (uint) {
-        return payees.length;
+    function getPayeesLength() public pure returns (uint) {
+        return PAYEES;
     }
 
     function getTotalShares() public view returns (uint) {

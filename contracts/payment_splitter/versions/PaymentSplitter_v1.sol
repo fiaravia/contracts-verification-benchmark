@@ -68,6 +68,11 @@ contract PaymentSplitter {
 
     // Getters
 
+    function isPayee(address a) public view returns (bool) {
+        for (uint i; i < payees.length; i++) if (payees[i] == a) return true;
+        return false;
+    }
+
     function getBalance() public view returns (uint) {
         return address(this).balance;
     }
