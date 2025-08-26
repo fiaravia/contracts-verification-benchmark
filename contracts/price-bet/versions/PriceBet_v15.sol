@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version `join` checks that player is different from owner
+/// @custom:version `timeout` can only be called once, if a player has joined
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
@@ -28,7 +28,7 @@ contract PriceBet {
         require(msg.value == initial_pot, "Player must cover the pot to join");
         require(player == ZERO_ADDRESS, "Player already joined");
         require(msg.sender != ZERO_ADDRESS, "Sender cannot be the zero address");
-        require(msg.sender != owner, "Player cannot coincide with the owner");
+
         // we require that join can only be performed before the deadline
         require(block.number < deadline, "Bet has timed out");
 
@@ -52,6 +52,8 @@ contract PriceBet {
     // timeout can be called by anyone after the deadline, and transfers the whole contract balance to the owner
     function timeout() public {
         require(block.number >= deadline, "Bet has not timed out yet");
+        require(player != ZERO_ADDRESS, "Player has not joined yet");
+        player = payable(ZERO_ADDRESS);
 
         (bool success, ) = owner.call{value: address(this).balance}("");
         require(success);

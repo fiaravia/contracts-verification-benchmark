@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version `join` checks that player is different from owner
+/// @custom:version `join` and `win` use (broken) balance invariants as guards for state transitions
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
@@ -25,10 +25,9 @@ contract PriceBet {
 
     // join allows a player to join the bet. This requires the player to deposit an amount of ETH equal to the initial pot.
     function join() public payable {
-        require(msg.value == initial_pot, "Player must cover the pot to join");
-        require(player == ZERO_ADDRESS, "Player already joined");
+        require(address(this).balance == 2*initial_pot, "Player already joined");
         require(msg.sender != ZERO_ADDRESS, "Sender cannot be the zero address");
-        require(msg.sender != owner, "Player cannot coincide with the owner");
+
         // we require that join can only be performed before the deadline
         require(block.number < deadline, "Bet has timed out");
 
@@ -39,8 +38,7 @@ contract PriceBet {
     // win can be called multiple times before the deadline. This action is disabled after the deadline
     function win() public {
         require(block.number < deadline, "Bet has timed out");
-        require(msg.sender == player, "Only the player can win");
-
+        require(address(this).balance == 2*initial_pot, "Player has not joined yet");
         // Warning: at deployment time, we cannot know for sure that address oracle actually contains a deployment of contract Oracle
         Oracle oracle_instance = Oracle(oracle);
         require(oracle_instance.get_exchange_rate() >= exchange_rate);

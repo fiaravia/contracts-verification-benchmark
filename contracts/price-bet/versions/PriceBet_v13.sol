@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version `join` checks that player is different from owner
+/// @custom:version `win` uses `block.timestamp` instead of `block.number`
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
@@ -28,7 +28,7 @@ contract PriceBet {
         require(msg.value == initial_pot, "Player must cover the pot to join");
         require(player == ZERO_ADDRESS, "Player already joined");
         require(msg.sender != ZERO_ADDRESS, "Sender cannot be the zero address");
-        require(msg.sender != owner, "Player cannot coincide with the owner");
+
         // we require that join can only be performed before the deadline
         require(block.number < deadline, "Bet has timed out");
 
@@ -38,7 +38,7 @@ contract PriceBet {
     // win allows the joined player to withdraw the whole contract balance if the oracle exchange rate is greater than the bet rate. 
     // win can be called multiple times before the deadline. This action is disabled after the deadline
     function win() public {
-        require(block.number < deadline, "Bet has timed out");
+        require(block.timestamp < deadline, "Bet has timed out");
         require(msg.sender == player, "Only the player can win");
 
         // Warning: at deployment time, we cannot know for sure that address oracle actually contains a deployment of contract Oracle
