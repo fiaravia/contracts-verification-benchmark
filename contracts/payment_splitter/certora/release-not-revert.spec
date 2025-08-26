@@ -1,15 +1,18 @@
 import "helper/methods.spec";
 
 rule release_not_revert {
-    env e; 
-    address addr;
+    env e;
+    uint idx;
 
-    uint index;
-    address payee = getPayee(index);
-    require getShares(payee) > 0;
-    require releasable(payee) > 0;
-    
-    release@withrevert(e, payee);
+    require e.msg.value == 0;
 
-    assert( !lastReverted );
+    require idx < getPayeesLength();
+    address a = getPayee(idx);
+
+    require getShares(a) > 0;
+    require getTotalShares(e) > 0;
+    require releasable(a) > 0;
+
+    release@withrevert(e, a);
+    assert !lastReverted;
 }
