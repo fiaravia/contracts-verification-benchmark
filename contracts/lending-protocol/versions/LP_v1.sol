@@ -254,4 +254,7 @@ contract LP {
         return XR(token);
     }
 
+    function getBorrowersLength() public view returns (uint) {
+        return borrowers.length;
+    }
 }
