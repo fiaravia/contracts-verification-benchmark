@@ -52,11 +52,11 @@ def violations_found(output):
 
 def property_violated(output, spec_path):
     property_name = str(spec_path).replace("certora/","").replace(".spec","").replace("-","_")
-    return f"Violated: {property_name}" in output
+    return f"Violated: {property_name}\n" in output
 
 def property_verified(output, spec_path):
     property_name = str(spec_path).replace("certora/","").replace(".spec","").replace("-","_")
-    return f"Verified: {property_name}" in output
+    return f"Verified: {property_name}\n" in output
 
 def has_critical_error(output):
     pattern1 = r'.*CRITICAL.*'
