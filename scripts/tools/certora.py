@@ -145,7 +145,7 @@ def run(contract_path, spec_path):
     else:
         if has_custom_run:
             command = utils.find_custom_run_line(spec_code)
-            command = command.replace('certoraRun ', 'certoraRun.py ')
+            command = command.replace('certoraRun ', 'certoraRun.py --short_output ')
             command = command.replace('_v1.sol', f'_{version_id}.sol')
         else:
             command = COMMAND_TEMPLATE.substitute(params)
