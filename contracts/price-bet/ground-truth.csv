@@ -168,8 +168,8 @@ join-revert,v6,1,"the `player` field can never be set"
 join-revert,v7,1,
 join-revert,v8,1,
 join-revert,v9,1,
-join-revert,v10,1,
-join-revert,v11,0,
+join-revert,v10,0,"join can be called after timeout"
+join-revert,v11,1,
 join-revert,v12,1,
 join-revert,v13,1,
 join-revert,v14,1,

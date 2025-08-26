@@ -77,7 +77,8 @@ def main(args):
             out_csv.append([p, v, outcomes[id]])
             verification_tasks.append([p, v])
 
-        existing_rows = utils.read_csv(output_dir.joinpath('out.csv'))
+        out_csv_path = output_dir.joinpath('out.csv')
+        existing_rows = utils.read_csv(out_csv_path)
         for existing_row in existing_rows:
             existing_verification_task = existing_row[:2]
             if existing_verification_task in verification_tasks:
@@ -86,7 +87,10 @@ def main(args):
                 continue
             out_csv.append(existing_row)        
 
-        utils.write_csv(output_dir.joinpath('out.csv'), out_csv)
+        utils.write_csv(out_csv_path, out_csv)
+
+        solver_csv_path = output_dir.joinpath(f"../../../solcmc-{solver}.csv")
+        utils.merge_csvs(out_csv_path, solver_csv_path)
     else:
         run_all(contracts_paths, timeout, solver=solver)
 
