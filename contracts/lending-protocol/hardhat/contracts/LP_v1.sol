@@ -3,7 +3,7 @@ pragma solidity >= 0.8.2;
 
 /// @custom:version minimal implementation without liquidation
 
-import "./lib/IERC20.sol"; 
+import "./lib/IERC20.sol";
 
 contract LP_v1 {
     // workaround for bug in solc v0.8.30
@@ -160,7 +160,7 @@ contract LP_v1 {
         require(
             _isValidToken(token_addr),
             "Repay: invalid token"
-        );
+        ); 
 
         require(
             debit[token_addr][msg.sender] >= amount,
@@ -237,4 +237,21 @@ contract LP_v1 {
         );
         return prices[token_addr];
     }
+
+    /** Functions for compatibility with LP_v2 */
+
+    function getAccruedDebt(address token, address user) public view returns (uint256) {
+        // in this version, we do not have accrued debt
+        return debit[token][user];
+    }
+
+    function getUpdatedSumDebits(address token) public view returns (uint256) {
+        return sum_debits[token];
+    }
+
+    function getUpdatedXR(address token) public view returns (uint256) {
+        // in this version, we do not update XR
+        return XR(token);
+    }
+
 }
