@@ -37,6 +37,27 @@ def read_csv(path):
                 rows.append(row)
     return rows
 
+def merge_csvs(path_from, path_to):
+    rows_from = read_csv(path_from)
+    rows_to = read_csv(path_to)
+    verification_tasks_to = [row[:2] for row in rows_to]
+
+    for row_from in rows_from:
+        verification_task_from = row_from[:2]
+        overwrite = False
+        for row_to in rows_to:
+            verification_task_to = row_to[:2]
+            if verification_task_from == verification_task_to:
+                overwrite = True
+                # Replace the row in rows_to with row_from
+                row_to_index = rows_to.index(row_to)
+                rows_to[row_to_index] = row_from
+                break
+        if not overwrite:
+            rows_to.append(row_from)        
+    write_csv(path_to, rows_to)
+    
+
 def remove_comments(file_content):
     # Remove single-line comments
     file_content = re.sub(r'//.*\n', '', file_content)

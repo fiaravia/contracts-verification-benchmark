@@ -50,6 +50,13 @@ def violations_found(output):
     pattern2 = r'.*Violated: *'
     return re.search(pattern1, output, re.DOTALL) or re.search(pattern2, output, re.DOTALL)
 
+def property_violated(output, spec_path):
+    property_name = str(spec_path).replace("certora/","").replace(".spec","").replace("-","_")
+    return f"Violated: {property_name}\n" in output
+
+def property_verified(output, spec_path):
+    property_name = str(spec_path).replace("certora/","").replace(".spec","").replace("-","_")
+    return f"Verified: {property_name}\n" in output
 
 def has_critical_error(output):
     pattern1 = r'.*CRITICAL.*'
@@ -145,7 +152,7 @@ def run(contract_path, spec_path):
     else:
         if has_custom_run:
             command = utils.find_custom_run_line(spec_code)
-            command = command.replace('certoraRun ', 'certoraRun.py ')
+            command = command.replace('certoraRun ', 'certoraRun.py --short_output ')
             command = command.replace('_v1.sol', f'_{version_id}.sol')
         else:
             command = COMMAND_TEMPLATE.substitute(params)
@@ -157,17 +164,23 @@ def run(contract_path, spec_path):
                 logging.error('Certora is not installed. Use:\npip install certora-cli.')
                 return ERROR, str(e)
     
-    has_violations = violations_found(log.stdout)
+    is_violated = property_violated(log.stdout, spec_path)
+    is_verified = property_verified(log.stdout, spec_path)
+
+    # is_violated and is_verified must be mutually exclusive
+    if is_violated != (not is_verified):
+        logging.error(log.stdout)
+        return ERROR, log.stdout
 
     # Handle Certora errors
     if log.stderr:
         print(log.stderr, file=sys.stderr)
 
-    if has_critical_error(log.stdout) and not has_violations:
+    if has_critical_error(log.stdout) and not is_violated:
         logging.error(log.stdout)
         return ERROR, log.stdout
 
-    if no_permission(log.stdout) and not has_violations:
+    if no_permission(log.stdout) and not is_violated:
         logging.error(log.stdout)
         return ERROR, log.stdout
 
@@ -176,7 +189,7 @@ def run(contract_path, spec_path):
     # Negation
     is_positive = not is_positive if negate else is_positive
 
-    if has_violations:
+    if is_violated:
         is_positive = False 
 
     res = STRONG_POSITIVE if has_assert or has_invariant else WEAK_POSITIVE
