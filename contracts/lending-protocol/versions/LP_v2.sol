@@ -169,7 +169,8 @@ contract LP {
         IERC20 token = IERC20(token_addr);
 
         // computes XR in the pre-state
-        uint xr = XR(token_addr);
+        // uint xr = XR(token_addr);
+        uint xr = getUpdatedXR(token_addr);
 
         token.transferFrom(msg.sender, address(this), amount);
         reserves[token_addr] += amount;
@@ -252,7 +253,8 @@ contract LP {
         );
 
         // computes XR in the pre-state
-        uint xr = XR(token_addr);
+        // uint xr = XR(token_addr);
+        uint xr = getUpdatedXR(token_addr);
 
         uint amount_rdm = (amount * xr) / 1e6;
         require(

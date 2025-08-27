@@ -160,7 +160,7 @@ contract LP_v2 {
         return accrued_debt;
     }
 
-    function deposit(uint amount, address token_addr) public {
+    function deposit(uint amount, address token_addr) public updateBorrowIndex{
         require(amount > 0, "Deposit: amount must be greater than zero");
         require(
             _isValidToken(token_addr),
@@ -169,7 +169,8 @@ contract LP_v2 {
         IERC20 token = IERC20(token_addr);
 
         // computes XR in the pre-state
-        uint xr = XR(token_addr);
+        // uint xr = XR(token_addr);
+        uint xr = getUpdatedXR(token_addr);
 
         token.transferFrom(msg.sender, address(this), amount);
         reserves[token_addr] += amount;
@@ -252,7 +253,8 @@ contract LP_v2 {
         );
 
         // computes XR in the pre-state
-        uint xr = XR(token_addr);
+        // uint xr = XR(token_addr);
+        uint xr = getUpdatedXR(token_addr);
 
         uint amount_rdm = (amount * xr) / 1e6;
         require(
