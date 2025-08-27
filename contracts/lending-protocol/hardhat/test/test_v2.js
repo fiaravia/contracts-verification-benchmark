@@ -261,7 +261,7 @@ describe("LP_v2", function () {
 
         const old_xr_t0 = await lp.getUpdatedXR(tok0); //1e6
         //uint old_sum_credits_t0 = currentContract.sum_credits[t0];
-        const old_sum_credits_t0 = await lp.getUpdatedSumDebits(tok0);
+        const old_sum_credits_t0 = await lp.sum_credits(tok0);
 
         await mine(1_000_000);
         await lp.connect(owner).accrueInt(); //res=0,tot_cred=10,tot_deb=11,xr=1.1e6

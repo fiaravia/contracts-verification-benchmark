@@ -139,9 +139,9 @@ contract LP {
         require(reserves[token_addr] >= amount, "Borrow: insufficient reserves");
 
         // records the borrower, if not already present in the array
-        if (debit[token_addr][msg.sender] == 0) {
+        if (!is_borrower(msg.sender)) {
             borrowers.push(msg.sender);
-        } 
+        }
 
         // Transfer tokens to the borrower
         IERC20 token = IERC20(token_addr);
@@ -153,6 +153,16 @@ contract LP {
 
         // Check if the borrower is collateralized in the post-state
         require(_isCollateralized(msg.sender), "Borrow: user is not collateralized");
+    }
+
+
+    function is_borrower(address a) public view returns (bool) {
+        for(uint i = 0; i < borrowers.length; i++) {
+            if (borrowers[i] == a) {
+                return true;
+            }
+        }
+        return false;
     }
 
     function repay(uint amount, address token_addr) public {
@@ -216,7 +226,6 @@ contract LP {
     // (disclaimer: this implementation is unrealistic, since it iterates over all tokens/borrowers)
     function accrueInt() public {
         require (msg.sender == owner);
-
         for (uint i = 0; i < tokens.length; i++) {
             for (uint j=0; j<borrowers.length; j++) {
                 uint accrued = (debit[tokens[i]][borrowers[j]] * ratePerPeriod) / 1e6;

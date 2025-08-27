@@ -391,8 +391,6 @@ describe("LP_v1", function () {
         expect(newXR).to.be.greaterThan(oldXR + (1_000_000n * r) / (oldSumCredits * (oldSumCredits - 1n))); // holds here: 1_100_000 > 1_099_999
     });*/
     
-/*
-
     it("test-for-double-interest", async function () {
         const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
 
@@ -420,16 +418,13 @@ describe("LP_v1", function () {
         await a_lp_conn.borrow(10,tok1)
 
         const debt_t1_a_before_accrual = await lp.debit(tok1, actor_a);
-        console.log(debt_t1_a_before_accrual);
 
         await lp.connect(owner).accrueInt();
 
         const debt_t1_a_after_accrual = await lp.debit(tok1, actor_a);
 
-        console.log(debt_t1_a_after_accrual );
-        
         expect(debt_t1_a_after_accrual).to.equal(debt_t1_a_before_accrual + debt_t1_a_before_accrual / 10n);
-    });*/
+    });
 
 });
 
