@@ -13,6 +13,9 @@ import logging
 import sys
 import os
 import re
+import time
+import random
+random.seed(42)
 
 import utils
 from utils import (STRONG_POSITIVE,
@@ -144,6 +147,7 @@ def run(contract_path, spec_path):
     conf_command = CONF_FILE_COMMAND_TEMPLATE.substitute(conf_params)
 
     if os.path.isfile(conf_params['conf_path']):
+        #print(conf_command)
         try:
             log = subprocess.run(conf_command.split(), capture_output=True, text=True)
         except FileNotFoundError as e:
@@ -157,6 +161,10 @@ def run(contract_path, spec_path):
             command = command.replace('_v1.sol', f'_{version_id}.sol')
         else:
             command = COMMAND_TEMPLATE.substitute(params)
+
+        # Random wait to avoid conflicting Certora runs
+        wait_time = random.randint(1,1000)/1000
+        time.sleep(wait_time)
         #print(command) #- substitute with a log that does not go to stdout
         try:
             log = subprocess.run(command.split(), capture_output=True, text=True)
@@ -164,7 +172,6 @@ def run(contract_path, spec_path):
             if 'certoraRun' in str(e):
                 logging.error('Certora is not installed. Use:\npip install certora-cli.')
                 return ERROR, str(e)
-    print(command)
     is_violated = property_violated(log.stdout, spec_path)
     is_verified_once = property_verified_at_least_one(log.stdout, spec_path)
 
