@@ -173,7 +173,7 @@ deposit-not-revert,v1,1,
 deposit-not-revert,v10,1,
 deposit-not-revert,v11,0,"Deposits may be paused by the owner."
 deposit-not-revert,v12,1,
-deposit-not-revert,v13,0,"The low-level call to the ower may revert."
+deposit-not-revert,v13,0,"The low-level call to the owner may revert."
 deposit-not-revert,v14,0,"The sender may be blacklisted by the owner."
 deposit-not-revert,v15,0,"The operation limit per block may be exceeded."
 deposit-not-revert,v16,0,
