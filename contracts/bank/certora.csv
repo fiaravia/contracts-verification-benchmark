@@ -78,6 +78,10 @@ credits-leq-balance,v16,N
 credits-leq-balance,v17,N
 credits-leq-balance,v2,N
 credits-leq-balance,v3,N
+credits-leq-balance,v4,N
+credits-leq-balance,v5,N
+credits-leq-balance,v6,N
+credits-leq-balance,v7,N
 credits-leq-balance,v8,N
 credits-leq-balance,v9,N
 deposit-additivity,v1,P!
@@ -199,14 +203,6 @@ deposit-revert,v6,P!
 deposit-revert,v7,N
 deposit-revert,v8,P!
 deposit-revert,v9,N
-methods,v1,ERR
-methods,v10,ERR
-methods,v11,ERR
-methods,v12,ERR
-methods,v13,ERR
-methods,v14,ERR
-methods,v15,ERR
-methods,v16,ERR
 withdraw-additivity,v1,P!
 withdraw-additivity,v10,P!
 withdraw-additivity,v11,P!
