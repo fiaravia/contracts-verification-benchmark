@@ -383,8 +383,8 @@ withdraw-revert,v15,1,
 withdraw-revert,v16,0,
 withdraw-revert,v17,0,"This version checks the credit of `tx.origin` rather than `msg.sender`."
 withdraw-revert,v2,0,"Withdraw transfers amount-1 wei."
-withdraw-revert,v3,0,"Withdraw does not revert if amount is zero."
-withdraw-revert,v4,0,"Withdraw does not revert if amount is zero."
+withdraw-revert,v3,1,
+withdraw-revert,v4,1,
 withdraw-revert,v5,1,
 withdraw-revert,v6,1,
 withdraw-revert,v7,1,
