@@ -8,5 +8,5 @@ hook Sstore state Vault.States new_state (Vault.States old_state) {
     state_idle_req = new_state == Vault.States.IDLE || new_state == Vault.States.REQ;
 }
 
-invariant state_idle_req_local()
+invariant state_idle_req_intra()
     state_idle_req;
