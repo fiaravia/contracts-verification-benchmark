@@ -3,6 +3,9 @@
 rule deposit_revert {
     env e;
 
+    // this condition is needed to avoid trivial reverts due to insufficient balance
+    require nativeBalances[e.msg.sender] >= e.msg.value; 
+
     mathint prev_credit_sender = currentContract.credits[e.msg.sender];
     // mathint MAX_UINT = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
     
