@@ -29,5 +29,6 @@ clean:
 		! -name 'Makefile' \
 		! -name 'contracts' \
 		! -name 'test' \
+		! -name '.gitignore' \
 		-exec rm -rf {} +
 	@echo "Clean complete."
