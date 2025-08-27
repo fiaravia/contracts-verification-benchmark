@@ -353,4 +353,9 @@ contract LP_v2 {
             return ((reserves[token_addr] + tot_debt) * 1e6)/sum_credits[token_addr];
         }
     }
+
+    function getBorrowersLength() public pure returns (uint) {
+        return 0;
+    }
 }
+

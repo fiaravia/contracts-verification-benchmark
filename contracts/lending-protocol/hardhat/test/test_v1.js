@@ -60,7 +60,7 @@ describe("LP_v1", function () {
         /* step 1; A:deposit(50:T0) */
         
         
-        const amountDeposit = BigInt(50);
+        const amountDeposit = 50n;
         
         const reserve_t0_0 = await lp.reserves(tok0_addr);
         const reserve_t1_0 = await lp.reserves(tok1_addr);
@@ -94,7 +94,7 @@ describe("LP_v1", function () {
         
         /* step 3; B:borrow(30:T0) */
         
-        const amountBorrow = BigInt(30);
+        const amountBorrow = 30n;
         
         await lp.connect(actor_b).borrow(amountBorrow, tok0_addr); 
 
@@ -126,7 +126,7 @@ describe("LP_v1", function () {
     
     
       /* step 1; A:deposit(50:T0) */
-      const amountDeposit = BigInt(50);
+      const amountDeposit = 50n;
     
       const reserve_t0_0 = await lp.reserves(tok0_addr);
       const reserve_t1_0 = await lp.reserves(tok1_addr);
@@ -160,7 +160,7 @@ describe("LP_v1", function () {
       expect(credit_t1_b_2).to.equal(credit_t1_b_1 + amountDeposit);
     
       /* step 3; B:borrow(30:T0) */
-      const amountBorrow = BigInt(30);
+      const amountBorrow = 30n;
     
       await lp.connect(actor_b).borrow(amountBorrow, tok0_addr);
     
@@ -201,10 +201,10 @@ describe("LP_v1", function () {
     
       // B's debit after accrual: 30 -> 33 (10%)
       expect(debit_t1_b_4).to.equal(debit_t1_b_3);
-      expect(debit_t0_b_4).to.equal(debit_t0_b_3 + BigInt(3));
+      expect(debit_t0_b_4).to.equal(debit_t0_b_3 + 3n);
     
       /* step 5; B:repay(5:T0) */
-      const repayAmt = BigInt(5);
+      const repayAmt = 5n;
       await tok0.connect(actor_b).approve(await lp.getAddress(), repayAmt);
       await lp.connect(actor_b).repay(repayAmt, tok0_addr);
     
@@ -212,8 +212,8 @@ describe("LP_v1", function () {
       const debit_t0_b_5 = await lp.debit(tok0_addr, actor_b);
     
       // reserves increase by repaid amount; debit decreases by repaid amount
-      expect(reserve_t0_5).to.equal(reserve_t0_4 + BigInt(5));
-      expect(debit_t0_b_5).to.equal(debit_t0_b_4 - BigInt(5));
+      expect(reserve_t0_5).to.equal(reserve_t0_4 + 5n);
+      expect(debit_t0_b_5).to.equal(debit_t0_b_4 - 5n);
     });
 
 
@@ -267,10 +267,10 @@ describe("LP_v1", function () {
         expect(new_xr_t0).to.be.greaterThan(old_xr_t0);
 
         // extra violation of the property
-        expect(new_xr_t0).to.be.greaterThan(old_xr_t0 + (BigInt(1)*(BigInt(1000000)) / old_sum_credits_t0) + BigInt(1));
+        expect(new_xr_t0).to.be.greaterThan(old_xr_t0 + (1n*1000000n / old_sum_credits_t0) + 1n);
     });
 
-    it("bor-xr, not a POC, just a trace", async function() {
+    it("bor-xr-eq, not a POC, just a trace", async function() {
 
         const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
 
@@ -278,18 +278,17 @@ describe("LP_v1", function () {
 
         const actor_a_conn = lp.connect(actor_a);
         const tok0_addr = await tok0.getAddress();
-
-        const old_xr_t0 = await lp.XR(tok0);
-
         await actor_a_conn.deposit(10,tok0_addr); 
 
+        const old_xr_t0 = await lp.XR(tok0);
+        await actor_a_conn.borrow(5, tok0_addr);
         const new_xr_t0 = await lp.XR(tok0);
-        
+
         //should be equal, no interest accrued
         expect(new_xr_t0).to.equal(old_xr_t0);
     });
 
-    it("rpy-xr, not a POC, just a trace", async function() {
+    it("rpy-xr-eq, not a POC, just a trace", async function() {
 
         const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
 
@@ -311,7 +310,7 @@ describe("LP_v1", function () {
         expect(new_xr_t0).to.equal(old_xr_t0);
     });
 
-    it("rdm-xr", async function() {
+    it("rdm-xr-eq", async function() {
         const { lp, tok0, actor_a, owner } = await loadFixture(deployContract);
 
         const lpAddr    = await lp.getAddress();
@@ -331,9 +330,106 @@ describe("LP_v1", function () {
                                                               // state: reserves=0, credits=10, debits=11 → XR=floor(11/10*1e6)=1_100_000
         const newXR = await lp.XR(tok0_addr);
 
-        expect(newXR).to.not.equal(oldXR);               // 1_100_000 > 1_090_909
+        expect(newXR).not.to.equal(oldXR);               // 1_100_000 > 1_090_909
     });
 
+    it("rdm-xr", async function () {
+        const { lp, tok0, actor_a, owner } = await loadFixture(deployContract);
+
+        const lpAddr    = await lp.getAddress();
+        const tok0_addr = await tok0.getAddress();
+
+        await tok0.connect(actor_a).approve(lpAddr, 100);
+
+        await lp.connect(actor_a).deposit(11, tok0_addr);  // reserves=11, credits=11, debits=0, XR=1e6
+        await lp.connect(actor_a).borrow(10, tok0_addr);   // reserves=1,  credits=11, debits=10, XR=1e6
+        await lp.connect(owner).accrueInt();               // reserves=1,  credits=11, debits=11, XR≈1_090_909
+
+        const WAD            = 1_000_000n;
+        const oldXR          = await lp.XR(tok0_addr);
+        const oldSumCredits  = await lp.sum_credits(tok0_addr); // = C (before redeem)
+
+        await lp.connect(actor_a).redeem(1, tok0_addr);    // k=1
+        
+        const newXR = await lp.XR(tok0_addr);
+
+        // Simple formula lower bound for redeem(1):
+        // newXR >= floor((oldXR*C - WAD*floor(oldXR/WAD)) / (C - 1))
+        expect(newXR).to.be.greaterThan(
+            ((oldXR * oldSumCredits) - (WAD * (oldXR / WAD))) / (oldSumCredits - 1n)
+        );
+    });
+
+
+/*
+    it("rdm-xr", async function () {
+        const { lp, tok0, actor_a, owner } = await loadFixture(deployContract);
+
+        const lpAddr = await lp.getAddress();
+        const tok0_addr = await tok0.getAddress();
+
+        await tok0.connect(actor_a).approve(lpAddr, 100);
+
+        await lp.connect(actor_a).deposit(11, tok0_addr);     // reserves=11, credits=11, debits=0,  XR=1_000_000
+        await lp.connect(actor_a).borrow(10, tok0_addr);      // reserves=1,  credits=11, debits=10, XR=1_000_000
+        await lp.connect(owner).accrueInt();                  // reserves=1,  credits=11, debits=11, XR=floor(12/11*1e6)=1_090_909
+
+        const oldXR = await lp.XR(tok0_addr);         // 1_090_909
+        const oldRes = await lp.reserves(tok0_addr);   // 1
+        const oldSumDebits = await lp.sum_debits(tok0_addr); // 11
+        const oldSumCredits = await lp.sum_credits(tok0_addr);// 11
+
+        await lp.connect(actor_a).redeem(1, tok0_addr);       // tokensOut=floor(1*1_090_909/1e6)=1
+        // state: reserves=0, credits=10, debits=11 → XR=floor(11/10*1e6)=1_100_000
+
+        const newXR = await lp.XR(tok0_addr);
+
+        expect(newXR).to.be.greaterThan(oldXR);               // 1_100_000 > 1_090_909
+
+        const r = (oldRes + oldSumDebits) % oldSumCredits; // (R + D) mod C
+
+        expect(newXR).to.be.greaterThan(oldXR + (1_000_000n * r) / (oldSumCredits * (oldSumCredits - 1n))); // holds here: 1_100_000 > 1_099_999
+    });*/
+    
+/*
+
+    it("test-for-double-interest", async function () {
+        const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
+
+        const lpAddr = await lp.getAddress();
+        
+        const a_lp_conn = lp.connect(actor_a);
+        const a_t0_conn = tok0.connect(actor_a);
+
+
+        // B deposits 30 t1
+        await tok1.connect(actor_b).approve(lpAddr, 30);
+        await lp.connect(actor_b).deposit(30, tok1);
+
+        // A deposits 50 t0
+        await a_t0_conn.approve(lpAddr, 50);
+        await a_lp_conn.deposit(50, tok0)
+
+        // A borrows and instantly repays 10 t1
+        await a_lp_conn.borrow(10, tok1);
+        await tok1.connect(actor_a).approve(lpAddr, 10);
+        await a_lp_conn.repay(10, tok1);
+
+
+        // A borrows 10 t1 and lets interest accrue
+        await a_lp_conn.borrow(10,tok1)
+
+        const debt_t1_a_before_accrual = await lp.debit(tok1, actor_a);
+        console.log(debt_t1_a_before_accrual);
+
+        await lp.connect(owner).accrueInt();
+
+        const debt_t1_a_after_accrual = await lp.debit(tok1, actor_a);
+
+        console.log(debt_t1_a_after_accrual );
+        
+        expect(debt_t1_a_after_accrual).to.equal(debt_t1_a_before_accrual + debt_t1_a_before_accrual / 10n);
+    });*/
 
 });
 
