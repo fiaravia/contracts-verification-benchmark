@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-/// @custom:version minimal implementation conformant to specification
+/// @custom:version variant with unchecked release
 
 contract PaymentSplitter {
 
