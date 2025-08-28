@@ -55,6 +55,6 @@ rule rpy_xr_eq {
     assert(new_xr_t0 == new_computed_xr_t0);
 
 
-    // XR should not change on borrow
+    // XR should not change on repay
     assert(old_xr_t0 == new_xr_t0);
 }
