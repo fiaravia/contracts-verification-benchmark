@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version `finalize` uses `transfer` instead of low-level call.
+/// @custom:version `cancel` updates the recovery key before checking `msg.sender`, and then restores it
 contract Vault {
     enum States{IDLE, REQ}
 
@@ -41,15 +41,17 @@ contract Vault {
         require(block.number >= request_time + wait_time);
         require(msg.sender == owner);
 
-        state = States.IDLE;
-        payable(msg.sender).transfer(amount);
+        state = States.IDLE;	
+        (bool succ,) = receiver.call{value: amount}("");
+        require(succ);
     }
 
     function cancel() public {
         require(state == States.REQ);
+	address old_recovery = recovery;
+	recovery = owner;
         require(msg.sender == recovery);
-
+	recovery = old_recovery;
         state = States.IDLE;
     }
 }
-

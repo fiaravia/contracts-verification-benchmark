@@ -1,4 +1,4 @@
-property,version,outcome,footnote
+property,version,outcome
 cancel-not-revert,v1,P!
 cancel-not-revert,v2,P!
 cancel-not-revert,v3,P!
@@ -7,6 +7,7 @@ cancel-not-revert,v5,P!
 cancel-not-revert,v6,P!
 cancel-not-revert,v7,P!
 cancel-not-revert,v8,P!
+cancel-not-revert,v9,N
 cancel-revert,v1,P!
 cancel-revert,v2,P!
 cancel-revert,v3,P!
@@ -15,6 +16,7 @@ cancel-revert,v5,N
 cancel-revert,v6,P!
 cancel-revert,v7,P!
 cancel-revert,v8,P!
+cancel-revert,v9,N
 finalize-assets-transfer,v1,N
 finalize-assets-transfer,v2,N
 finalize-assets-transfer,v3,N
@@ -23,6 +25,7 @@ finalize-assets-transfer,v5,N
 finalize-assets-transfer,v6,N
 finalize-assets-transfer,v7,N
 finalize-assets-transfer,v8,N
+finalize-assets-transfer,v9,N
 finalize-before-deadline-revert,v1,P!
 finalize-before-deadline-revert,v2,P!
 finalize-before-deadline-revert,v3,N
@@ -31,6 +34,7 @@ finalize-before-deadline-revert,v5,P!
 finalize-before-deadline-revert,v6,P!
 finalize-before-deadline-revert,v7,N
 finalize-before-deadline-revert,v8,P!
+finalize-before-deadline-revert,v9,P!
 finalize-not-revert,v1,N
 finalize-not-revert,v2,N
 finalize-not-revert,v3,N
@@ -39,6 +43,7 @@ finalize-not-revert,v5,N
 finalize-not-revert,v6,N
 finalize-not-revert,v7,N
 finalize-not-revert,v8,N
+finalize-not-revert,v9,N
 finalize-or-cancel-twice-revert,v1,P!
 finalize-or-cancel-twice-revert,v2,P!
 finalize-or-cancel-twice-revert,v3,P!
@@ -47,6 +52,7 @@ finalize-or-cancel-twice-revert,v5,P!
 finalize-or-cancel-twice-revert,v6,P!
 finalize-or-cancel-twice-revert,v7,P!
 finalize-or-cancel-twice-revert,v8,P!
+finalize-or-cancel-twice-revert,v9,P!
 finalize-revert,v1,P!
 finalize-revert,v2,P!
 finalize-revert,v3,N
@@ -55,6 +61,7 @@ finalize-revert,v5,P!
 finalize-revert,v6,P!
 finalize-revert,v7,N
 finalize-revert,v8,P!
+finalize-revert,v9,P!
 finalize-sent-eq-amount,v1,N
 finalize-sent-eq-amount,v2,N
 finalize-sent-eq-amount,v3,N
@@ -63,6 +70,7 @@ finalize-sent-eq-amount,v5,N
 finalize-sent-eq-amount,v6,N
 finalize-sent-eq-amount,v7,N
 finalize-sent-eq-amount,v8,N
+finalize-sent-eq-amount,v9,N
 finalize-sent-leq-amount,v1,P!
 finalize-sent-leq-amount,v2,P!
 finalize-sent-leq-amount,v3,P!
@@ -71,9 +79,12 @@ finalize-sent-leq-amount,v5,P!
 finalize-sent-leq-amount,v6,P!
 finalize-sent-leq-amount,v7,P!
 finalize-sent-leq-amount,v8,P!
+finalize-sent-leq-amount,v9,P!
 keys-distinct,v1,P!
 keys-distinct,v2,N
 keys-distinct,v3,P!
+keys-distinct,v7,P!
+keys-distinct,v9,P!
 keys-invariant-inter,v1,P!
 keys-invariant-inter,v2,P!
 keys-invariant-inter,v3,P!
@@ -82,14 +93,16 @@ keys-invariant-inter,v5,P!
 keys-invariant-inter,v6,P!
 keys-invariant-inter,v7,P!
 keys-invariant-inter,v8,P!
-keys-invariant-intra,v1,N
-keys-invariant-intra,v2,N
-keys-invariant-intra,v3,N
-keys-invariant-intra,v4,N
-keys-invariant-intra,v5,N
-keys-invariant-intra,v6,N
-keys-invariant-intra,v7,N
-keys-invariant-intra,v8,N
+keys-invariant-inter,v9,P!
+keys-invariant-intra,v1,P!
+keys-invariant-intra,v2,P!
+keys-invariant-intra,v3,P!
+keys-invariant-intra,v4,P!
+keys-invariant-intra,v5,P!
+keys-invariant-intra,v6,P!
+keys-invariant-intra,v7,P!
+keys-invariant-intra,v8,P!
+keys-invariant-intra,v9,N
 receive-not-revert,v1,P!
 receive-not-revert,v2,P!
 receive-not-revert,v3,P!
@@ -98,6 +111,7 @@ receive-not-revert,v5,P!
 receive-not-revert,v6,P!
 receive-not-revert,v7,P!
 receive-not-revert,v8,P!
+receive-not-revert,v9,P!
 state-idle-req-inter,v1,P!
 state-idle-req-inter,v2,P!
 state-idle-req-inter,v3,P!
@@ -106,14 +120,16 @@ state-idle-req-inter,v5,P!
 state-idle-req-inter,v6,P!
 state-idle-req-inter,v7,P!
 state-idle-req-inter,v8,P!
-state-idle-req-intra,v1,N
-state-idle-req-intra,v2,N
-state-idle-req-intra,v3,N
-state-idle-req-intra,v4,N
-state-idle-req-intra,v5,N
-state-idle-req-intra,v6,N
-state-idle-req-intra,v7,N
-state-idle-req-intra,v8,N
+state-idle-req-inter,v9,P!
+state-idle-req-intra,v1,P!
+state-idle-req-intra,v2,P!
+state-idle-req-intra,v3,P!
+state-idle-req-intra,v4,P!
+state-idle-req-intra,v5,P!
+state-idle-req-intra,v6,P!
+state-idle-req-intra,v7,P!
+state-idle-req-intra,v8,P!
+state-idle-req-intra,v9,P!
 state-req-amount-consistent,v1,P!
 state-req-amount-consistent,v2,P!
 state-req-amount-consistent,v3,P!
@@ -122,6 +138,7 @@ state-req-amount-consistent,v5,P!
 state-req-amount-consistent,v6,N
 state-req-amount-consistent,v7,P!
 state-req-amount-consistent,v8,P!
+state-req-amount-consistent,v9,P!
 state-update,v1,P!
 state-update,v2,P!
 state-update,v3,P!
@@ -130,6 +147,7 @@ state-update,v5,P!
 state-update,v6,P!
 state-update,v7,P!
 state-update,v8,P!
+state-update,v9,P!
 withdraw-finalize-not-revert,v1,N
 withdraw-finalize-not-revert,v2,N
 withdraw-finalize-not-revert,v3,N
@@ -138,6 +156,7 @@ withdraw-finalize-not-revert,v5,N
 withdraw-finalize-not-revert,v6,N
 withdraw-finalize-not-revert,v7,N
 withdraw-finalize-not-revert,v8,N
+withdraw-finalize-not-revert,v9,N
 withdraw-not-revert,v1,P!
 withdraw-not-revert,v2,P!
 withdraw-not-revert,v3,P!
@@ -146,6 +165,7 @@ withdraw-not-revert,v5,P!
 withdraw-not-revert,v6,P!
 withdraw-not-revert,v7,P!
 withdraw-not-revert,v8,P!
+withdraw-not-revert,v9,P!
 withdraw-revert,v1,P!
 withdraw-revert,v2,P!
 withdraw-revert,v3,P!
@@ -154,6 +174,7 @@ withdraw-revert,v5,P!
 withdraw-revert,v6,N
 withdraw-revert,v7,P!
 withdraw-revert,v8,P!
+withdraw-revert,v9,P!
 withdraw-withdraw-revert,v1,P!
 withdraw-withdraw-revert,v2,P!
 withdraw-withdraw-revert,v3,P!
@@ -162,3 +183,4 @@ withdraw-withdraw-revert,v5,P!
 withdraw-withdraw-revert,v6,P!
 withdraw-withdraw-revert,v7,P!
 withdraw-withdraw-revert,v8,P!
+withdraw-withdraw-revert,v9,P!
