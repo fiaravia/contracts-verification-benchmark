@@ -13,6 +13,9 @@ import logging
 import sys
 import os
 import re
+import time
+import random
+random.seed(42)
 
 import utils
 from utils import (STRONG_POSITIVE,
@@ -26,7 +29,7 @@ THREADS = 6     # n of parallel executions
 
 
 COMMAND_TEMPLATE = Template(
-    'certoraRun.py --short_output $contract_path:$name --verify $name:$spec_path --msg "$msg" --wait_for_results'
+    'certoraRun.py --short_output $contract_path:$name --verify $name:$spec_path --msg "$msg" --wait_for_results --rule_sanity none'
 )
 
 CONF_FILE_COMMAND_TEMPLATE = Template(
@@ -52,11 +55,12 @@ def violations_found(output):
 
 def property_violated(output, spec_path):
     property_name = str(spec_path).replace("certora/","").replace(".spec","").replace("-","_")
-    return f"Violated: {property_name}\n" in output
+    return f"Violated: {property_name}" in output
 
-def property_verified(output, spec_path):
+# Checks if the property was verified at least for one method
+def property_verified_at_least_one(output, spec_path):
     property_name = str(spec_path).replace("certora/","").replace(".spec","").replace("-","_")
-    return f"Verified: {property_name}\n" in output
+    return f"Verified: {property_name}" in output
 
 def has_critical_error(output):
     pattern1 = r'.*CRITICAL.*'
@@ -143,6 +147,7 @@ def run(contract_path, spec_path):
     conf_command = CONF_FILE_COMMAND_TEMPLATE.substitute(conf_params)
 
     if os.path.isfile(conf_params['conf_path']):
+        #print(conf_command)
         try:
             log = subprocess.run(conf_command.split(), capture_output=True, text=True)
         except FileNotFoundError as e:
@@ -156,19 +161,22 @@ def run(contract_path, spec_path):
             command = command.replace('_v1.sol', f'_{version_id}.sol')
         else:
             command = COMMAND_TEMPLATE.substitute(params)
-        # print(command) - substitute with a log that does not go to stdout
+
+        # Random wait to avoid conflicting Certora runs
+        wait_time = random.randint(1,1000)/1000
+        time.sleep(wait_time)
+        #print(command) #- substitute with a log that does not go to stdout
         try:
             log = subprocess.run(command.split(), capture_output=True, text=True)
         except FileNotFoundError as e:
             if 'certoraRun' in str(e):
                 logging.error('Certora is not installed. Use:\npip install certora-cli.')
                 return ERROR, str(e)
-    
     is_violated = property_violated(log.stdout, spec_path)
-    is_verified = property_verified(log.stdout, spec_path)
+    is_verified_once = property_verified_at_least_one(log.stdout, spec_path)
 
     # is_violated and is_verified must be mutually exclusive
-    if is_violated != (not is_verified):
+    if (not is_violated) and (not is_verified_once):
         logging.error(log.stdout)
         return ERROR, log.stdout
 

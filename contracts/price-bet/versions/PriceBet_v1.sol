@@ -22,7 +22,7 @@ contract PriceBet {
         deadline = block.number + _timeout;
         exchange_rate = _exchange_rate;
     }
-
+   
     // join allows a player to join the bet. This requires the player to deposit an amount of ETH equal to the initial pot.
     function join() public payable {
         require(msg.value == initial_pot, "Player must cover the pot to join");

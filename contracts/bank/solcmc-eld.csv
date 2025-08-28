@@ -1,4 +1,4 @@
-property,version,outcome,footnote
+property,version,outcome
 assets-dec-onlyif-deposit,v1,N!
 assets-dec-onlyif-deposit,v10,N!
 assets-dec-onlyif-deposit,v11,N!
@@ -149,7 +149,7 @@ deposit-revert,v3,P!
 deposit-revert,v4,UNK
 deposit-revert,v5,P!
 deposit-revert,v6,P!
-deposit-revert,v7,UNK
+deposit-revert,v7,N
 deposit-revert,v8,P!
 deposit-revert,v9,P!
 withdraw-assets-credit-others,v1,N!

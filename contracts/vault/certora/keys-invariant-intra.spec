@@ -13,5 +13,5 @@ hook Sstore recovery address new_addr (address old_addr) {
     if (old_addr != 0 && new_addr != old_addr) recovery_unchanged = false;
 }
 
-invariant keys_invariant_local()
+invariant keys_invariant_intra()
     owner_unchanged && recovery_unchanged;

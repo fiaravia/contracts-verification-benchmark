@@ -6,10 +6,10 @@ cancel-revert,v1,1,
 cancel-revert,v2,1,
 cancel-revert,v3,1,
 cancel-revert,v5,0,
+finalize-assets-transfer-receive,v1,1,
 finalize-assets-transfer,v1,0,
 finalize-assets-transfer,v2,0,
 finalize-assets-transfer,v3,0,
-finalize-assets-transfer-receive,v1,1,
 finalize-before-deadline-revert,v1,1,
 finalize-before-deadline-revert,v2,1,
 finalize-before-deadline-revert,v3,0,
@@ -23,12 +23,12 @@ finalize-or-cancel-twice-revert,v3,1,
 finalize-revert,v1,1,
 finalize-revert,v2,1,
 finalize-revert,v3,0,
-finalize-sent-leq-amount,v1,0,finalize can be re-entered
-finalize-sent-leq-amount,v4,1,finalize is non-reentrant
-finalize-sent-leq-amount,v8,1,transfer does not have enough gas to enable reentrant calls to finalize
 finalize-sent-eq-amount,v1,0,low-level call may have enough gas to enable further transfers
 finalize-sent-eq-amount,v4,1,finalize is non-reentrant
 finalize-sent-eq-amount,v8,1,transfer does not have enough gas to enable further transfers
+finalize-sent-leq-amount,v1,0,finalize can be re-entered
+finalize-sent-leq-amount,v4,1,finalize is non-reentrant
+finalize-sent-leq-amount,v8,1,transfer does not have enough gas to enable reentrant calls to finalize
 keys-distinct,v1,1,
 keys-distinct,v2,0,
 keys-distinct,v3,1,
@@ -38,9 +38,15 @@ keys-invariant-inter,v3,1,
 keys-invariant-intra,v1,1,
 keys-invariant-intra,v2,1,
 keys-invariant-intra,v3,1,
+okey-rkey-private-withdraw,v1,1,
+okey-rkey-private-withdraw,v2,1,
+okey-rkey-private-withdraw,v3,0,
 receive-not-revert,v1,1,
 receive-not-revert,v2,1,
 receive-not-revert,v3,1,
+rkey-no-withdraw,v1,1,
+rkey-no-withdraw,v2,1,
+rkey-no-withdraw,v3,0,
 state-idle-req-inter,v1,1,
 state-idle-req-inter,v2,1,
 state-idle-req-inter,v3,1,
@@ -50,15 +56,25 @@ state-idle-req-intra,v3,1,
 state-req-amount-consistent,v1,1,
 state-req-amount-consistent,v2,1,
 state-req-amount-consistent,v3,1,
+state-update-receive,v1,1,
 state-update,v1,0,
 state-update,v2,0,
 state-update,v3,0,
 state-update,v4,0,
-state-update-receive,v1,1,
+tx-idle-req-eoa,v1,1,check EIP 7702 
+tx-idle-req,v1,0,if owner is a contract without a method to call Vault.withdraw 
+tx-owner-assets-transfer-eoa-receive,v1,1,check EIP 7702  
+tx-owner-assets-transfer,v1,0,if receiver is a contract whose receive method reverts
+tx-req-idle-eoa,v1,1,check EIP 7702 
+tx-req-idle,v1,0,if receiver is a contract without a method to call Vault.cancel
+tx-tx-assets-transfer-eoa-receive-private,v1,1,
+tx-tx-assets-transfer-eoa-receive,v1,0,if recovery front-runs the call to withdraw with a call to cancel
+tx-tx-assets-transfer-eoa,v1,0,if receiver is a contract whose receive method reverts
+tx-tx-assets-transfer,v1,0,if owner is a contract without a method to call Vault.withdraw
+withdraw-finalize-not-revert-receive,v1,0,
 withdraw-finalize-not-revert,v1,0,
 withdraw-finalize-not-revert,v2,0,
 withdraw-finalize-not-revert,v3,0,
-withdraw-finalize-not-revert-receive,v1,0,
 withdraw-finalize-revert-inter,v1,1,
 withdraw-finalize-revert-inter,v2,1,
 withdraw-finalize-revert-inter,v3,0,
@@ -72,19 +88,3 @@ withdraw-revert,v6,0,
 withdraw-withdraw-revert,v1,1,
 withdraw-withdraw-revert,v2,1,
 withdraw-withdraw-revert,v3,1,
-okey-rkey-private-withdraw,v1,1,
-okey-rkey-private-withdraw,v2,1,
-okey-rkey-private-withdraw,v3,0,
-rkey-no-withdraw,v1,1,
-rkey-no-withdraw,v2,1,
-rkey-no-withdraw,v3,0,
-tx-idle-req,v1,0,if owner is a contract without a method to call Vault.withdraw 
-tx-idle-req-eoa,v1,1,check EIP 7702 
-tx-req-idle,v1,0,if receiver is a contract without a method to call Vault.cancel
-tx-req-idle-eoa,v1,1,check EIP 7702 
-tx-owner-assets-transfer,v1,0,if receiver is a contract whose receive method reverts
-tx-owner-assets-transfer-eoa-receive,v1,1,check EIP 7702  
-tx-tx-assets-transfer,v1,0,if owner is a contract without a method to call Vault.withdraw
-tx-tx-assets-transfer-eoa,v1,0,if receiver is a contract whose receive method reverts
-tx-tx-assets-transfer-eoa-receive,v1,0,if recovery front-runs the call to withdraw with a call to cancel
-tx-tx-assets-transfer-eoa-receive-private,v1,1,

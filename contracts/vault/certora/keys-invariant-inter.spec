@@ -2,7 +2,7 @@
 
 // in any blockchain state, the owner key and the recovery key cannot be changed after the contract is deployed
 
-rule keys_invariant_global {
+rule keys_invariant_inter {
     env e;
     method f;
     calldataarg args;

@@ -10,7 +10,7 @@ class TestComputeScore(unittest.TestCase):
         # Create a temporary directory and file for testing
         self.temp_dir = tempfile.TemporaryDirectory()
         self.scoring_schema = scoring.get_scoring_schema()
-        self.cm_header = 'property,version,result,footnote'
+        self.cm_header = 'property,version,result'
 
     def tearDown(self):
         # Cleanup: close the temporary directory
@@ -87,7 +87,7 @@ class TestCountOutcomes(unittest.TestCase):
     def setUp(self):
         # Create a temporary directory and file for testing
         self.temp_dir = tempfile.TemporaryDirectory()
-        self.cm_header = 'property,version,result,footnote'
+        self.cm_header = 'property,version,result'
 
     def tearDown(self):
         # Cleanup: close the temporary directory
