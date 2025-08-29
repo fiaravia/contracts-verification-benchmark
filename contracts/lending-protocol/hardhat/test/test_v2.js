@@ -3,7 +3,7 @@ const { loadFixture, mine } =
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("LP_v2", function () {
+describe("LendingProtocol_v2", function () {
 
     async function deployContract() {
         const [owner, actor_a, actor_b] = await ethers.getSigners();
@@ -22,7 +22,7 @@ describe("LP_v2", function () {
             signer: owner 
         });
 
-        const lp = await ethers.deployContract("LP_v2",
+        const lp = await ethers.deployContract("LendingProtocol_v2",
             [
                 await tok0.getAddress(),
                 await tok1.getAddress(),
