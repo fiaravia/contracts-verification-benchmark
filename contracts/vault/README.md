@@ -68,6 +68,7 @@ To this purpose, the vault contract implements a state transition system with st
 - **v6**: missing check `amount_ <= address(this).balance` in `withdraw`.
 - **v7**: wrong time constraint in `finalize`.
 - **v8**: `finalize` uses `transfer` instead of low-level call.
+- **v9**: `cancel` updates the recovery key before checking `msg.sender`, and then restores it
 
 ## Verification data
 
