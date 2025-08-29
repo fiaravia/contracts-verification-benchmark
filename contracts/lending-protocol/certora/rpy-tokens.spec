@@ -16,7 +16,11 @@ rule rpy_tokens {
     require(a != currentContract);
 
     require(e.msg.sender == a);
-    require((currentContract.tok0(e) == t) xor (currentContract.tok1(e) == t)); // t is IERC20; its functions can be used with t
+
+    // xor over the two tokens of the contract
+    require t == currentContract.tok0(e) || t == currentContract.tok1(e);
+    require !(t == currentContract.tok0(e) && t == currentContract.tok1(e));
+    require (t == currentContract.tok0(e)) != (t == currentContract.tok1(e));
 
     require(currentContract.tok0(e) == t); // t0 is IERC20; its functions can be used with t
 

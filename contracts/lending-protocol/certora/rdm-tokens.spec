@@ -18,7 +18,10 @@ rule rdm_tokens {
     require(e.msg.sender == a);
     require(currentContract.isValidToken(e, t));
 
-    require((currentContract.tok0(e) == t) xor (currentContract.tok1(e) == t)); // t is IERC20; its functions can be used with t
+    // xor over the two tokens of the contract
+    require t == currentContract.tok0(e) || t == currentContract.tok1(e);
+    require !(t == currentContract.tok0(e) && t == currentContract.tok1(e));
+    require (t == currentContract.tok0(e)) != (t == currentContract.tok1(e));
 
     uint xr = getUpdatedXR(e, t);
 
