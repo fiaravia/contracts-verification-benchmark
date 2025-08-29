@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version compound interests inspired by Aave v1 
+/// @custom:version faulty recreation of v2, token_addr in borrow is always overwritten to tok0
 
 import "./lib/IERC20.sol";
 
@@ -182,6 +182,9 @@ contract LP {
     }
 
     function borrow(uint amount, address token_addr) public updateBorrowIndex {
+
+        token_addr = address(tok0); //INTENTIONAL BUG HERE
+
         require(amount > 0, "Borrow: amount must be greater than zero");
         require(
             _isValidToken(token_addr),
@@ -318,7 +321,7 @@ contract LP {
     function getUpdatedSumDebits(address token_addr) public view returns (uint) {
         require(
             _isValidToken(token_addr),
-            "getUpdatedSumDebits: invalid token"
+            "GetAccruedDebt: invalid token"
         );
         // Update globalBorrowIndex
         uint _global_borrow_index = 0;
