@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version minimal implementation without liquidation
+/// @custom:version version that keeps 1 token for itself on redeem
 
 import "./lib/IERC20.sol";
 
-contract LendingProtocol_v1 {
+contract LendingProtocol_v4 {
     // workaround for bug in solc v0.8.30
     address constant ZERO_ADDRESS = address(0x0000000000000000000000000000000000000000);
 
@@ -200,7 +200,7 @@ contract LendingProtocol_v1 {
         // computes XR in the pre-state
         uint xr = XR(token_addr);
 
-        uint amount_rdm = (amount * xr) / 1e6;
+        uint amount_rdm = ((amount * xr) / 1e6) - 1; // taxes 1 token
         require(
             reserves[token_addr] >= amount_rdm,
             "Redeem: insufficient reserves"

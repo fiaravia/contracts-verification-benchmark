@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version compound interests inspired by Aave v1 
+/// @custom:version faulty recreation of v2, token_addr in deposit, borrow, repay and redeem is always overwritten to tok1
 
-import "./lib/IERC20.sol"; 
+import "./lib/IERC20.sol";
 
-contract LendingProtocol_v2 {
+contract LendingProtocol_v5 {
     // workaround for bug in solc v0.8.30
     address constant ZERO_ADDRESS = address(0x0000000000000000000000000000000000000000);
 
@@ -72,7 +72,7 @@ contract LendingProtocol_v2 {
     // XR(t) returns the exchange rate for token t (multiplied by 1e6)
     function XR(address token) public view returns (uint) {
         require (_isValidToken(token), "Invalid token");
-
+        
         // get updated sum_debits
         uint multiplier = _calculate_linear_interest();
         uint _global_borrow_index = (global_borrow_index * multiplier) / 1e6;
@@ -167,6 +167,9 @@ contract LendingProtocol_v2 {
     }
 
     function deposit(uint amount, address token_addr) public {
+
+        token_addr = address(tok1); //INTENTIONAL BUG HERE
+
         require(amount > 0, "Deposit: amount must be greater than zero");
         require(
             _isValidToken(token_addr),
@@ -187,6 +190,9 @@ contract LendingProtocol_v2 {
     }
 
     function borrow(uint amount, address token_addr) public updateBorrowIndex {
+
+        token_addr = address(tok1); //INTENTIONAL BUG HERE
+
         require(amount > 0, "Borrow: amount must be greater than zero");
         require(
             _isValidToken(token_addr),
@@ -217,6 +223,9 @@ contract LendingProtocol_v2 {
     }
 
     function repay(uint amount, address token_addr) public updateBorrowIndex {
+
+        token_addr = address(tok1); //INTENTIONAL BUG HERE
+
         require(amount > 0, "Repay: amount must be greater than zero");
         require(
             _isValidToken(token_addr),
@@ -246,6 +255,9 @@ contract LendingProtocol_v2 {
     }
 
     function redeem(uint amount, address token_addr) public {
+
+        token_addr = address(tok1); //INTENTIONAL BUG HERE
+
         require(amount > 0, "Redeem: amount must be greater than zero");
         require(
             _isValidToken(token_addr),
@@ -322,7 +334,7 @@ contract LendingProtocol_v2 {
     function getUpdatedSumDebits(address token_addr) public view returns (uint) {
         require(
             _isValidToken(token_addr),
-            "getUpdatedSumDebits: invalid token"
+            "GetAccruedDebt: invalid token"
         );
         // Update globalBorrowIndex
         uint _global_borrow_index = 0;

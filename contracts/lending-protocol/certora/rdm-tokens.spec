@@ -45,6 +45,5 @@ rule rdm_tokens {
 
     assert(new_lp_bal == old_lp_bal - rdm_amt);
     assert(new_a_bal  == old_a_bal  + rdm_amt);
-
     assert(new_res == old_res - rdm_amt);
 }
