@@ -28,7 +28,6 @@ The contract has the following entry points:
 - **join-only-once**: a `join()` transaction can only be called successfully once.
 - **join-player**: after a successful `join()`, `player` is not the zero address
 - **join-revert**: a transaction `join()` reverts if the amount of ETH sent along with the transaction is different from `initial_pot`, or the player address has already been set to a non-zero address, or the deadline has passed.
-- **no-frozen-funds**: eventually (i.e. at least once after the initial state), any user can perform some transaction after which the entire contract balance is trasferred to the `owner` address.
 - **only-owner-or-player-receive**: in any state where the player has been set, only the owner or the player can receive ETH from the contract.
 - **owner-cannot-withdraw-before-deadline**: if the deadline has not passed yet, then the `owner` cannot withdraw any ETH.
 - **owner-cannot-withdraw-before-deadline-not-player**: if the deadline has not passed yet and the `owner` is not the `player`, then the `owner` cannot withdraw any ETH.
@@ -46,6 +45,8 @@ The contract has the following entry points:
 - **timeout-revert**: a transaction `timeout()` reverts if the deadline has not passed yet.
 - **transfer-pot**: if some user manages to withdraw ETH from the contract, then the amount withdrawn by that user is at least twice the initial pot.
 - **transfer-pot-join**: if some user has joined the bet (i.e. `player` is not the zero address) and some user manages to withdraw ETH from the contract, then the amount withdrawn by that user is at least twice the initial pot.
+- **tx-assets-transfer-any**: eventually (i.e. at least once after the initial state), there exists some user who can perform some transaction after which the entire contract balance is trasferred to its own address.
+- **tx-assets-transfer-owner**: eventually (i.e. at least once after the initial state), there exists some user who can perform some transaction after which the entire contract balance is trasferred to the `owner` address.
 - **win-balance**: after a successful `win()`, the ETH balance of `player` is increased by the entire contract balance.
 - **win-balance-receive**: if the `receive` method of `player` just accepts all ETH, then after a successful `win()`, the ETH balance of `player` is increased by the entire contract balance.
 - **win-frontrun**: if the `player` can win the bet, there exists an adversary that can frontrun the `player` to prevent him from actually winning.
@@ -57,21 +58,22 @@ The contract has the following entry points:
 
 ## Versions
 - **v1**: minimal implementation conforming to specifications
-- **v2**: `join` does not check if player has already joined 
-- **v3**: `timeout()` callable only before the deadline ('<' instead of '>=')
-- **v4**: `join()` does not require the player to deposit an amount corresponding to the initial pot
-- **v5**: `join()` requires the player to transfer an amount strictly greater than the initial pot
-- **v6**: `join()` forgets to update the `player` field  
-- **v7**: `win()` can be called also after the deadline  
-- **v8**: `win()` only transfers 1 instead of the entire contract balance  
-- **v9**: `win()` does not check if the oracle exchange rate is greater than the target exchange rate
-- **v10**: `join` can be called after the deadline
-- **v11**: after a second deadline, anyone can withdraw the entire contract balance
-- **v12**: `join` checks that player is different from owner
-- **v13**: `win` uses `block.timestamp` instead of `block.number`
-- **v14**: uses `transfer` instead of low-level `call` to send ETH
-- **v15**: `timeout` can only be called once, if a player has joined
-- **v16**: `join` and `win` use (broken) balance invariants as guards for state transitions
+- **v2**: minimal implementation conforming to specifications
+- **v3**: `join` does not check if player has already joined 
+- **v4**: `timeout()` callable only before the deadline ('<' instead of '>=')
+- **v5**: `join()` does not require the player to deposit an amount corresponding to the initial pot
+- **v6**: `join()` requires the player to transfer an amount strictly greater than the initial pot
+- **v7**: `join()` forgets to update the `player` field  
+- **v8**: `win()` can be called also after the deadline  
+- **v9**: `win()` only transfers 1 instead of the entire contract balance  
+- **v10**: `win()` does not check if the oracle exchange rate is greater than the target exchange rate
+- **v11**: `join` can be called after the deadline
+- **v12**: after a second deadline, anyone can withdraw the entire contract balance
+- **v13**: `join` checks that player is different from owner
+- **v14**: `win` uses `block.timestamp` instead of `block.number`
+- **v15**: uses `transfer` instead of low-level `call` to send ETH
+- **v16**: `timeout` can only be called once, if a player has joined
+- **v17**: `join` and `win` use (broken) balance invariants as guards for state transitions
 
 ## Verification data
 
