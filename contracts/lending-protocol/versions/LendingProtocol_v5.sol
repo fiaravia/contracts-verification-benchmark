@@ -72,7 +72,13 @@ contract LendingProtocol {
     // XR(t) returns the exchange rate for token t (multiplied by 1e6)
     function XR(address token) public view returns (uint) {
         require (_isValidToken(token), "Invalid token");
-        return _XR(sum_credits[token], sum_debits[token], reserves[token]);
+        
+        // get updated sum_debits
+        uint multiplier = _calculate_linear_interest();
+        uint _global_borrow_index = (global_borrow_index * multiplier) / 1e6;
+        uint tot_debt = (sum_debits[token] * _global_borrow_index) / sum_debits_index[token];
+
+        return _XR(sum_credits[token], tot_debt, reserves[token]);
     }
 
     function _valCredit(address a) internal view returns (uint256) {
@@ -172,8 +178,7 @@ contract LendingProtocol {
         IERC20 token = IERC20(token_addr);
 
         // computes XR in the pre-state
-        // uint xr = XR(token_addr);
-        uint xr = getUpdatedXR(token_addr);
+        uint xr = XR(token_addr);
 
         token.transferFrom(msg.sender, address(this), amount);
         reserves[token_addr] += amount;
@@ -265,8 +270,7 @@ contract LendingProtocol {
         );
 
         // computes XR in the pre-state
-        // uint xr = XR(token_addr);
-        uint xr = getUpdatedXR(token_addr);
+        uint xr = XR(token_addr);
 
         uint amount_rdm = (amount * xr) / 1e6;
         require(
@@ -348,24 +352,6 @@ contract LendingProtocol {
         uint tot_debt = (sum_debits[token_addr] * _global_borrow_index) / sum_debits_index[token_addr];
 
         return tot_debt;
-    }
-
-    function getUpdatedXR(address token_addr) public view returns (uint) {
-        require(
-            _isValidToken(token_addr),
-            "GetUpdatedXR: invalid token"
-        );
-
-        uint multiplier = _calculate_linear_interest();
-        uint _global_borrow_index = (global_borrow_index * multiplier) / 1e6;
-
-        uint tot_debt = (sum_debits[token_addr] * _global_borrow_index) / sum_debits_index[token_addr];
-
-        if (sum_credits[token_addr] == 0) {
-            return 1e6;
-        } else {
-            return ((reserves[token_addr] + tot_debt) * 1e6)/sum_credits[token_addr];
-        }
     }
 
     function getBorrowersLength() public pure returns (uint) {

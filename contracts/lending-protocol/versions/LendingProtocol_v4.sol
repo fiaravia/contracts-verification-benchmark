@@ -258,11 +258,6 @@ contract LendingProtocol {
         return sum_debits[token];
     }
 
-    function getUpdatedXR(address token) public view returns (uint256) {
-        // in this version, we do not update XR
-        return XR(token);
-    }
-
     function getBorrowersLength() public view returns (uint) {
         return borrowers.length;
     }

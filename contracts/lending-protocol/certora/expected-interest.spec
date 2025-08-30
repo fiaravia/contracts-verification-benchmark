@@ -12,7 +12,7 @@ rule expected_interest {
     require isValidToken(e, t1);
     require isValidToken(e, t0);
     require getBorrowersLength(e) == 0;
-    require(getUpdatedXR(e, t1) == 1000000);
+    require(XR(e, t1) == 1000000);
     require(currentContract.ratePerPeriod == 100000); // 10% interest per period
     require amt > 0;
     require getAccruedDebt(e, t1, a) == 0;

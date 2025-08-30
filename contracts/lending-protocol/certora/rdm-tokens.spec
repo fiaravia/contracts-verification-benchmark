@@ -23,7 +23,7 @@ rule rdm_tokens {
     require !(t == currentContract.tok0(e) && t == currentContract.tok1(e));
     require (t == currentContract.tok0(e)) != (t == currentContract.tok1(e));
 
-    uint xr = getUpdatedXR(e, t);
+    uint xr = XR(e, t);
 
     mathint rdm_amt = amt * xr / 1000000;
 

@@ -87,7 +87,7 @@ rule trace2 {
 
     uint reserve_t0_4 = currentContract.reserves[t0];
     uint reserve_t1_4 = currentContract.reserves[t1];
-    uint xr_t0_4 = currentContract.getUpdatedXR(e4, t0);
+    uint xr_t0_4 = currentContract.XR(e4, t0);
     uint credit_t0_a_4 = currentContract.credit[t0][a];
     uint credit_t1_b_4 = currentContract.credit[t1][b];
     uint debit_t0_b_4 = currentContract.getAccruedDebt(e4, t0, b);
