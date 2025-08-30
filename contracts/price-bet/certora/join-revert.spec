@@ -8,6 +8,8 @@
 rule join_revert {
     env e;
 
+    require nativeBalances[e.msg.sender] >= e.msg.value;
+
     require 
         e.msg.value != currentContract.initial_pot ||
         currentContract.player != 0 ||
