@@ -3,10 +3,9 @@
 
 pragma solidity ^0.8.0;
 
-/// @custom:version this version has a fixed number of payees (3) and does not accept dynamic shares.
+/// @custom:version loop-free version with a fixed number of payees (set to 3) and equal shares
 
-contract PaymentSplitter3 {
-
+contract PaymentSplitter_v3 {
     uint256 private constant PAYEES = 3;
     uint256 private numPayees = 0;
 
@@ -16,38 +15,55 @@ contract PaymentSplitter3 {
     mapping(address => uint256) private shares;
     mapping(address => uint256) private released;
     address[] private payees;
-    
 
-constructor (address payee1, address payee2, address payee3) payable {
-    require(payee1 != address(0), "PaymentSplitter: account is the zero address");
-    require(shares[payee1] == 0, "PaymentSplitter: account already has shares");
-    
-    payees[0] = payee1;
-    shares[payee1] = 1;
-    released[payee1] = 0;
-    totalShares = totalShares + 1;
-    numPayees += 1;
-    
-    require(payee2 != address(0), "PaymentSplitter: account is the zero address");
-    require(shares[payee2] == 0, "PaymentSplitter: account already has shares");
-    
-    payees[1] = payee2;
-    shares[payee2] = 1;
-    released[payee2] = 0;
-    totalShares = totalShares + 1;
-    numPayees += 1;
-    
-    require(payee3 != address(0), "PaymentSplitter: account is the zero address");
-    require(shares[payee3] == 0, "PaymentSplitter: account already has shares");
-    
-    payees[2] = payee3;
-    shares[payee3] = 1;
-    released[payee3] = 0;
-    totalShares = totalShares + 1;
-    numPayees += 1;
-}
+    constructor(address payee1, address payee2, address payee3) payable {
+        require(
+            payee1 != address(0),
+            "PaymentSplitter: account is the zero address"
+        );
+        require(
+            shares[payee1] == 0,
+            "PaymentSplitter: account already has shares"
+        );
 
-    receive() external payable virtual { }
+        payees.push(payee1);
+        shares[payee1] = 1;
+        released[payee1] = 0;
+        totalShares = totalShares + 1;
+        numPayees += 1;
+
+        require(
+            payee2 != address(0),
+            "PaymentSplitter: account is the zero address"
+        );
+        require(
+            shares[payee2] == 0,
+            "PaymentSplitter: account already has shares"
+        );
+
+        payees.push(payee2);
+        shares[payee2] = 1;
+        released[payee2] = 0;
+        totalShares = totalShares + 1;
+        numPayees += 1;
+
+        require(
+            payee3 != address(0),
+            "PaymentSplitter: account is the zero address"
+        );
+        require(
+            shares[payee3] == 0,
+            "PaymentSplitter: account already has shares"
+        );
+
+        payees.push(payee3);
+        shares[payee3] = 1;
+        released[payee3] = 0;
+        totalShares = totalShares + 1;
+        numPayees += 1;
+    }
+
+    receive() external payable virtual {}
 
     function releasable(address account) public view returns (uint256) {
         uint256 totalReceived = address(this).balance + totalReleased;
@@ -56,6 +72,7 @@ constructor (address payee1, address payee2, address payee3) payable {
 
     function release(address payable account) public virtual {
         require(shares[account] > 0, "PaymentSplitter: account has no shares");
+        require(isPayee(account));
 
         uint256 payment = releasable(account);
 
@@ -68,7 +85,7 @@ constructor (address payee1, address payee2, address payee3) payable {
             released[account] += payment;
         }
 
-        (bool success,) = account.call{value: payment}("");
+        (bool success, ) = account.call{value: payment}("");
         require(success);
     }
 
@@ -80,6 +97,11 @@ constructor (address payee1, address payee2, address payee3) payable {
     }
 
     // Getters
+
+    function isPayee(address a) public view returns (bool) {
+        for (uint i; i < PAYEES; i++) if (payees[i] == a) return true;
+        return false;
+    }
 
     function getBalance() public view returns (uint) {
         return address(this).balance;
@@ -101,7 +123,10 @@ constructor (address payee1, address payee2, address payee3) payable {
     }
 
     function getShares(address addr) public view returns (uint) {
-        return shares[addr];
+        if (isPayee(addr)) {
+            return 1;
+        }
+        return 0;
     }
 
     function getReleased(address addr) public view returns (uint) {
@@ -111,23 +136,28 @@ constructor (address payee1, address payee2, address payee3) payable {
     function getSumOfShares() public view returns (uint) {
         uint sum = 0;
 
-        sum += shares[payees[0]];
-        sum += shares[payees[1]];
-        sum += shares[payees[2]];
+        sum += getShares(payees[0]);
+        sum += getShares(payees[1]);
+        sum += getShares(payees[0]);
 
         return sum;
     }
+
     function getSumOfReleased() public view returns (uint) {
         uint sum = 0;
 
         sum += released[payees[0]];
         sum += released[payees[1]];
         sum += released[payees[2]];
-        
+
         return sum;
     }
 
     function getPayeesLength() public pure returns (uint) {
-        return 3;
+        return PAYEES;
+    }
+
+    function getTotalShares() public view returns (uint) {
+        return totalShares;
     }
 }

@@ -1,7 +1,6 @@
 import "helper/methods.spec";
 import "helper/invariants.spec";
 
-
 rule swappable_call_order {
     requireInvariant shares_sum_eq_totalShares();
     requireInvariant released_sum_totalReleased();

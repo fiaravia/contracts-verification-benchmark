@@ -10,6 +10,6 @@
         "releasable-balance-check": "for all addresses `addr` in `payees`, `releasable(addr)` is less than or equal to the balance of the contract.",
         "releasable-sum-balance": "the sum of the releasable funds for every addresses is equal to the balance of the contract.",
         "release-release-revert": "two consecutive calls to `release` for the same address `a`, without there being any transfer to the contract in between calls, revert on the second call.", 
-        "swappable-call-order": "two different calls in any order to `release` yield the same contract state."
+        "swappable-call-order": "given two `payees` `a` and `b`, with `a != b`, calling `release(a)` and `release(b)`, independently of the order of the calls, yields the same contract state."
     }
 }

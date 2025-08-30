@@ -1,10 +1,9 @@
 pragma solidity ^0.8.0;
 
-
 contract ReturnsN {
     uint n;
 
-    constructor(uint _n) payable{
+    constructor(uint _n) payable {
         n = _n;
     }
 

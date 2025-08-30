@@ -26,7 +26,7 @@ contract PaymentSplitter {
             "PaymentSplitter: account already has shares"
         );
 
-        payees[0] = payee1;
+        payees.push(payee1);
         shares[payee1] = 1;
         released[payee1] = 0;
         totalShares = totalShares + 1;
@@ -41,7 +41,7 @@ contract PaymentSplitter {
             "PaymentSplitter: account already has shares"
         );
 
-        payees[1] = payee2;
+        payees.push(payee2);
         shares[payee2] = 1;
         released[payee2] = 0;
         totalShares = totalShares + 1;
@@ -56,7 +56,7 @@ contract PaymentSplitter {
             "PaymentSplitter: account already has shares"
         );
 
-        payees[2] = payee3;
+        payees.push(payee3);
         shares[payee3] = 1;
         released[payee3] = 0;
         totalShares = totalShares + 1;
