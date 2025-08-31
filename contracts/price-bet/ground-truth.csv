@@ -250,26 +250,26 @@ owner-cannot-withdraw-before-deadline,v2,0,
 owner-cannot-withdraw-before-deadline,v3,0,
 owner-cannot-withdraw-before-deadline,v4,0,
 owner-cannot-withdraw-before-deadline,v5,0,
-owner-cannot-withdraw-before-deadline,v6,1,"Player is the zero address, so win always reverts"
+owner-cannot-withdraw-before-deadline,v6,1,"player is the zero address, so win always reverts"
 owner-cannot-withdraw-before-deadline,v7,0,
 owner-cannot-withdraw-before-deadline,v8,0,
 owner-cannot-withdraw-before-deadline,v9,0,
-player-cannot-withdraw-after-deadline-not-owner,v10,1,
-player-cannot-withdraw-after-deadline-not-owner,v1,1,
+player-cannot-withdraw-after-deadline-not-owner,v10,0,
+player-cannot-withdraw-after-deadline-not-owner,v1,0,"Anyone can call timeout, and its low-level call can trigger an ETH transfer to player"
 player-cannot-withdraw-after-deadline-not-owner,v11,0,"Anyone can withdraw after second deadline"
-player-cannot-withdraw-after-deadline-not-owner,v12,1,
-player-cannot-withdraw-after-deadline-not-owner,v13,1,
-player-cannot-withdraw-after-deadline-not-owner,v14,1,
-player-cannot-withdraw-after-deadline-not-owner,v15,1,
-player-cannot-withdraw-after-deadline-not-owner,v16,1,
-player-cannot-withdraw-after-deadline-not-owner,v2,1,
-player-cannot-withdraw-after-deadline-not-owner,v3,1,
-player-cannot-withdraw-after-deadline-not-owner,v4,1,
-player-cannot-withdraw-after-deadline-not-owner,v5,1,
-player-cannot-withdraw-after-deadline-not-owner,v6,1,
+player-cannot-withdraw-after-deadline-not-owner,v12,0,
+player-cannot-withdraw-after-deadline-not-owner,v13,0,
+player-cannot-withdraw-after-deadline-not-owner,v14,1,"timeout uses transfer instead of low-level call to send ETH"
+player-cannot-withdraw-after-deadline-not-owner,v15,0,
+player-cannot-withdraw-after-deadline-not-owner,v16,0,
+player-cannot-withdraw-after-deadline-not-owner,v2,0,
+player-cannot-withdraw-after-deadline-not-owner,v3,1,"timeout can only be called before the deadline"
+player-cannot-withdraw-after-deadline-not-owner,v4,0,
+player-cannot-withdraw-after-deadline-not-owner,v5,0,
+player-cannot-withdraw-after-deadline-not-owner,v6,1,"The player address cannot be set"
 player-cannot-withdraw-after-deadline-not-owner,v7,0,
-player-cannot-withdraw-after-deadline-not-owner,v8,1,
-player-cannot-withdraw-after-deadline-not-owner,v9,1,
+player-cannot-withdraw-after-deadline-not-owner,v8,0,
+player-cannot-withdraw-after-deadline-not-owner,v9,0,
 player-cannot-withdraw-after-deadline,v10,0,
 player-cannot-withdraw-after-deadline,v1,0,"The owner coincides with the player"
 player-cannot-withdraw-after-deadline,v11,0,
@@ -292,9 +292,9 @@ player-immutable,v11,1,
 player-immutable,v12,1,
 player-immutable,v13,1,
 player-immutable,v14,1,
-player-immutable,v15,1,
+player-immutable,v15,0,"timeout resets player to zero address"
 player-immutable,v16,0,"join() win() selfdestruct() join()"
-player-immutable,v2,0,
+player-immutable,v2,0,"join does not check if player has already joined"
 player-immutable,v3,1,
 player-immutable,v4,1,
 player-immutable,v5,1,
