@@ -190,16 +190,48 @@ only-owner-or-player-receive,v6,0,
 only-owner-or-player-receive,v7,0,
 only-owner-or-player-receive,v8,0,
 only-owner-or-player-receive,v9,0,
+owner-cannot-receive-before-deadline-not-player,v10,0,
+owner-cannot-receive-before-deadline-not-player,v1,0,"player calls win, and its low-level call can trigger an ETH transfer to owner"
+owner-cannot-receive-before-deadline-not-player,v11,0,
+owner-cannot-receive-before-deadline-not-player,v12,0,
+owner-cannot-receive-before-deadline-not-player,v13,0,
+owner-cannot-receive-before-deadline-not-player,v14,1,"win uses transfer instead of low-level, so owner cannot receive ETH directed to player"
+owner-cannot-receive-before-deadline-not-player,v15,0,
+owner-cannot-receive-before-deadline-not-player,v16,0,"owner can call win, and its low-level call can trigger an ETH transfer to owner"
+owner-cannot-receive-before-deadline-not-player,v2,0,
+owner-cannot-receive-before-deadline-not-player,v3,0,"owner can call timeout before the deadline"
+owner-cannot-receive-before-deadline-not-player,v4,0,
+owner-cannot-receive-before-deadline-not-player,v5,0,
+owner-cannot-receive-before-deadline-not-player,v6,1,"player is the zero address, so win always reverts"
+owner-cannot-receive-before-deadline-not-player,v7,0,
+owner-cannot-receive-before-deadline-not-player,v8,0,
+owner-cannot-receive-before-deadline-not-player,v9,0,
+owner-cannot-receive-before-deadline,v10,0,
+owner-cannot-receive-before-deadline,v1,0,"The owner may coincide with the player"
+owner-cannot-receive-before-deadline,v11,0,
+owner-cannot-receive-before-deadline,v12,0,"Even though the owner is different from the player, the low-level call in win can trigger an ETH transfer to owner"
+owner-cannot-receive-before-deadline,v13,0,
+owner-cannot-receive-before-deadline,v14,0,
+owner-cannot-receive-before-deadline,v15,0,
+owner-cannot-receive-before-deadline,v16,0,
+owner-cannot-receive-before-deadline,v2,0,
+owner-cannot-receive-before-deadline,v3,0,
+owner-cannot-receive-before-deadline,v4,0,
+owner-cannot-receive-before-deadline,v5,0,
+owner-cannot-receive-before-deadline,v6,1,"Player is the zero address, so win always reverts"
+owner-cannot-receive-before-deadline,v7,0,
+owner-cannot-receive-before-deadline,v8,0,
+owner-cannot-receive-before-deadline,v9,0,
 owner-cannot-withdraw-before-deadline-not-player,v10,1,
-owner-cannot-withdraw-before-deadline-not-player,v1,1,
+owner-cannot-withdraw-before-deadline-not-player,v1,1,"owner cannot call win, since it is different from player"
 owner-cannot-withdraw-before-deadline-not-player,v11,1,
 owner-cannot-withdraw-before-deadline-not-player,v12,1,
 owner-cannot-withdraw-before-deadline-not-player,v13,1,
 owner-cannot-withdraw-before-deadline-not-player,v14,1,
 owner-cannot-withdraw-before-deadline-not-player,v15,1,
-owner-cannot-withdraw-before-deadline-not-player,v16,0,"owner can call win(), and its low-level call can trigger an ETH transfer to owner"
+owner-cannot-withdraw-before-deadline-not-player,v16,0,"owner can call win, and its low-level call can trigger an ETH transfer to owner"
 owner-cannot-withdraw-before-deadline-not-player,v2,1,
-owner-cannot-withdraw-before-deadline-not-player,v3,0,
+owner-cannot-withdraw-before-deadline-not-player,v3,0,"owner can call timeout before the deadline"
 owner-cannot-withdraw-before-deadline-not-player,v4,1,
 owner-cannot-withdraw-before-deadline-not-player,v5,1,
 owner-cannot-withdraw-before-deadline-not-player,v6,1,
@@ -207,9 +239,9 @@ owner-cannot-withdraw-before-deadline-not-player,v7,1,
 owner-cannot-withdraw-before-deadline-not-player,v8,1,
 owner-cannot-withdraw-before-deadline-not-player,v9,1,
 owner-cannot-withdraw-before-deadline,v10,0,
-owner-cannot-withdraw-before-deadline,v1,0,"The owner coincides with the player"
+owner-cannot-withdraw-before-deadline,v1,0,"The owner may coincide with the player"
 owner-cannot-withdraw-before-deadline,v11,0,
-owner-cannot-withdraw-before-deadline,v12,1,"The owner is different from the player"
+owner-cannot-withdraw-before-deadline,v12,1,"The owner is different from the player, so it cannot trigger win (only player can), and cannot trigger timeout before the deadline"
 owner-cannot-withdraw-before-deadline,v13,0,
 owner-cannot-withdraw-before-deadline,v14,0,
 owner-cannot-withdraw-before-deadline,v15,0,
@@ -218,7 +250,7 @@ owner-cannot-withdraw-before-deadline,v2,0,
 owner-cannot-withdraw-before-deadline,v3,0,
 owner-cannot-withdraw-before-deadline,v4,0,
 owner-cannot-withdraw-before-deadline,v5,0,
-owner-cannot-withdraw-before-deadline,v6,0,
+owner-cannot-withdraw-before-deadline,v6,1,"Player is the zero address, so win always reverts"
 owner-cannot-withdraw-before-deadline,v7,0,
 owner-cannot-withdraw-before-deadline,v8,0,
 owner-cannot-withdraw-before-deadline,v9,0,

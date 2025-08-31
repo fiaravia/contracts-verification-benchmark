@@ -29,8 +29,10 @@ The contract has the following entry points:
 - **join-player**: after a successful `join()`, `player` is not the zero address
 - **join-revert**: a transaction `join()` reverts if the amount of ETH sent along with the transaction is different from `initial_pot`, or the player address has already been set to a non-zero address, or the deadline has passed.
 - **only-owner-or-player-receive**: in any state where the player has been set, only the owner or the player can receive ETH from the contract.
-- **owner-cannot-withdraw-before-deadline**: if the deadline has not passed yet, then the `owner` cannot withdraw any ETH.
-- **owner-cannot-withdraw-before-deadline-not-player**: if the deadline has not passed yet and the `owner` is not the `player`, then the `owner` cannot withdraw any ETH.
+- **owner-cannot-receive-before-deadline**: if the deadline has not passed yet, then the `owner` cannot receive ETH from the PriceBet contract.
+- **owner-cannot-receive-before-deadline-not-player**: if the deadline has not passed yet and the `owner` is not the `player`, then the `owner` cannot receive ETH from the PriceBet contract.
+- **owner-cannot-withdraw-before-deadline**: if the deadline has not passed yet, then the `owner` cannot fire a transaction (to the PriceBet contract) after which its ETH balance is increased.
+- **owner-cannot-withdraw-before-deadline-not-player**: if the deadline has not passed yet and the `owner` is not the `player`, then the `owner` cannot fire a transaction (to the PriceBet contract) after which its ETH balance is increased.
 - **player-cannot-withdraw-after-deadline**: if the deadline has passed, the `player` cannot withdraw any ETH.
 - **player-cannot-withdraw-after-deadline-not-owner**: if the deadline has passed, and the `player` is not the `owner`, then the `player` cannot withdraw any ETH.
 - **player-immutable**: if `player` is not the zero address, then its value does never change
@@ -54,26 +56,25 @@ The contract has the following entry points:
 - **win-not-revert**: a transaction `win()` does not revert if the deadline has not expired, the sender is the `player`, and the call to oracle returns an exchange rate that is greater than or equal to the target `exchange_rate`.
 - **win-pot**: after a successful `win()`, the ETH balance of `player` is increased at least twice the initial pot.
 - **win-pot-receive**: if the `receive` method of `player` just accepts all ETH, then after a successful `win()`, the ETH balance of `player` increases of at least twice the initial pot.
-- **win-revert**: a transaction `win()` reverts if the deadline has expired, or the sender is not the player, or the oracle exchange rate is less than the oracle exchange rate. Assume that the address `oracle` actually contains a deployment of contract Oracle.
+- **win-revert**: a transaction `win()` reverts if the deadline has expired, or the sender is not the player, or the `exchange_rate` within the Oracle contract is less than the target `exchange_rate` within the PriceBet contract. Assume that the address `oracle` actually contains a deployment of contract Oracle.
 
 ## Versions
 - **v1**: minimal implementation conforming to specifications
-- **v2**: minimal implementation conforming to specifications
-- **v3**: `join` does not check if player has already joined 
-- **v4**: `timeout()` callable only before the deadline ('<' instead of '>=')
-- **v5**: `join()` does not require the player to deposit an amount corresponding to the initial pot
-- **v6**: `join()` requires the player to transfer an amount strictly greater than the initial pot
-- **v7**: `join()` forgets to update the `player` field  
-- **v8**: `win()` can be called also after the deadline  
-- **v9**: `win()` only transfers 1 instead of the entire contract balance  
-- **v10**: `win()` does not check if the oracle exchange rate is greater than the target exchange rate
-- **v11**: `join` can be called after the deadline
-- **v12**: after a second deadline, anyone can withdraw the entire contract balance
-- **v13**: `join` checks that player is different from owner
-- **v14**: `win` uses `block.timestamp` instead of `block.number`
-- **v15**: uses `transfer` instead of low-level `call` to send ETH
-- **v16**: `timeout` can only be called once, if a player has joined
-- **v17**: `join` and `win` use (broken) balance invariants as guards for state transitions
+- **v2**: `join` does not check if player has already joined 
+- **v3**: `timeout()` callable only before the deadline ('<' instead of '>=')
+- **v4**: `join()` does not require the player to deposit an amount corresponding to the initial pot
+- **v5**: `join()` requires the player to transfer an amount strictly greater than the initial pot
+- **v6**: `join()` forgets to update the `player` field  
+- **v7**: `win()` can be called also after the deadline  
+- **v8**: `win()` only transfers 1 instead of the entire contract balance  
+- **v9**: `win()` does not check if the oracle exchange rate is greater than the target exchange rate
+- **v10**: `join` can be called after the deadline
+- **v11**: after a second deadline, anyone can withdraw the entire contract balance
+- **v12**: `join` checks that player is different from owner
+- **v13**: `win` uses `block.timestamp` instead of `block.number`
+- **v14**: uses `transfer` instead of low-level `call` to send ETH
+- **v15**: `timeout` can only be called once, if a player has joined
+- **v16**: `join` and `win` use (broken) balance invariants as guards for state transitions
 
 ## Verification data
 

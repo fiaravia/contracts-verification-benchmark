@@ -3,6 +3,25 @@ pragma solidity >= 0.8.2;
 
 /// @custom:version `join` and `win` use (broken) balance invariants as guards for state transitions
 
+contract Oracle {
+    address owner;
+    uint exchange_rate;
+
+    constructor(uint init_rate) {
+        owner = msg.sender;
+        exchange_rate = init_rate;
+    }
+
+    function get_exchange_rate() public view returns(uint) {
+        return exchange_rate;
+    }
+
+    function set_exchange_rate(uint new_rate) public {
+        require(msg.sender == owner);
+        exchange_rate = new_rate;
+    }
+}
+
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
     uint256 deadline;           // a time limit after which the player loses the bet
@@ -53,24 +72,5 @@ contract PriceBet {
 
         (bool success, ) = owner.call{value: address(this).balance}("");
         require(success);
-    }
-}
-
-contract Oracle {
-    address owner;
-    uint exchange_rate;
-
-    constructor(uint init_rate) {
-        owner = msg.sender;
-        exchange_rate = init_rate;
-    }
-
-    function get_exchange_rate() public view returns(uint) {
-        return exchange_rate;
-    }
-
-    function set_exchange_rate(uint new_rate) public {
-        require(msg.sender == owner);
-        exchange_rate = new_rate;
     }
 }
