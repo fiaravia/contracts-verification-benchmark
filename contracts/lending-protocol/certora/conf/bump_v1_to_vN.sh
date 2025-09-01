@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+
+# Script to duplicate all files named with a v1 suffix to vN (e.g., v5),
+# updating internal references from v1 to vN as well.
+# Usage: ./bump_v1_to_vN.sh [dir] <N>
+
 set -euo pipefail
 
 dir="${1:-.}"                    # folder to scan (default: current)

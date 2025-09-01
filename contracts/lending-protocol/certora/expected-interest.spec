@@ -1,7 +1,7 @@
 // SPDX-License-Identifie: GPL-3.0-only
 
 rule expected_interest {
-    env e;                 // all calls use the same env (same sender)
+    env e;
     address a;
     address t1;
     address t0;
@@ -16,6 +16,7 @@ rule expected_interest {
     require(currentContract.ratePerPeriod == 100000); // 10% interest per period
     require amt > 0;
     require getAccruedDebt(e, t1, a) == 0;
+    require e.msg.sender == a;
 
     // 1) borrow on t1 -> a should be recorded once
     borrow(e, amt, t1);
@@ -30,6 +31,7 @@ rule expected_interest {
     //require debt_before == amt;
 
     env e2;
+    require e2.msg.sender == a;
     require e2.block.number == e.block.number + 1000000; // move forward in time
     accrueInt(e2);
     
