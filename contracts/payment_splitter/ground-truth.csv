@@ -38,7 +38,7 @@ release-release-revert,v1,1,
 release-release-revert,v2,1,
 release-release-revert,v3,1,
 release-release-revert,v4,1,
-release-release-revert,v4,1,
+release-release-revert,v5,1,
 swappable-call-order,v1,0,"If the receivers of the funds send different amounts of money back to the contract as a fallback, resulting releases may differ"
 swappable-call-order,v2,0,"If the receivers of the funds send different amounts of money back to the contract as a fallback, resulting releases may differ"
 swappable-call-order,v3,0,"If the receivers of the funds send different amounts of money back to the contract as a fallback, resulting releases may differ"
