@@ -14,6 +14,8 @@
         "join-player": "after a successful `join()`, `player` is not the zero address",
         "join-revert": "a transaction `join()` reverts if the amount of ETH sent along with the transaction is different from `initial_pot`, or the player address has already been set to a non-zero address, or the deadline has passed.",
         "only-owner-or-player-receive":	"in any state where the player has been set, only the owner or the player can receive ETH from the contract.",
+        "owner-cannot-receive-before-deadline": "if the deadline has not passed yet, then the `owner` cannot receive ETH from the PriceBet contract.",
+        "owner-cannot-receive-before-deadline-not-player": "if the deadline has not passed yet and the `owner` is not the `player`, then the `owner` cannot receive ETH from the PriceBet contract.",
         "owner-cannot-withdraw-before-deadline": "if the deadline has not passed yet, then the `owner` cannot fire a transaction (to the PriceBet contract) after which its ETH balance is increased.",
         "owner-cannot-withdraw-before-deadline-not-player": "if the deadline has not passed yet and the `owner` is not the `player`, then the `owner` cannot fire a transaction (to the PriceBet contract) after which its ETH balance is increased.",
         "player-cannot-withdraw-after-deadline": "if the deadline has passed, the `player` cannot withdraw any ETH.",

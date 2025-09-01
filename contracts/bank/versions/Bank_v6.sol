@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity >= 0.8.2;
 
-/// @custom:version no `amount <= credits[msg.sender]` check and `amount + 1` is transferred to the msg.sender in `withdraw`
+/// @custom:version no `amount <= credits[msg.sender]` check and `amount + 1` is transferred to `msg.sender` in `withdraw`
 
 contract Bank {
     mapping (address user => uint credit) credits;

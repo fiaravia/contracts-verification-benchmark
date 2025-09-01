@@ -6,10 +6,10 @@ The Bank contract stores assets deposited by users, and and pays them out when r
 - the `withdraw` method allows the sender to receive any desired amount of ETH deposited in their account.
 
 ## Properties
-- **assets-dec-onlyif-deposit**: if the ETH balance of an address A is decreased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.
-- **assets-inc-onlyif-withdraw**: if the ETH balance of a address A is increased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender.
-- **credit-dec-onlyif-withdraw**: if the credit of an address A is decreased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender
-- **credit-inc-onlyif-deposit**: if the credit of an address A is increased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.
+- **assets-dec-onlyif-deposit**: if the ETH balance of a user A is decreased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.
+- **assets-inc-onlyif-withdraw**: if the ETH balance of a user A is increased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender.
+- **credit-dec-onlyif-withdraw**: if the credit of a user A is decreased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender
+- **credit-inc-onlyif-deposit**: if the credit of a user A is increased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.
 - **credits-leq-balance**: the wei balance stored in the contract is (at least) equal to the sum of all the user credits
 - **deposit-additivity**: two (successful) `deposit` of n1 and n2 wei (performed by the same sender) are equivalent to a single `deposit` of n1+n2 wei of T.
 - **deposit-assets-credit**: after a successful `deposit()`, the credits of `msg.sender` are increased by `msg.value`.
@@ -40,7 +40,7 @@ The Bank contract stores assets deposited by users, and and pays them out when r
 - **v3**: `deposit` and `withdraw` limits for non-owner users, with owner exempt from limits; `withdraw` uses `transfer` instead of low-level call 
 - **v4**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is incremented by `amount - 1` in `deposit`
 - **v5**: no `amount <= credits[msg.sender]` check and `credits[msg.sender]` is incremented by `amount + 1` in `deposit`
-- **v6**: no `amount <= credits[msg.sender]` check and `amount + 1` is transferred to the msg.sender in `withdraw`
+- **v6**: no `amount <= credits[msg.sender]` check and `amount + 1` is transferred to `msg.sender` in `withdraw`
 - **v7**: `deposit` pays a unit fee to the owner
 - **v8**: `withdraw` is non-reentrant
 - **v9**: `deposit` and `withdraw` are non-reentrant
