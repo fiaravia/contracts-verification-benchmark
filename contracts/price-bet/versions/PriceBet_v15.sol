@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version `timeout` can only be called once, if a player has joined
+/// @custom:version `timeout` can only be called once, if a player has joined, and resets player
 
 contract PriceBet {
     uint256 initial_pot;        // pot transferred from the owner to the contract
