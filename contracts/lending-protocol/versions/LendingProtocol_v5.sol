@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version faulty recreation of v2, token_addr in deposit, borrow, repay and redeem is always overwritten to tok1
+/// @custom:version faulty recreation of v2, token_addr repay is always overwritten to tok1
 
 import "./lib/IERC20.sol";
 
@@ -168,8 +168,6 @@ contract LendingProtocol {
 
     function deposit(uint amount, address token_addr) public {
 
-        token_addr = address(tok1); //INTENTIONAL BUG HERE
-
         require(amount > 0, "Deposit: amount must be greater than zero");
         require(
             _isValidToken(token_addr),
@@ -190,8 +188,6 @@ contract LendingProtocol {
     }
 
     function borrow(uint amount, address token_addr) public updateBorrowIndex {
-
-        token_addr = address(tok1); //INTENTIONAL BUG HERE
 
         require(amount > 0, "Borrow: amount must be greater than zero");
         require(
@@ -255,8 +251,6 @@ contract LendingProtocol {
     }
 
     function redeem(uint amount, address token_addr) public {
-
-        token_addr = address(tok1); //INTENTIONAL BUG HERE
 
         require(amount > 0, "Redeem: amount must be greater than zero");
         require(
