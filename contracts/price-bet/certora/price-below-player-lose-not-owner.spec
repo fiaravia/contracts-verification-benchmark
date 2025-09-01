@@ -21,7 +21,7 @@ rule price_below_player_lose_not_owner {
     require e.msg.sender == player;
 
     // the deadline has not passed
-    require e.block.number <= currentContract.deadline;
+    require e.block.number < currentContract.deadline;
 
     // the price is below the target price
     require oracle.exchange_rate < currentContract.exchange_rate;
