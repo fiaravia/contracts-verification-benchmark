@@ -8,8 +8,8 @@ rule non_zero_payees {
     requireInvariant released_sum_totalReleased();
 
     uint index;
-
     require index < currentContract.getPayeesLength();
+    
     assert currentContract.payees[index] != 0;
 }
 

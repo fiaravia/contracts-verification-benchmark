@@ -3,9 +3,9 @@
 
 pragma solidity ^0.8.0;
 
-/// @custom:version minimal implementation conformant to specification
+/// @custom:version faulty implementation with a parenthesis order error in `pendingPayment`
 
-contract PaymentSplitter_v1 {
+contract PaymentSplitter_v5 {
     uint256 private totalShares;
     uint256 private totalReleased;
 
@@ -55,8 +55,9 @@ contract PaymentSplitter_v1 {
         uint256 totalReceived,
         uint256 alreadyReleased
     ) private view returns (uint256) {
+        // return (totalReceived * shares[account]) / totalShares - alreadyReleased;
         return
-            (totalReceived * shares[account]) / totalShares - alreadyReleased;
+            totalReceived * (shares[account] / totalShares) - alreadyReleased;
     }
 
     function addPayee(address account, uint256 shares_) private {
@@ -129,5 +130,9 @@ contract PaymentSplitter_v1 {
 
     function getTotalShares() public view returns (uint) {
         return totalShares;
+    }
+
+    function getTotalReleased() public view returns (uint) {
+        return totalReleased;
     }
 }

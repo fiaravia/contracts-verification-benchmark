@@ -3,9 +3,9 @@
 
 pragma solidity ^0.8.0;
 
-/// @custom:version minimal implementation conformant to specification
+/// @custom:version variant with unchecked release
 
-contract PaymentSplitter_v1 {
+contract PaymentSplitter {
     uint256 private totalShares;
     uint256 private totalReleased;
 
@@ -41,13 +41,12 @@ contract PaymentSplitter_v1 {
 
         // totalReleased is the sum of all values in released.
         // If "totalReleased += payment" does not overflow, then "released[account] += payment" cannot overflow.
-        totalReleased += payment;
         unchecked {
+            totalReleased += payment;
             released[account] += payment;
         }
 
-        (bool success, ) = account.call{value: payment}("");
-        require(success);
+        account.call{value: payment}("");
     }
 
     function pendingPayment(
