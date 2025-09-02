@@ -47,7 +47,6 @@ contract PaymentSplitter {
         }
 
         account.call{value: payment}("");
-        // require(success);
     }
 
     function pendingPayment(

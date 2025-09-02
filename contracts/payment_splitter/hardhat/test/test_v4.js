@@ -35,6 +35,79 @@ describe("PaymentSplitter_v4", function () {
         })
     };
 
+
+    //     release-balance-payee
+
+    {
+        async function deployContract() {
+
+            const RevertOnReceive = await (ethers.deployContract("RevertOnReceive"))
+            const [filler1, filler2] = await ethers.getSigners();
+
+            const payees = [RevertOnReceive.getAddress(), filler1.getAddress(), filler2.getAddress()];
+            const shares = [1,1,1];
+
+            const PaymentSplitter = await (ethers.deployContract("PaymentSplitter_v4", [
+                payees, shares
+            ],
+                {
+                    value: ethers.parseUnits("100", "wei")
+                }));
+
+            return { PaymentSplitter, RevertOnReceive };
+        }
+
+        it("release-balance-payee", async function () {
+            const { PaymentSplitter, RevertOnReceive } = await loadFixture(deployContract);
+
+            const balanceBefore = await ethers.provider.getBalance(RevertOnReceive.getAddress());
+
+            await PaymentSplitter.release(RevertOnReceive.getAddress());
+
+            const balanceAfter = await ethers.provider.getBalance(RevertOnReceive.getAddress());
+
+            expect(balanceAfter).to.equal(balanceBefore);
+        })
+    }
+
+    //     release-balance-ps
+
+    {
+        async function deployContract() {
+
+            const Returns5 = await (ethers.deployContract("ReturnsN", [5], {
+                value: ethers.parseUnits("5", "wei")
+            }));
+            const [filler1, filler2] = await ethers.getSigners();
+
+            const payees = [Returns5.getAddress(), filler1.getAddress(), filler2.getAddress()];
+            const shares = [1,1,1];
+
+            const PaymentSplitter = await (ethers.deployContract("PaymentSplitter_v4", [
+                payees, shares
+            ],
+                {
+                    value: ethers.parseUnits("100", "wei")
+                }));
+
+            return { PaymentSplitter, Returns5 };
+        }
+
+        it("release-balance-ps", async function () {
+            const { PaymentSplitter, Returns5 } = await loadFixture(deployContract);
+
+            const balanceBefore = await ethers.provider.getBalance(PaymentSplitter.getAddress());
+            
+            const amt = await PaymentSplitter.releasable(Returns5.getAddress())
+            await PaymentSplitter.release(Returns5.getAddress());
+
+            const balanceAfter = await ethers.provider.getBalance(PaymentSplitter.getAddress());
+
+            expect(balanceAfter).not.to.equal(balanceBefore - amt);
+        })
+    }
+
+
     //     swappable-call-order
     {
         async function deployContract() {

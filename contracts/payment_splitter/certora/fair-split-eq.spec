@@ -2,8 +2,9 @@ import "helper/methods.spec";
 import "helper/invariants.spec";
 
 invariant fair_split_eq (env e, uint index)
-    
-    index < currentContract.getPayeesLength() => 
+    // released[a] + releasable(a) == (totalReceived * shares[a]) / totalShares
+
+    index < currentContract.getPayeesLength() => // implication excludes non-payees 
     
     getReleased(currentContract.payees[index]) + 
     currentContract.releasable(currentContract.payees[index]) == (

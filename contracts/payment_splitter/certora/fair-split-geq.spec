@@ -2,8 +2,9 @@ import "helper/methods.spec";
 import "helper/invariants.spec";
 
 invariant fair_split_geq (env e,uint index)(
-    index < getPayeesLength() 
-    => 
+    // (totalReceived * shares[a]) / totalShares >= released[a]
+
+    index < getPayeesLength() => 
 
     ((getBalance() + currentContract.totalReleased) * 
     currentContract.getShares(currentContract.payees[index])) /

@@ -29,11 +29,26 @@ releasable-sum-balance,v2,0,"The balance could be non-divisible by the number of
 releasable-sum-balance,v3,0,"The balance could be non-divisible by the number of shares, leaving a reminder in the balance"
 releasable-sum-balance,v4,0,"The balance could be non-divisible by the number of shares, leaving a reminder in the balance"
 releasable-sum-balance,v5,0,"`totalReleasable()` is always `0`"
+release-balance-payee,v1,1
+release-balance-payee,v2,1
+release-balance-payee,v3,1
+release-balance-payee,v4,0,"`release()` does not verify the successfulness of the call, so even when it doesn't revert, it is not guaranteed that the call didn't"
+release-balance-payee,v5,1
+release-balance-ps,v1,1
+release-balance-ps,v2,1
+release-balance-ps,v3,1
+release-balance-ps,v4,0,"`release()` does not verify the successfulness of the call, so even when it doesn't revert, it is not guaranteed that the call didn't"
+release-balance-ps,v5,1
 release-not-revert,v1,0,"The contract could revert when `totalReleased += payment` overflows, or when the external call reverts"
 release-not-revert,v2,0,"The contract could revert when `totalReleased += payment` overflows, or when the external call reverts"
 release-not-revert,v3,0,"The contract could revert when `totalReleased += payment` overflows, or when the external call reverts"
 release-not-revert,v4,1,
 release-not-revert,v5,0,"if `payees.length > 1`, for any payee `a` in `payees`, `releasable(a) == 0` leading to the `release(a)` function reverting"
+release-not-revert-receive,v1,1,
+release-not-revert-receive,v2,1,
+release-not-revert-receive,v3,1,
+release-not-revert-receive,v4,1,
+release-not-revert-receive,v5,1,
 release-release-revert,v1,1,
 release-release-revert,v2,1,
 release-release-revert,v3,1,
