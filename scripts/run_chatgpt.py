@@ -59,9 +59,14 @@ def get_ground_truths(contract_path):
                 ground_truths[(parts[0],parts[1].replace("v",""))] = True if parts[2] == "1" else False
     return ground_truths
 
-def choose_verification_tasks(prop, versions, ground_truths, no_sample=False):
-    if no_sample:
-        return [(prop, v) for v in versions]
+def choose_verification_tasks(prop, versions, ground_truths, args):
+    if args.use_csv_verification_tasks:
+        verification_tasks = []
+        verification_tasks_from_csv = get_verification_tasks_from_csv(args.use_csv_verification_tasks)
+        for property, version in verification_tasks_from_csv:
+            if property == prop and version in versions:
+                verification_tasks.append((property, version))
+
     else:
         versions_positive = []
         versions_negative = []
@@ -74,14 +79,14 @@ def choose_verification_tasks(prop, versions, ground_truths, no_sample=False):
             
         k = min(len(versions_positive),len(versions_negative))
 
-        print(f"{k=}")
+        #print(f"{k=}")
         sampled_versions_positive = random.sample(versions_positive, k)
         sampled_versions_negative = random.sample(versions_negative, k)
-        print(f"{sampled_versions_positive=}")
-        print(f"{sampled_versions_negative=}")
+        #print(f"{sampled_versions_positive=}")
+        #print(f"{sampled_versions_negative=}")
         verification_tasks = [(prop, v) for v in sampled_versions_positive + sampled_versions_negative]
-        print(f"{verification_tasks=}")
-        return verification_tasks
+        #print(f"{verification_tasks=}")
+    return verification_tasks
 
 def get_verification_tasks_from_csv(filepath,):
     verification_tasks = []
@@ -240,27 +245,10 @@ def find_contract_folder(contract_arg: str) -> str:
     print(f"Errore: nessuna cartella trovata per '{contract_arg}' in {CONTRACTS_DIR}", file=sys.stderr)
     sys.exit(1)
 
-def write_results_to_csvOld(results_df, output_file):
 
-    # Applica sanitizzazione sulle colonne di testo potenzialmente problematiche
-    results_df["llm_explanation"] = results_df["llm_explanation"].apply(sanitize_for_csv)
-    results_df["llm_counterexample"] = results_df["llm_counterexample"].apply(sanitize_for_csv)
-    results_df["raw_output"] = results_df["raw_output"].apply(sanitize_for_csv)
-        
-    if os.path.exists(output_file):
-        output_file_backup = output_file.replace("llms_results/","llms_results/backup/").replace(".csv", f"_backup_{str(datetime.datetime.now()).replace(' ','_').replace(':','-')}.csv")
-        os.rename(output_file, output_file_backup)
-        print(f"Backup of existing file saved as {output_file_backup}")
+def write_results_to_csv(results, output_file, temp=False):
 
-    output_file = output_file.replace(".csv","_old.csv")
-
-    results_df.to_csv(output_file, index=False, quoting=csv.QUOTE_ALL)
-
-    print(f"Results saved to {output_file}")
-
-def write_results_to_csv(results, output_file):
-
-    if os.path.exists(output_file):
+    if not temp and os.path.exists(output_file):
         output_file_backup = output_file.replace("llms_results/","llms_results/backup/").replace(".csv", f"_backup_{str(datetime.datetime.now()).replace(' ','_').replace(':','-')}.csv")
         os.rename(output_file, output_file_backup)
         print(f"Backup of existing file saved as {output_file_backup}")
@@ -279,12 +267,6 @@ def write_results_to_csv(results, output_file):
     with open(output_file, "w", encoding="utf-8") as f: 
         f.write(text)
 
-def get_results_from_csvOld(input_file):
-    if not os.path.exists(input_file):
-        print(f"Error: the file {input_file} does not exist.", file=sys.stderr)
-        sys.exit(1)
-    results_df = pd.read_csv(input_file)
-    return results_df
 
 def get_results_from_csv(input_file):
     if not os.path.exists(input_file):
@@ -305,58 +287,6 @@ def get_results_from_csv(input_file):
         else:
             print(f"Warning: malformed line in {input_file}: {line}", file=sys.stderr)
     return results
-
-def merge_dataframesOld(df1, df2):
-    # Concatenate df1 and df2 along the rows (axis=0)
-    df3 = pd.concat([df1, df2], ignore_index=True)
-    
-    # Ensure the first two columns are the ones used for comparison
-    key_columns = df3.columns[:2]
-    df1_keys = set(tuple(row) for _, row in df1.iterrows())
-    # Store the updated rows in a list
-    updated_rows = []
-    
-    # Iterate through the rows of df3
-    for idx, row in df3.iterrows():
-        # Key for comparison (first two elements of the row)
-        key = tuple(row[key_columns])
-        
-        # Find all rows in df3 that share the same first two columns (key)
-        matching_rows = df3[(df3[key_columns[0]] == row[key_columns[0]]) & 
-                            (df3[key_columns[1]] == row[key_columns[1]])]
-        assert len(matching_rows) in [1,2], f"Matching row numbers different from 1 or 2"
-        if len(matching_rows) == 2:
-            #print(f"\n{matching_rows=}")
-            row1, row2 = matching_rows.iloc[0], matching_rows.iloc[1]
-            # Check if either of the rows appears in df1
-            #print(f"{row1[1:]=}")
-            #print(f"{row2[1:]=}")
-            #print(f"{df1[:][key_columns]=}")            
-            row1_in_df1 = tuple(row1) in df1_keys
-            row2_in_df1 = tuple(row2) in df1_keys
-            #print(f"\nrow1_in_df1, row2_in_df1:{row1_in_df1}, {row2_in_df1}")
-            if row1_in_df1 and row2_in_df1:
-                if row1.all() == row2.all():
-                    updated_rows.append(row1)
-                else:
-                    raise ValueError(f"Both rows {row1} and {row2} appear in df1, cannot process.")
-            elif not row1_in_df1 and not row2_in_df1:
-                raise ValueError(f"None of the rows {row1} and {row2} appears in df1, cannot process.")
-            elif row1_in_df1:
-                updated_rows.append(row1)
-            elif row2_in_df1:
-                updated_rows.append(row2)             
-
-        else:
-            updated_rows.append(row)
-
-
-    updated_rows = list({tuple(row[key_columns]): row for row in updated_rows}.values())
-
-        # Convert the updated rows back into a DataFrame
-    df3_updated = pd.DataFrame(updated_rows, columns=df3.columns)
-    
-    return df3_updated
 
 
 def merge_results(old_results, new_results):
@@ -397,9 +327,14 @@ def main():
 
     args = parser.parse_args()
 
-    if args.version and not args.no_sample:
-        args.no_sample = True
-        print("Warning: --no_sample is automatically enabled when --version is specified.")
+    if args.use_csv_verification_tasks and not args.no_sample:
+        print("Warning: --no_sample has no effect when --use_csv_verification_tasks is enabled.")
+
+
+    #if args.version and not args.no_sample:
+    #    args.no_sample = True
+    #    print("Warning: --no_sample is automatically enabled when --version is specified.")
+
 
     # Find contract folder ignoring cases and special chars
     contract_folder = find_contract_folder(args.contract)
@@ -423,17 +358,18 @@ def main():
         if not versions:
             print(f"Nessuna versione trovata in {versions_path}", file=sys.stderr)
 
-        if not args.use_csv_verification_tasks:
-            verification_tasks_prop = choose_verification_tasks(prop, versions, ground_truths, args.no_sample)
-            verification_tasks.extend(verification_tasks_prop)  
-
-    if args.use_csv_verification_tasks:
-        verification_tasks = get_verification_tasks_from_csv(args.use_csv_verification_tasks)
-    else:
-        csv_ver_tasks_name = f"logs_verification_tasks/verification_tasks_{str(datetime.datetime.now())}.csv".replace(" ","")
-        save_verification_tasks(verification_tasks, csv_ver_tasks_name)
-
+        verification_tasks_prop = choose_verification_tasks(prop, versions, ground_truths, args)
+        print(f"{verification_tasks_prop=}")
+        verification_tasks.extend(verification_tasks_prop)  
+    print(f"Verification tasks: {verification_tasks}")
     print(len(verification_tasks))
+
+    #if args.use_csv_verification_tasks:
+    #    verification_tasks = get_verification_tasks_from_csv(args.use_csv_verification_tasks)
+
+    csv_ver_tasks_name = f"logs_verification_tasks/verification_tasks_{str(datetime.datetime.now())}.csv".replace(" ","")
+    save_verification_tasks(verification_tasks, csv_ver_tasks_name)
+
     output_file = f"llms_results/results_{args.model}_{args.prompt}_{args.contract}_{args.tokens}tok.csv".replace(".txt","")
     print(f"Results will be saved to {output_file}")
             
@@ -459,16 +395,17 @@ def main():
             "raw_output": output
         }
         results.append(result_entry)
-        with open(f"logs_results/results_temp_{starting_time}.txt", "a", encoding="utf-8") as f:
-            f.write(json.dumps(result_entry) + "\n")
+        temp_file = f"logs_results/results_temp_{starting_time}.txt"
+        write_results_to_csv(results, temp_file, temp=True)
+        
 
     #print(results)
     results_df = pd.DataFrame(results)
     
     if os.path.exists(output_file):
         previous_results = get_results_from_csv(output_file)
-        for res in previous_results:
-            print(res)
+        #for res in previous_results:
+        #    print(res)
 
         results = merge_results(previous_results, results)
 
