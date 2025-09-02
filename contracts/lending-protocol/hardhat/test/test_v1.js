@@ -30,6 +30,8 @@ describe("LendingProtocol_v1", function () {
         );
 
         await tok0.transfer(actor_a, 5000);
+        await tok1.transfer(actor_a, 5000);
+        await tok0.transfer(actor_b, 5000);
         await tok1.transfer(actor_b, 5000);
 
         return { lp, tok0, tok1, actor_a , actor_b , owner};
@@ -216,6 +218,59 @@ describe("LendingProtocol_v1", function () {
       expect(debit_t0_b_5).to.equal(debit_t0_b_4 - 5n);
     });
 
+    it("dep-additivity", async function() {
+        var balance_tok0_after_1, balance_tok0_after_2;
+
+        // Run 1: first deposit n1, then n2
+        {
+            const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
+            const lpAddr    = await lp.getAddress();
+            const tok1_addr = await tok1.getAddress();
+
+            // setup: deposit 10, borrow 10, accrue once
+            await tok1.connect(actor_a).approve(lpAddr, 10n);
+            await lp.connect(actor_a).deposit(10, tok1_addr);
+            await lp.connect(actor_a).borrow(10, tok1_addr);
+            await lp.connect(owner).accrueInt();
+
+            //actual POC
+            const n1 = 1n;
+            const n2 = 1n;
+
+            await tok1.connect(actor_a).approve(lpAddr, n1 + n2);
+
+            await lp.connect(actor_a).deposit(n1, tok1_addr);
+            await lp.connect(actor_a).deposit(n2, tok1_addr);
+
+            balance_tok1_after_1 = await lp.credit(tok1_addr, actor_a);
+
+        }
+
+        // Run 2: deposit n1+n2
+        {
+            const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
+            const lpAddr    = await lp.getAddress();
+            const tok1_addr = await tok1.getAddress();
+
+            // setup: deposit 10, borrow 10, accrue once
+            await tok1.connect(actor_a).approve(lpAddr, 10n);
+            await lp.connect(actor_a).deposit(10, tok1_addr);
+            await lp.connect(actor_a).borrow(10, tok1_addr);
+            await lp.connect(owner).accrueInt();
+
+            //actual POC
+            const n1 = 1n;
+            const n2 = 1n;
+
+            await tok1.connect(actor_a).approve(lpAddr, n1 + n2);
+            await lp.connect(actor_a).deposit(n1 + n2, tok1_addr);
+
+            balance_tok1_after_2 = await lp.credit(tok1_addr, actor_a.getAddress());
+        }
+
+        expect(balance_tok1_after_1).to.not.equal(balance_tok1_after_2); 
+
+    });
 
     it("dep-xr-eq", async function() {
 
