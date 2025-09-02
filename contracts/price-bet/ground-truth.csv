@@ -641,7 +641,7 @@ win-revert,v10,1,
 win-revert,v1,1,
 win-revert,v11,1,
 win-revert,v12,1,
-win-revert,v13,1,
+win-revert,v13,1,"In Ethereum, for all future block we have block.timestamp > block.number. Then, if block.number >= deadline, it also holds that block.timestamp > deadline, hence win reverts"
 win-revert,v14,1,
 win-revert,v15,1,
 win-revert,v16,0,"win does not require that the sender is the player"
