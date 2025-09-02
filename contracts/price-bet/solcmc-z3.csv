@@ -240,12 +240,14 @@ timeout-revert,v6,P!
 timeout-revert,v7,P!
 timeout-revert,v8,P!
 timeout-revert,v9,P!
+transfer-pot-join,v1,N!
+transfer-pot-join,v15,UNK
 win-balance,v1,N!
 win-balance,v10,N!
 win-balance,v11,N!
 win-balance,v12,N!
 win-balance,v13,N!
-win-balance,v14,N!
+win-balance,v14,P!
 win-balance,v15,N!
 win-balance,v16,N!
 win-balance,v2,N!
