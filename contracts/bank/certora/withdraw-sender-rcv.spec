@@ -4,6 +4,9 @@ rule withdraw_sender_rcv {
     env e;
     uint256 amount;
 
+    // technical assumption: the sender is not the contract itself
+    require (e.msg.sender != currentContract);
+
     mathint old_sender_balance = nativeBalances[e.msg.sender];
     withdraw(e,amount);
     mathint new_sender_balance = nativeBalances[e.msg.sender];

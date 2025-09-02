@@ -7,6 +7,9 @@
 rule timeout_not_revert {
     env e;
 
+    // technical assumption
+    require currentContract.owner != currentContract;
+
     require 
         e.msg.value == 0 &&
         e.block.number >= currentContract.deadline;

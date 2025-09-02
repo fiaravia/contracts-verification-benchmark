@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-/// @custom:run certoraRun versions/PriceBet_v1.sol:PriceBet versions/PriceBet_v1.sol:Oracle --verify PriceBet:certora/price-below-player-lose-not-owner.spec --link PriceBet:oracle=Oracle
+/// @custom:run certoraRun versions/PriceBet_v1.sol:PriceBet versions/PriceBet_v1.sol:Oracle --verify PriceBet:certora/price-below-player-lose-before-deadline-not-owner.spec --link PriceBet:oracle=Oracle
 
 using Oracle as oracle;
 
-rule price_below_player_lose_not_owner {
+rule price_below_player_lose_before_deadline_not_owner {
     env e;
     method f;
     calldataarg args;
