@@ -1,6 +1,6 @@
 using LendingProtocol as lp;
 
-rule bor_additivity {
+rule rpy_additivity {
     env e1;
     env e2;
     env e3;
@@ -13,17 +13,19 @@ rule bor_additivity {
     storage initial = lastStorage;
 
     require e1.msg.sender == e2.msg.sender;
-    borrow(e1, amount1, token);
-    borrow(e2, amount2, token);
-    
+
+    repay(e1, amount1, token);
+    repay(e2, amount2, token);
+
     storage s12 = lastStorage;
 
     require e3.msg.sender == e1.msg.sender;
     require amount3 == amount1 + amount2;
-    borrow(e3, amount3, token) at initial;
+
+    repay(e3, amount3, token) at initial;
 
     storage s3 = lastStorage;
-
+    
     // avoids cheap violation, since the block number that would not normally be saved, is saved in the contract
     require (e1.block.number == blocknumber);
     require (e2.block.number == blocknumber);
