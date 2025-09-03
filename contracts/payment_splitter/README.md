@@ -31,6 +31,7 @@ The contract follows a pull payment model. This means that payments are not auto
 - **v3**: loop-free version with a fixed number of payees (set to 3) and equal shares
 - **v4**: variant with unchecked release
 - **v5**: faulty implementation with a parenthesis error in `pendingPayment`
+- **v6**: homograph attack in ZERO_ADDRESS 
 
 ## Verification data
 
