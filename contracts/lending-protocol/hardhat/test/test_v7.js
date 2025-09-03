@@ -3,7 +3,7 @@ const { loadFixture, mine } =
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("LendingProtocol_v5", function () {
+describe("LendingProtocol_v7", function () {
 
     async function deployContract() {
         const [owner, actor_a, actor_b] = await ethers.getSigners();
@@ -22,7 +22,7 @@ describe("LendingProtocol_v5", function () {
             signer: owner
         });
 
-        const lp = await ethers.deployContract("LendingProtocol_v5",
+        const lp = await ethers.deployContract("LendingProtocol_v7",
             [
                 await tok0.getAddress(),
                 await tok1.getAddress(),
@@ -30,9 +30,9 @@ describe("LendingProtocol_v5", function () {
         );
 
         await tok0.transfer(actor_a, 5000);
+        await tok1.transfer(actor_a, 5000);
+        await tok0.transfer(actor_b, 5000);
         await tok1.transfer(actor_b, 5000);
-
-        await tok1.transfer(actor_a, 500);
 
         return { lp, tok0, tok1, actor_a, actor_b, owner };
     }
@@ -40,7 +40,7 @@ describe("LendingProtocol_v5", function () {
     it("trace1", async function () {
         const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
 
-        // deployment checks 
+        /* deployment checks */
 
         const tok0_addr = await tok0.getAddress();
         const tok1_addr = await tok1.getAddress();
@@ -52,14 +52,14 @@ describe("LendingProtocol_v5", function () {
         expect(await lp.reserves(tok0_addr)).to.equal(0);
         expect(await lp.reserves(tok1_addr)).to.equal(0);
 
-        expect(await lp.getUpdatedSumDebits(tok0_addr)).to.equal(0);
-        expect(await lp.getUpdatedSumDebits(tok1_addr)).to.equal(0);
+        expect(await lp.sum_credits(tok0_addr)).to.equal(0);
+        expect(await lp.sum_credits(tok1_addr)).to.equal(0);
 
         expect(await lp.sum_debits(tok0_addr)).to.equal(0);
         expect(await lp.sum_debits(tok1_addr)).to.equal(0);
 
 
-        // step 1; A:deposit(50:T0) 
+        /* step 1; A:deposit(50:T0) */
 
 
         const amountDeposit = 50n;
@@ -81,7 +81,7 @@ describe("LendingProtocol_v5", function () {
         expect(reserve_t1_1).to.equal(reserve_t1_0);
         expect(credit_t0_a_1).to.equal(credit_t0_a_0 + amountDeposit);
 
-        // step 2; B:deposit(50:T1) 
+        /* step 2; B:deposit(50:T1) */
 
         await tok1.connect(actor_b).approve(await lp.getAddress(), amountDeposit);
         await lp.connect(actor_b).deposit(amountDeposit, tok1_addr);
@@ -94,7 +94,7 @@ describe("LendingProtocol_v5", function () {
         expect(reserve_t1_2).to.equal(reserve_t1_1 + amountDeposit);
         expect(credit_t1_b_2).to.equal(credit_t1_b_1 + amountDeposit);
 
-        // step 3; B:borrow(30:T0) 
+        /* step 3; B:borrow(30:T0) */
 
         const amountBorrow = 30n;
 
@@ -184,7 +184,6 @@ describe("LendingProtocol_v5", function () {
         const reserve_t0_preAccrue = reserve_t0_3;
         const reserve_t1_preAccrue = reserve_t1_3;
 
-        await mine(1_000_000);
         await lp.connect(owner).accrueInt();
 
         const reserve_t0_4 = await lp.reserves(tok0_addr);
@@ -232,7 +231,6 @@ describe("LendingProtocol_v5", function () {
             await tok1.connect(actor_a).approve(lpAddr, 10n);
             await lp.connect(actor_a).deposit(10, tok1_addr);
             await lp.connect(actor_a).borrow(10, tok1_addr);
-            await mine(1_000_000);
             await lp.connect(owner).accrueInt();
 
             //actual POC
@@ -258,7 +256,6 @@ describe("LendingProtocol_v5", function () {
             await tok1.connect(actor_a).approve(lpAddr, 10n);
             await lp.connect(actor_a).deposit(10, tok1_addr);
             await lp.connect(actor_a).borrow(10, tok1_addr);
-            await mine(1_000_000);
             await lp.connect(owner).accrueInt();
 
             //actual POC
@@ -289,7 +286,6 @@ describe("LendingProtocol_v5", function () {
 
         const old_xr_t0 = await lp.XR(tok0); //1e6
 
-        await mine(1_000_000);
         await lp.connect(owner).accrueInt(); //res=0,tot_cred=10,tot_deb=11,xr=1.1e6
 
         await actor_a_conn.deposit(1, tok0_addr); // rounding error
@@ -316,7 +312,6 @@ describe("LendingProtocol_v5", function () {
         //uint old_sum_credits_t0 = currentContract.sum_credits[t0];
         const old_sum_credits_t0 = await lp.sum_credits(tok0);
 
-        await mine(1_000_000);
         await lp.connect(owner).accrueInt(); //res=0,tot_cred=10,tot_deb=11,xr=1.1e6
 
         await actor_a_conn.deposit(1, tok0_addr); // rounding error
@@ -326,10 +321,8 @@ describe("LendingProtocol_v5", function () {
 
         expect(new_xr_t0).to.be.greaterThan(old_xr_t0);
 
-        // extra violation of the property
         expect(new_xr_t0).to.be.greaterThan(old_xr_t0 + (1n * 1000000n / old_sum_credits_t0) + 1n);
     });
-    
 
     it("rdm-additivity", async function () {
         var balEnd1, balEnd2;
@@ -346,13 +339,15 @@ describe("LendingProtocol_v5", function () {
             await tok1.connect(actor_b).approve(lpAddr, bigColl);
             await lp.connect(actor_b).deposit(bigColl, tok1);
             await lp.connect(actor_b).borrow(10n, tok0);
-            await mine(3 * 1_000_000);
+            await lp.connect(owner).accrueInt();
+            await lp.connect(owner).accrueInt();
+            await lp.connect(owner).accrueInt();
 
             // actual POC
             const a = 1n;
             const b = 6n;
 
-            await lp.connect(actor_a).redeem(a, tok0);  
+            await lp.connect(actor_a).redeem(a, tok0);
             await lp.connect(actor_a).redeem(b, tok0);
             balEnd1 = await tok0.balanceOf(actor_a);
         }
@@ -368,7 +363,9 @@ describe("LendingProtocol_v5", function () {
             await tok1.connect(actor_b).approve(lpAddr, bigColl);
             await lp.connect(actor_b).deposit(bigColl, tok1);
             await lp.connect(actor_b).borrow(10n, tok0);
-            await mine(3 * 1_000_000);
+            await lp.connect(owner).accrueInt();
+            await lp.connect(owner).accrueInt();
+            await lp.connect(owner).accrueInt();
 
             // actual POC
             const a = 1n;
@@ -394,7 +391,7 @@ describe("LendingProtocol_v5", function () {
 
         await lp.connect(actor_a).borrow(10, tok0_addr);      // reserves=1, credits=11, debits=10, XR still 1e6
 
-        await mine(1_000_000);                  // reserves=1, credits=11, debits=11, XR=floor(12/11*1e6)=1_090_909
+        await lp.connect(owner).accrueInt();                  // reserves=1, credits=11, debits=11, XR=floor(12/11*1e6)=1_090_909
 
         const oldXR = await lp.XR(tok0_addr);
 
@@ -423,14 +420,15 @@ describe("LendingProtocol_v5", function () {
 
         const sum_debit_before_mine = await lp.getUpdatedSumDebits(tok0);
 
-        await mine(20 * 1_000_000);
+        i = 0;
+        while (i < 20) {
+            await lp.connect(owner).accrueInt();
+            i += 1;
+        }
 
         const sum_debit_after_mine = await lp.getUpdatedSumDebits(tok0);
 
         const debit_after_mine = await lp.getAccruedDebt(tok0, actor_b);
-
-        expect(debit_after_mine).to.equal(debit_before_mine + 2n);
-        expect(sum_debit_after_mine).to.equal(sum_debit_before_mine + 2n);
 
         // await tok1.connect(actor_a).approve(await lp.getAddress(), 3);
         await expect(actor_b_conn.repay(2, tok0)).to.be.revertedWith("Repay: insufficient debts");
@@ -467,4 +465,6 @@ describe("LendingProtocol_v5", function () {
         expect(new_reserves_t0).to.not.equal(old_reserves_t0 + 5n);
     });
 
+
 });
+

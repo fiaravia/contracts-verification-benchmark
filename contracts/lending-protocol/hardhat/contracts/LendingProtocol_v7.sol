@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version version that keeps 1 token for itself on redeem (based on v1)
+/// @custom:version faulty version based on v1, token_addr repay is always overwritten to tok1
 
 import "./lib/IERC20.sol";
 
-contract LendingProtocol {
+contract LendingProtocol_v7 {
     // workaround for bug in solc v0.8.30
     address constant ZERO_ADDRESS = address(0x0000000000000000000000000000000000000000);
 
@@ -165,7 +165,10 @@ contract LendingProtocol {
         return false;
     }
 
-    function repay(uint amount, address token_addr) public {
+    function repay(uint amount, address token_addr) public{
+
+        token_addr = address(tok1); //INTENTIONAL BUG HERE
+
         require(amount > 0, "Repay: amount must be greater than zero");
         require(
             _isValidToken(token_addr),
@@ -200,7 +203,7 @@ contract LendingProtocol {
         // computes XR in the pre-state
         uint xr = XR(token_addr);
 
-        uint amount_rdm = ((amount * xr) / 1e6) - 1; // taxes 1 token
+        uint amount_rdm = (amount * xr) / 1e6;
         require(
             reserves[token_addr] >= amount_rdm,
             "Redeem: insufficient reserves"

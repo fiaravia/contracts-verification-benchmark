@@ -3,12 +3,12 @@ const { loadFixture, mine } =
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("LendingProtocol_v5", function () {
+describe("LendingProtocol_v6", function () {
 
     async function deployContract() {
         const [owner, actor_a, actor_b] = await ethers.getSigners();
 
-        const amount = 1000000000;
+        const amount = 1000000000000;
 
         const tok0 = await ethers.deployContract("ERC20", [
             amount
@@ -22,17 +22,17 @@ describe("LendingProtocol_v5", function () {
             signer: owner
         });
 
-        const lp = await ethers.deployContract("LendingProtocol_v5",
+        const lp = await ethers.deployContract("LendingProtocol_v6",
             [
                 await tok0.getAddress(),
                 await tok1.getAddress(),
             ]
         );
 
-        await tok0.transfer(actor_a, 5000);
-        await tok1.transfer(actor_b, 5000);
+        await tok0.transfer(actor_a, 5000000);
+        await tok1.transfer(actor_b, 5000000);
 
-        await tok1.transfer(actor_a, 500);
+        await tok1.transfer(actor_a, 5000000);
 
         return { lp, tok0, tok1, actor_a, actor_b, owner };
     }
@@ -209,14 +209,14 @@ describe("LendingProtocol_v5", function () {
         // step 5; B:repay(5:T0) 
         const repayAmt = 5n;
         await tok0.connect(actor_b).approve(await lp.getAddress(), repayAmt);
-        await expect(lp.connect(actor_b).repay(repayAmt, tok0_addr)).to.be.revertedWith("Repay: insufficient debts");
+        await lp.connect(actor_b).repay(repayAmt, tok0_addr);
 
         const reserve_t0_5 = await lp.reserves(tok0_addr);
         const debit_t0_b_5 = await lp.getAccruedDebt(tok0_addr, actor_b);
 
         // reserves increase by repaid amount; debit decreases by repaid amount
-        expect(reserve_t0_5).to.not.equal(reserve_t0_4 + 5n); // broken because repay always operates on tok1
-        expect(debit_t0_b_5).to.not.equal(debit_t0_b_4 - 5n); // broken because repay always operates on tok1
+        expect(reserve_t0_5).to.equal(reserve_t0_4 + 5n);
+        expect(debit_t0_b_5).to.equal(debit_t0_b_4 - 5n);
     });
 
     it("dep-additivity", async function () {
@@ -300,6 +300,7 @@ describe("LendingProtocol_v5", function () {
         expect(new_xr_t0).not.to.equal(old_xr_t0);
     });
 
+
     it("dep-xr", async function () {
 
         const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
@@ -329,7 +330,6 @@ describe("LendingProtocol_v5", function () {
         // extra violation of the property
         expect(new_xr_t0).to.be.greaterThan(old_xr_t0 + (1n * 1000000n / old_sum_credits_t0) + 1n);
     });
-    
 
     it("rdm-additivity", async function () {
         var balEnd1, balEnd2;
@@ -382,6 +382,64 @@ describe("LendingProtocol_v5", function () {
         expect(balEnd1).to.not.equal(balEnd2);
     });
 
+    it("rdm-state", async function () {
+        const { lp, tok0, tok1, actor_a, actor_b } = await loadFixture(deployContract);
+
+        const lpAddr = await lp.getAddress();
+        const tok0_addr = await tok0.getAddress();
+        const tok1_addr = await tok1.getAddress();
+
+        await tok0.connect(actor_a).approve(lpAddr, 50n);
+        await lp.connect(actor_a).deposit(50n, tok0_addr);
+
+        await tok1.connect(actor_b).approve(lpAddr, 50n);
+        await lp.connect(actor_b).deposit(50n, tok1_addr);
+
+        const old_reserves_t0 = await lp.reserves(tok0_addr);
+        const old_credit_t0_a = await lp.credit(tok0_addr, actor_a);
+        const old_xr_t0 = await lp.XR(tok0_addr);
+
+        expect(old_xr_t0).to.be.at.least(1_000_000n);
+
+        const amt_credit = 7n;
+        expect(old_credit_t0_a).to.be.at.least(amt_credit);
+
+        await lp.connect(actor_a).redeem(amt_credit, tok0_addr);
+
+        const new_reserves_t0 = await lp.reserves(tok0_addr);
+
+        const amt = (amt_credit * old_xr_t0) / 1_000_000n;
+
+        expect(new_reserves_t0).not.to.equal(old_reserves_t0 - amt);
+    });
+
+
+    it("rdm-tokens", async function () {
+        const { lp, tok0, actor_a, owner } = await loadFixture(deployContract);
+
+        const lpAddr = await lp.getAddress();
+        const actor_a_conn = lp.connect(actor_a);
+        const tok0_addr = await tok0.getAddress();
+
+        await tok0.connect(actor_a).approve(lpAddr, 10n);
+        await actor_a_conn.deposit(10, tok0_addr);
+
+        const old_lp_bal = await tok0.balanceOf(await lp.getAddress());
+        const old_a_bal = await tok0.balanceOf(await actor_a.getAddress());
+        const old_reserves_t0 = await lp.reserves(await tok0.getAddress());
+
+        await actor_a_conn.redeem(10, tok0_addr);
+
+        const new_lp_bal = await tok0.balanceOf(await lp.getAddress());
+        const new_a_bal = await tok0.balanceOf(await actor_a.getAddress());
+        const new_reserves_t0 = await lp.reserves(await tok0.getAddress());
+
+        expect(new_lp_bal).to.not.equal(old_lp_bal - 10n);
+        expect(new_a_bal).to.not.equal(old_a_bal + 10n);
+        expect(new_reserves_t0).to.not.equal(old_reserves_t0 - 10n);
+
+    });
+
     it("rdm-xr-eq", async function () {
         const { lp, tok0, actor_a, owner } = await loadFixture(deployContract);
 
@@ -394,7 +452,8 @@ describe("LendingProtocol_v5", function () {
 
         await lp.connect(actor_a).borrow(10, tok0_addr);      // reserves=1, credits=11, debits=10, XR still 1e6
 
-        await mine(1_000_000);                  // reserves=1, credits=11, debits=11, XR=floor(12/11*1e6)=1_090_909
+        await mine(1_000_000);
+        await lp.connect(owner).accrueInt();                  // reserves=1, credits=11, debits=11, XR=floor(12/11*1e6)=1_090_909
 
         const oldXR = await lp.XR(tok0_addr);
 
@@ -404,67 +463,5 @@ describe("LendingProtocol_v5", function () {
 
         expect(newXR).not.to.equal(oldXR);               // 1_100_000 > 1_090_909
     });
-
-    it("rpy-state", async function () {
-        const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
-
-        await tok0.connect(actor_a).approve(await lp.getAddress(), 10);
-        await tok1.connect(actor_b).approve(await lp.getAddress(), 10);
-
-        const actor_a_conn = lp.connect(actor_a);
-        const actor_b_conn = lp.connect(actor_b);
-
-        await actor_a_conn.deposit(10, tok0);
-        await actor_b_conn.deposit(10, tok1);
-
-        await actor_b_conn.borrow(1, tok0);
-
-        const debit_before_mine = await lp.getAccruedDebt(tok0, actor_b);
-
-        const sum_debit_before_mine = await lp.getUpdatedSumDebits(tok0);
-
-        await mine(20 * 1_000_000);
-
-        const sum_debit_after_mine = await lp.getUpdatedSumDebits(tok0);
-
-        const debit_after_mine = await lp.getAccruedDebt(tok0, actor_b);
-
-        expect(debit_after_mine).to.equal(debit_before_mine + 2n);
-        expect(sum_debit_after_mine).to.equal(sum_debit_before_mine + 2n);
-
-        // await tok1.connect(actor_a).approve(await lp.getAddress(), 3);
-        await expect(actor_b_conn.repay(2, tok0)).to.be.revertedWith("Repay: insufficient debts");
-
-        const debit_after_repay = await lp.getAccruedDebt(tok0, actor_b);
-        const sum_debit_after_repay = await lp.getUpdatedSumDebits(tok0);
-
-        expect(debit_after_mine - 2n).to.not.equal(debit_after_repay);
-        expect(sum_debit_after_mine - 2n).to.not.equal(sum_debit_after_repay);
-    });
-
-    it("rpy-tokens", async function () {
-        const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
-        const lpAddr = await lp.getAddress();
-        const actor_a_conn = lp.connect(actor_a);
-        const tok0_addr = await tok0.getAddress();
-
-        await tok0.connect(actor_a).approve(lpAddr, 10n);
-        await actor_a_conn.deposit(10, tok0_addr);
-        await actor_a_conn.borrow(5, tok0_addr);
-
-        const old_lp_bal = await tok0.balanceOf(await lp.getAddress());
-        const old_a_bal = await tok0.balanceOf(await actor_a.getAddress());
-        const old_reserves_t0 = await lp.reserves(await tok0.getAddress());
-
-        await expect(actor_a_conn.repay(5, tok0_addr)).to.be.revertedWith("Repay: insufficient debts");
-
-        const new_lp_bal = await tok0.balanceOf(await lp.getAddress());
-        const new_a_bal = await tok0.balanceOf(await actor_a.getAddress());
-        const new_reserves_t0 = await lp.reserves(await tok0.getAddress());
-
-        expect(new_lp_bal).to.not.equal(old_lp_bal + 5n);
-        expect(new_a_bal).to.not.equal(old_a_bal - 5n);
-        expect(new_reserves_t0).to.not.equal(old_reserves_t0 + 5n);
-    });
-
 });
+
