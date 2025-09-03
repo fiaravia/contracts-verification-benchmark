@@ -18,11 +18,11 @@ The contract follows a pull payment model. This means that payments are not auto
 - **positive-shares**: for all addresses `addr` in `payees`, `shares[addr] > 0`.
 - **releasable-balance-check**: for all addresses `addr` in `payees`, `releasable(addr)` is less than or equal to the balance of the contract.
 - **releasable-sum-balance**: the sum of the releasable funds for every addresses is equal to the balance of the contract.
-- **release-balance-payee**: for every address `a` in `payees`, after a successful call to `release(a)` the balance of `a` is increased by `releasable(a)`.
-- **release-balance-ps**: for every address `a` in `payees`, after a successful call to `release(a)` the balance of `PaymentSplitter` is decreased by `releasable(a)`.
+- **release-balance-payee**: for every address `a` in `payees`, after a non-reverting call to `release(a)` the balance of `a` is increased by `releasable(a)`.
+- **release-balance-ps**: for every address `a` in `payees`, after a non-reverting call to `release(a)` the balance of `PaymentSplitter` is decreased by `releasable(a)`.
 - **release-not-revert**: for all addresses `a` in `payees`, if `releasable(a) > 0`, then `release(a)` does not revert.
-- **release-not-revert-receive**: if the address a is in payees, its receive method just accepts all ETH, and releasable(a) > 0, then release(a) does not revert
-- **release-release-revert**: two consecutive calls to `release` for the same address `a`, without there being any transfer to the contract in between calls, revert on the second call.
+- **release-not-revert-receive**: if the address `a` is in `payees`, and its `receive` method just accepts all ETH, and `releasable(a) > 0`, then `release(a)` does not revert
+- **release-release-revert**: two consecutive calls to `release` for the same address `a`, without there being any ETH transfer to the contract in-between calls, revert on the second call.
 - **swappable-call-order**: given two `payees` `a` and `b`, with `a != b`, calling `release(a)` and `release(b)`, independently of the order of the calls, yields the same contract state.
 
 ## Versions
