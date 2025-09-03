@@ -243,15 +243,15 @@ exists-unique-credit-change,v11,0,
 exists-unique-credit-change,v12,0,
 exists-unique-credit-change,v13,0,
 exists-unique-credit-change,v14,0,
-exists-unique-credit-change,v15,1,
+exists-unique-credit-change,v15,0,"deposit(value=0) does not change credits"
 exists-unique-credit-change,v16,0,
 exists-unique-credit-change,v17,0,
 exists-unique-credit-change,v2,0,
 exists-unique-credit-change,v3,1,"Transfer in `withdraw` prevents further calls."
 exists-unique-credit-change,v4,0,
-exists-unique-credit-change,v5,1,
+exists-unique-credit-change,v5,0,"A:withdraw() triggers a call to B:deposit()"
 exists-unique-credit-change,v6,0,
-exists-unique-credit-change,v7,1,
+exists-unique-credit-change,v7,0,"deposit updates credits of msg.sender and owner"
 exists-unique-credit-change,v8,0,
 exists-unique-credit-change,v9,0,"Deposit is non-reentrant.",
 no-frozen-assets,v1,0,"all the creditors have a receive method that reverts" 
