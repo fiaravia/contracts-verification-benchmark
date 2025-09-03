@@ -11,7 +11,7 @@
         "deposit-assets-credit": "after a successful `deposit()`, the credits of `msg.sender` are increased by `msg.value`.",
         "deposit-assets-credit-others": "after a successful `deposit()`, the credit of any user but the sender is preserved.",
         "deposit-assets-transfer-others": "after a successful `deposit()`, the ETH balance of any user but the sender are preserved.",
-        "deposit-contract-balance": "after a successful `deposit()`, the ETH balance of the contract is increased by `msg.value`.",
+        "deposit-contract-balance": "after a non-reverting `deposit()`, the ETH balance of the contract is increased by `msg.value`.",
         "deposit-not-revert": "a `deposit` transaction never reverts",
         "deposit-revert": "a `deposit` transaction reverts if `msg.value` plus the current credits of `msg.sender` overflows.",
         "exists-at-least-one-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credits of at least one user have changed",
