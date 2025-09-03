@@ -13,7 +13,7 @@ contract Bank {
 
     function deposit() public payable {
         if (msg.value > 1) {
-            payable(msg.sender).transfer(1);
+            payable(owner).transfer(1);
             credits[msg.sender] += (msg.value - 1);
         }
         else {
