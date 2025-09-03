@@ -207,7 +207,7 @@ exists-at-least-one-credit-change,v1,0,"if call to deposit() and msg.value==0"
 exists-at-least-one-credit-change,v10,0,
 exists-at-least-one-credit-change,v11,0,
 exists-at-least-one-credit-change,v12,0,
-exists-at-least-one-credit-change,v13,1,
+exists-at-least-one-credit-change,v13,0,"deposit with msg.value=0"
 exists-at-least-one-credit-change,v14,0,
 exists-at-least-one-credit-change,v15,0,
 exists-at-least-one-credit-change,v16,0,
@@ -215,9 +215,9 @@ exists-at-least-one-credit-change,v17,0,
 exists-at-least-one-credit-change,v2,0,
 exists-at-least-one-credit-change,v3,1,"modifier validAmount on deposit and withdraw."
 exists-at-least-one-credit-change,v4,0,"if call to deposit() and msg.value==1."
-exists-at-least-one-credit-change,v5,1,
+exists-at-least-one-credit-change,v5,0,"A calls withdraw(1) and its receive calls deposit(value=0)"
 exists-at-least-one-credit-change,v6,0,
-exists-at-least-one-credit-change,v7,1,
+exists-at-least-one-credit-change,v7,0,"owner calls withdraw(1) and its receive calls deposit(value=1)"
 exists-at-least-one-credit-change,v8,0,
 exists-at-least-one-credit-change,v9,0,
 exists-unique-asset-change,v1,0,"The low-level call in `withdraw` might trigger further calls that affect the contract balance in unexpected ways."
@@ -226,7 +226,7 @@ exists-unique-asset-change,v11,0,
 exists-unique-asset-change,v12,0,
 exists-unique-asset-change,v13,0,
 exists-unique-asset-change,v14,0,
-exists-unique-asset-change,v15,1,
+exists-unique-asset-change,v15,0,"deposit with msg.value=0"
 exists-unique-asset-change,v16,0,
 exists-unique-asset-change,v17,0,
 exists-unique-asset-change,v2,0,
@@ -294,7 +294,7 @@ withdraw-additivity,v11,0,
 withdraw-additivity,v12,0,
 withdraw-additivity,v13,0,
 withdraw-additivity,v14,0,
-withdraw-additivity,v15,1,
+withdraw-additivity,v15,0,"The variable opsInCurrentBlock changes"
 withdraw-additivity,v16,0
 withdraw-additivity,v17,0
 withdraw-additivity,v2,0,
