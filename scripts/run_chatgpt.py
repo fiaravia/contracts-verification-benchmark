@@ -68,24 +68,29 @@ def choose_verification_tasks(prop, versions, ground_truths, args):
                 verification_tasks.append((property, version))
 
     else:
-        versions_positive = []
-        versions_negative = []
+        if args.no_sample:
+            verification_tasks = [(prop, v) for v in versions]
+        else:
+            versions_positive = []
+            versions_negative = []
+            #print(ground_truths)
+            for version in versions:
+                #print(version,ground_truths[(prop,version)])
+                if ground_truths[(prop,version)]:
+                    versions_positive.append(version)
+                else:
+                    versions_negative.append(version)
+            #print(versions_positive)
+            #print(versions_negative)
+            k = min(len(versions_positive),len(versions_negative))
 
-        for version in versions:
-            if ground_truths[(prop,version)]:
-                versions_positive.append(version)
-            else:
-                versions_negative.append(version)
-            
-        k = min(len(versions_positive),len(versions_negative))
-
-        #print(f"{k=}")
-        sampled_versions_positive = random.sample(versions_positive, k)
-        sampled_versions_negative = random.sample(versions_negative, k)
-        #print(f"{sampled_versions_positive=}")
-        #print(f"{sampled_versions_negative=}")
-        verification_tasks = [(prop, v) for v in sampled_versions_positive + sampled_versions_negative]
-        #print(f"{verification_tasks=}")
+            #print(f"{k=}")
+            sampled_versions_positive = random.sample(versions_positive, k)
+            sampled_versions_negative = random.sample(versions_negative, k)
+            #print(f"{sampled_versions_positive=}")
+            #print(f"{sampled_versions_negative=}")
+            verification_tasks = [(prop, v) for v in sampled_versions_positive + sampled_versions_negative]
+            #print(f"{verification_tasks=}")
     return verification_tasks
 
 def get_verification_tasks_from_csv(filepath,):
@@ -331,9 +336,9 @@ def main():
         print("Warning: --no_sample has no effect when --use_csv_verification_tasks is enabled.")
 
 
-    #if args.version and not args.no_sample:
-    #    args.no_sample = True
-    #    print("Warning: --no_sample is automatically enabled when --version is specified.")
+    if args.version and not args.no_sample:
+        args.no_sample = True
+        print("Warning: --no_sample is automatically enabled when --version is specified.")
 
 
     # Find contract folder ignoring cases and special chars
