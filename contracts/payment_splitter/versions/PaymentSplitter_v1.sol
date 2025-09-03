@@ -6,16 +6,18 @@ pragma solidity ^0.8.0;
 /// @custom:version minimal implementation conformant to specification
 
 contract PaymentSplitter {
-
     uint256 private totalShares;
     uint256 private totalReleased;
 
     mapping(address => uint256) private shares;
     mapping(address => uint256) private released;
     address[] private payees;
-    
+
     constructor(address[] memory payees_, uint256[] memory shares_) payable {
-        require(payees_.length == shares_.length, "PaymentSplitter: payees and shares length mismatch");
+        require(
+            payees_.length == shares_.length,
+            "PaymentSplitter: payees and shares length mismatch"
+        );
         require(payees_.length > 0, "PaymentSplitter: no payees");
 
         for (uint256 i = 0; i < payees_.length; i++) {
@@ -23,7 +25,7 @@ contract PaymentSplitter {
         }
     }
 
-    receive() external payable virtual { }
+    receive() external payable virtual {}
 
     function releasable(address account) public view returns (uint256) {
         uint256 totalReceived = address(this).balance + totalReleased;
@@ -44,7 +46,7 @@ contract PaymentSplitter {
             released[account] += payment;
         }
 
-        (bool success,) = account.call{value: payment}("");
+        (bool success, ) = account.call{value: payment}("");
         require(success);
     }
 
@@ -53,13 +55,20 @@ contract PaymentSplitter {
         uint256 totalReceived,
         uint256 alreadyReleased
     ) private view returns (uint256) {
-        return (totalReceived * shares[account]) / totalShares - alreadyReleased;
+        return
+            (totalReceived * shares[account]) / totalShares - alreadyReleased;
     }
 
     function addPayee(address account, uint256 shares_) private {
-        require(account != address(0), "PaymentSplitter: account is the zero address");
+        require(
+            account != address(0),
+            "PaymentSplitter: account is the zero address"
+        );
         require(shares_ > 0, "PaymentSplitter: shares are 0");
-        require(shares[account] == 0, "PaymentSplitter: account already has shares");
+        require(
+            shares[account] == 0,
+            "PaymentSplitter: account already has shares"
+        );
 
         payees.push(account);
         shares[account] = shares_;
@@ -67,6 +76,11 @@ contract PaymentSplitter {
     }
 
     // Getters
+
+    function isPayee(address a) public view returns (bool) {
+        for (uint i; i < payees.length; i++) if (payees[i] == a) return true;
+        return false;
+    }
 
     function getBalance() public view returns (uint) {
         return address(this).balance;
@@ -100,6 +114,7 @@ contract PaymentSplitter {
         }
         return sum;
     }
+
     function getSumOfReleased() public view returns (uint) {
         uint sum = 0;
         for (uint i = 0; i < payees.length; i++) {
@@ -110,5 +125,9 @@ contract PaymentSplitter {
 
     function getPayeesLength() public view returns (uint) {
         return payees.length;
+    }
+
+    function getTotalShares() public view returns (uint) {
+        return totalShares;
     }
 }

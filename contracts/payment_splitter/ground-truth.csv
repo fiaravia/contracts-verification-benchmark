@@ -1,31 +1,61 @@
 property,version,truth,footnote-md
-fair-split,v1,1,
-fair-split-for-v3,v1,0,
-funds-get-transferred,v1,0,
+fair-split-eq,v1,1,
+fair-split-eq,v2,1,
+fair-split-eq,v3,1,
+fair-split-eq,v4,1,
+fair-split-eq,v5,0,"This version has a bug in `pendingPayment()` such that it will always return `0` if there are multiple `payees`"
+fair-split-geq,v1,1,
+fair-split-geq,v2,1,
+fair-split-geq,v3,1,
+fair-split-geq,v4,1,
+fair-split-geq,v5,1,
 non-zero-payees,v1,1,
-positive-shares,v1,1,
-releasable-balance-check,v1,1,
-releasable-sum-balance,v1,0,
-release-release-revert,v1,1,
-swappable-call-order,v1,0,
-zero-dust,v1,0,
-fair-split,v2,1,
-fair-split-for-v3,v2,0,
-funds-get-transferred,v2,0,
 non-zero-payees,v2,1,
-positive-shares,v2,1,
-releasable-balance-check,v2,1,
-releasable-sum-balance,v2,0,
-release-release-revert,v2,1,
-swappable-call-order,v2,0,
-zero-dust,v2,0,
-fair-split,v3,1,
-fair-split-for-v3,v3,1,
-funds-get-transferred,v3,0,
 non-zero-payees,v3,1,
+non-zero-payees,v4,1,
+non-zero-payees,v5,1,
+positive-shares,v1,1,
+positive-shares,v2,1,
 positive-shares,v3,1,
+positive-shares,v4,1,
+positive-shares,v5,1,
+releasable-balance-check,v1,1,
+releasable-balance-check,v2,1,
 releasable-balance-check,v3,1,
-releasable-sum-balance,v3,0,
+releasable-balance-check,v4,1,
+releasable-balance-check,v5,1,
+releasable-sum-balance,v1,0,"The balance could be non-divisible by the number of shares, leaving a reminder in the balance"
+releasable-sum-balance,v2,0,"The balance could be non-divisible by the number of shares, leaving a reminder in the balance"
+releasable-sum-balance,v3,0,"The balance could be non-divisible by the number of shares, leaving a reminder in the balance"
+releasable-sum-balance,v4,0,"The balance could be non-divisible by the number of shares, leaving a reminder in the balance"
+releasable-sum-balance,v5,0,"`totalReleasable()` is always `0`"
+release-balance-payee,v1,1
+release-balance-payee,v2,1
+release-balance-payee,v3,1
+release-balance-payee,v4,0,"`release()` does not verify the successfulness of the call, so even when it doesn't revert, it is not guaranteed that the call didn't"
+release-balance-payee,v5,1
+release-balance-ps,v1,1
+release-balance-ps,v2,1
+release-balance-ps,v3,1
+release-balance-ps,v4,0,"`release()` does not verify the successfulness of the call, so even when it doesn't revert, it is not guaranteed that the call didn't"
+release-balance-ps,v5,1
+release-not-revert,v1,0,"The contract could revert when `totalReleased += payment` overflows, or when the external call reverts"
+release-not-revert,v2,0,"The contract could revert when `totalReleased += payment` overflows, or when the external call reverts"
+release-not-revert,v3,0,"The contract could revert when `totalReleased += payment` overflows, or when the external call reverts"
+release-not-revert,v4,1,
+release-not-revert,v5,0,"if `payees.length > 1`, for any payee `a` in `payees`, `releasable(a) == 0` leading to the `release(a)` function reverting"
+release-not-revert-receive,v1,1,
+release-not-revert-receive,v2,1,
+release-not-revert-receive,v3,1,
+release-not-revert-receive,v4,1,
+release-not-revert-receive,v5,1,
+release-release-revert,v1,1,
+release-release-revert,v2,1,
 release-release-revert,v3,1,
-swappable-call-order,v3,0,
-zero-dust,v3,0,
+release-release-revert,v4,1,
+release-release-revert,v5,1,
+swappable-call-order,v1,0,"If the receivers of the funds send different amounts of money back to the contract as a fallback, resulting releases may differ"
+swappable-call-order,v2,0,"If the receivers of the funds send different amounts of money back to the contract as a fallback, resulting releases may differ"
+swappable-call-order,v3,0,"If the receivers of the funds send different amounts of money back to the contract as a fallback, resulting releases may differ"
+swappable-call-order,v4,0,"If the receivers of the funds send different amounts of money back to the contract as a fallback, resulting releases may differ"
+swappable-call-order,v5,1,"if `payees.length > 1`, given a `payee` `a`, any call to `release(a)` will revert, so the order of the two calls does not matter"

@@ -1,7 +1,5 @@
 import "helper/methods.spec";
 import "helper/invariants.spec";
-import "fair-split.spec";
-
 
 rule releasable_balance_check {
     
@@ -10,8 +8,6 @@ rule releasable_balance_check {
     requireInvariant payee_shares_gt_zero();
 
     requireInvariant out_of_bounds_payee();
-
-    require currentContract.payees.length == 3;
 
     uint index;
 

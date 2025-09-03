@@ -12,6 +12,9 @@ using Oracle as oracle;
 rule win_not_revert {
     env e;
 
+    // technical assumption
+    require currentContract.player != currentContract;
+
     require 
         e.msg.value == 0 &&
         e.block.number < currentContract.deadline &&

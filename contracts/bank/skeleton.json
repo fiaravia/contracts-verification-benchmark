@@ -14,9 +14,9 @@
         "deposit-contract-balance": "after a successful `deposit()`, the ETH balance of the contract is increased by `msg.value`.",
         "deposit-not-revert": "a `deposit` transaction never reverts",
         "deposit-revert": "a `deposit` transaction reverts if `msg.value` plus the current credits of `msg.sender` overflows.",
-        "exists-at-least-one-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credits of at least one address have changed",
+        "exists-at-least-one-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credits of at least one user have changed",
         "exists-unique-asset-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the ETH balance of exactly one account (except the contract's) have changed",
-        "exists-unique-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credit of exactly one address have changed",
+        "exists-unique-credit-change": "after a successful `deposit` or `withdraw` transaction to the Bank contract, the credit of exactly one user have changed",
         "no-frozen-assets": "if the contract has a strictly positive ETH balance, then someone can transfer them from the contract to some user",
         "no-frozen-credits": "if the sum of all the credits is strictly positive, it is possible to reduce them",
         "withdraw-additivity": "if the same sender can perform two (successful) `withdraw` of n1 and n2 wei, respectively, then the same sender can always obtain an equivalent effect (on the state of the Bank contract and on its own account) through a single `withdraw` of n1+n2 wei. Here equivalence neglects transaction fees.",
@@ -27,8 +27,7 @@
         "withdraw-revert": "a `withdraw(amount)` call reverts if `amount` is zero or greater than the credit of `msg.sender`.",
         "withdraw-sender-credit": "after a successful `withdraw(amount)`, the credit of `msg.sender` is decreased by `amount`.",
         "withdraw-sender-rcv": "after a successful `withdraw(amount)`, the ETH balance of 'msg.sender` is increased by `amount` wei.",
-        "withdraw-sender-rcv-EOA": "after a successful `withdraw(amount)` originated by an EOA, the ETH balance of the `msg.sender` is increased by `amount` wei.",
-        "withdraw-sender-rcv-EOA-receive": "if the `receive` method of `msg.sender` just accepts all ETH, after a successful `withdraw(amount)`, the ETH balance of `msg.sender` is increased by `amount` ETH."
+        "withdraw-sender-rcv-EOA": "after a successful `withdraw(amount)` originated by an EOA, the ETH balance of the `msg.sender` is increased by `amount` wei."
     },
     "property-types": {
         "assets-dec-onlyif-deposit": "single-transition invariant",
@@ -54,7 +53,6 @@
         "withdraw-sender-credit": "function spec",
         "withdraw-sender-rcv": "function spec",
         "withdraw-sender-rcv-EOA": "function spec",
-        "withdraw-sender-rcv-EOA-receive": "function spec",
         "exists-at-least-one-credit-change": "single-transition invariant",
         "exists-unique-asset-change": "single-transition invariant",
         "exists-unique-credit-change": "single-transition invariant"

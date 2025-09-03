@@ -1,4 +1,4 @@
-property,version,outcome,footnote
+property,version,outcome
 assets-dec-onlyif-deposit,v1,N!
 assets-dec-onlyif-deposit,v10,N!
 assets-dec-onlyif-deposit,v11,N!
@@ -173,7 +173,7 @@ withdraw-assets-transfer-others,v1,UNK
 withdraw-assets-transfer-others,v10,N!
 withdraw-assets-transfer-others,v11,N!
 withdraw-assets-transfer-others,v12,UNK
-withdraw-assets-transfer-others,v13,N!
+withdraw-assets-transfer-others,v13,UNK
 withdraw-assets-transfer-others,v14,UNK
 withdraw-assets-transfer-others,v15,N!
 withdraw-assets-transfer-others,v16,UNK
@@ -271,3 +271,4 @@ withdraw-sender-rcv-EOA,v6,N!
 withdraw-sender-rcv-EOA,v7,N!
 withdraw-sender-rcv-EOA,v8,N!
 withdraw-sender-rcv-EOA,v9,N!
+withdraw-user-balance,v13,N!
