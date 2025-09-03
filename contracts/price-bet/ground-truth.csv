@@ -307,7 +307,7 @@ price-above-player-win-frontrun,v10,0,
 price-above-player-win-frontrun,v1,0,"The oracle can update prices so that win fails"
 price-above-player-win-frontrun,v11,0,
 price-above-player-win-frontrun,v12,0,
-price-above-player-win-frontrun,v13,1,"In a state with block.number < deadline, it also holds that block.timestamp > deadline, so the owner can front-run the player with a timeout"
+price-above-player-win-frontrun,v13,0,"The time constraint in win could be false, since block.timestamp > block.number"
 price-above-player-win-frontrun,v14,0,
 price-above-player-win-frontrun,v15,0,
 price-above-player-win-frontrun,v16,0,
