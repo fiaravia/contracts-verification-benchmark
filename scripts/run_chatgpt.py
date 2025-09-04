@@ -22,7 +22,7 @@ def sanitize_for_csv(text):
     """Raddoppia le virgolette e sostituisce newline reali con \n."""
     if not isinstance(text, str):
         return text
-    text = text.replace('"', '""')
+    #text = text.replace('"', '""')
     text = re.sub(r"\r?\n", r"\\n", text)
     return text
 
