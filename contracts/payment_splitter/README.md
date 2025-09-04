@@ -14,6 +14,7 @@ The contract follows a pull payment model. This means that payments are not auto
 ## Properties
 - **fair-split-eq**: for every address `a` in `payees`, `released[a] + releasable(a) == (totalReceived * shares[a]) / totalShares`.
 - **fair-split-geq**: for every address `a` in `payees`, `(totalReceived * shares[a]) / totalShares >= released[a]`.
+- **fair-split-geq-no-overflow**: for every address `a` in `payees`, `(totalReceived * shares[a]) / totalShares >= released[a]` whenever the expression does not overflow.
 - **non-zero-payees**: for all addresses `a` in `payees`, `a != address(0)`.
 - **positive-shares**: for all addresses `addr` in `payees`, `shares[addr] > 0`.
 - **releasable-balance-check**: for all addresses `addr` in `payees`, `releasable(addr)` is less than or equal to the balance of the contract.
@@ -24,6 +25,8 @@ The contract follows a pull payment model. This means that payments are not auto
 - **release-not-revert-receive**: if the address `a` is in `payees`, and its `receive` method just accepts all ETH, and `releasable(a) > 0`, then `release(a)` does not revert
 - **release-release-revert**: two consecutive calls to `release` for the same address `a`, without there being any ETH transfer to the contract in-between calls, revert on the second call.
 - **swappable-call-order**: given two `payees` `a` and `b`, with `a != b`, calling `release(a)` and `release(b)`, independently of the order of the calls, yields the same contract state.
+- **tx-transfer-balance-receive**: if the contract balance is non-zero and all payees are EOAs, then eventually someone can perform a transaction on PaymentSplitter that decreases the contract balance.
+- **tx-transfer-releasable-receive**: if `releasable(a) > 0` and the address `a` has a `receive` method that just accepts all ETH, then someone can perform a transaction on PaymentSplitter that transfers ETH from the contract to `a`.
 
 ## Versions
 - **v1**: minimal implementation conformant to specification
@@ -32,6 +35,8 @@ The contract follows a pull payment model. This means that payments are not auto
 - **v4**: variant with unchecked release
 - **v5**: faulty implementation with a parenthesis error in `pendingPayment`
 - **v6**: homograph attack in ZERO_ADDRESS 
+- **v7**: `releasable` must be called by the payee
+- **v8**: owner can withdraw remining balance
 
 ## Verification data
 
