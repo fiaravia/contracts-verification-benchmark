@@ -3,7 +3,39 @@ const {
 } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
 const { expect } = require("chai");
 
+const PANIC_OVERFLOW = 0x11;
+
 describe("PaymentSplitter_v2", function () {
+
+    //     fair-split-eq
+    { 
+        async function deployContract(){
+
+            const [payee, tmp1, tmp2] = await ethers.getSigners();
+
+            const PaymentSplitter = await (ethers.deployContract("PaymentSplitter_v2", [
+                payee.address,
+                ethers.MaxUint256-2n,
+                tmp1,
+                1,
+                tmp2,
+                1
+            ],
+                {
+                    value: ethers.parseUnits("2", "wei")
+                }
+            ));
+
+            return {PaymentSplitter, payee};
+        }
+
+        it("fair-split-eq", async function () {
+            const {PaymentSplitter, payee} = await loadFixture(deployContract);
+
+            await expect(PaymentSplitter.release(payee.address))
+            .to.be.revertedWithPanic(PANIC_OVERFLOW);
+        });
+    }
 
     {
         async function deployContract() {
