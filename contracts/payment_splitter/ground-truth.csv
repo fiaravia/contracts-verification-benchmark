@@ -87,4 +87,4 @@ tx-transfer-balance-receive,v5,0,
 tx-transfer-balance-receive,v6,0,
 tx-transfer-balance-receive,v7,0,
 tx-transfer-balance-receive,v8,1,"owner can withdraw remaining balance",
-tx-transfer-balance-receive,v9,1,"all payees can have zero shares"
+tx-transfer-balance-receive,v9,0,"all payees can have zero shares"
