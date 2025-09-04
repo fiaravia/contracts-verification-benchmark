@@ -352,7 +352,7 @@ describe("LendingProtocol_v6", function () {
             const a = 1n;
             const b = 6n;
 
-            await lp.connect(actor_a).redeem(a, tok0);  
+            await lp.connect(actor_a).redeem(a, tok0);
             await lp.connect(actor_a).redeem(b, tok0);
             balEnd1 = await tok0.balanceOf(actor_a);
         }

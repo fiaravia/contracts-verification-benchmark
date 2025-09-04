@@ -329,7 +329,7 @@ describe("LendingProtocol_v5", function () {
         // extra violation of the property
         expect(new_xr_t0).to.be.greaterThan(old_xr_t0 + (1n * 1000000n / old_sum_credits_t0) + 1n);
     });
-    
+
 
     it("rdm-additivity", async function () {
         var balEnd1, balEnd2;
@@ -352,7 +352,7 @@ describe("LendingProtocol_v5", function () {
             const a = 1n;
             const b = 6n;
 
-            await lp.connect(actor_a).redeem(a, tok0);  
+            await lp.connect(actor_a).redeem(a, tok0);
             await lp.connect(actor_a).redeem(b, tok0);
             balEnd1 = await tok0.balanceOf(actor_a);
         }

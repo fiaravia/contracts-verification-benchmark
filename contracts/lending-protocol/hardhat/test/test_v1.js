@@ -323,48 +323,7 @@ describe("LendingProtocol_v1", function () {
 
         expect(new_xr_t0).to.be.greaterThan(old_xr_t0 + (1n * 1000000n / old_sum_credits_t0) + 1n);
     });
-    /*
-        it("bor-xr-eq, not a POC, just a trace", async function() {
-    
-            const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
-    
-            await tok0.connect(actor_a).approve(await lp.getAddress(), 11);
-    
-            const actor_a_conn = lp.connect(actor_a);
-            const tok0_addr = await tok0.getAddress();
-            await actor_a_conn.deposit(10,tok0_addr); 
-    
-            const old_xr_t0 = await lp.XR(tok0);
-            await actor_a_conn.borrow(5, tok0_addr);
-            const new_xr_t0 = await lp.XR(tok0);
-    
-            //should be equal, no interest accrued
-            expect(new_xr_t0).to.equal(old_xr_t0);
-        });
-    */
-    /*
-        it("rpy-xr-eq, not a POC, just a trace", async function() {
-    
-            const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
-    
-            await tok0.connect(actor_a).approve(await lp.getAddress(), 11);
-    
-            const actor_a_conn = lp.connect(actor_a);
-            const tok0_addr = await tok0.getAddress();
-    
-            await actor_a_conn.deposit(10,tok0_addr);
-            await actor_a_conn.borrow(5, tok0_addr); 
-    
-            await lp.connect(owner).accrueInt();
-    
-            const old_xr_t0 = await lp.XR(tok0);
-            await actor_a_conn.repay(1, tok0_addr);
-    
-            const new_xr_t0 = await lp.XR(tok0);
-    
-            expect(new_xr_t0).to.equal(old_xr_t0);
-        });
-    */
+
 
     it("rdm-additivity", async function () {
         var balEnd1, balEnd2;
@@ -389,7 +348,7 @@ describe("LendingProtocol_v1", function () {
             const a = 1n;
             const b = 6n;
 
-            await lp.connect(actor_a).redeem(a, tok0);  
+            await lp.connect(actor_a).redeem(a, tok0);
             await lp.connect(actor_a).redeem(b, tok0);
             balEnd1 = await tok0.balanceOf(actor_a);
         }
@@ -443,69 +402,6 @@ describe("LendingProtocol_v1", function () {
 
         expect(newXR).not.to.equal(oldXR);               // 1_100_000 > 1_090_909
     });
-    /*
-        it("rdm-xr", async function () {
-            const { lp, tok0, actor_a, owner } = await loadFixture(deployContract);
-    
-            const lpAddr    = await lp.getAddress();
-            const tok0_addr = await tok0.getAddress();
-    
-            await tok0.connect(actor_a).approve(lpAddr, 100);
-    
-            await lp.connect(actor_a).deposit(11, tok0_addr);  // reserves=11, credits=11, debits=0, XR=1e6
-            await lp.connect(actor_a).borrow(10, tok0_addr);   // reserves=1,  credits=11, debits=10, XR=1e6
-            await lp.connect(owner).accrueInt();               // reserves=1,  credits=11, debits=11, XR≈1_090_909
-    
-            const WAD            = 1_000_000n;
-            const oldXR          = await lp.XR(tok0_addr);
-            const oldSumCredits  = await lp.sum_credits(tok0_addr); // = C (before redeem)
-    
-            await lp.connect(actor_a).redeem(1, tok0_addr);    // k=1
-            
-            const newXR = await lp.XR(tok0_addr);
-    
-            // Simple formula lower bound for redeem(1):
-            // newXR >= floor((oldXR*C - WAD*floor(oldXR/WAD)) / (C - 1))
-            expect(newXR).to.be.greaterThan(
-                ((oldXR * oldSumCredits) - (WAD * (oldXR / WAD))) / (oldSumCredits - 1n)
-            );
-        });
-    */
-    /*    
-        it("test-for-double-interest", async function () {
-            const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
-    
-            const lpAddr = await lp.getAddress();
-            
-            const a_lp_conn = lp.connect(actor_a);
-            const a_t0_conn = tok0.connect(actor_a);
-    
-    
-            // B deposits 30 t1
-            await tok1.connect(actor_b).approve(lpAddr, 30);
-            await lp.connect(actor_b).deposit(30, tok1);
-    
-            // A deposits 50 t0
-            await a_t0_conn.approve(lpAddr, 50);
-            await a_lp_conn.deposit(50, tok0)
-    
-            // A borrows and instantly repays 10 t1
-            await a_lp_conn.borrow(10, tok1);
-            await tok1.connect(actor_a).approve(lpAddr, 10);
-            await a_lp_conn.repay(10, tok1);
-    
-    
-            // A borrows 10 t1 and lets interest accrue
-            await a_lp_conn.borrow(10,tok1)
-    
-            const debt_t1_a_before_accrual = await lp.debit(tok1, actor_a);
-    
-            await lp.connect(owner).accrueInt();
-    
-            const debt_t1_a_after_accrual = await lp.debit(tok1, actor_a);
-    
-            expect(debt_t1_a_after_accrual).to.equal(debt_t1_a_before_accrual + debt_t1_a_before_accrual / 10n);
-        });
-    */
+
 });
 

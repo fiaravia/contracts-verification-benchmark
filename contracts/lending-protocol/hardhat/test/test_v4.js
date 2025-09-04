@@ -218,13 +218,13 @@ describe("LendingProtocol_v4", function () {
         expect(debit_t0_b_5).to.equal(debit_t0_b_4 - 5n);
     });
 
-    it("dep-additivity", async function() {
+    it("dep-additivity", async function () {
         var balance_tok1_after_1, balance_tok1_after_2;
 
         // Run 1: first deposit n1, then n2
         {
             const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
-            const lpAddr    = await lp.getAddress();
+            const lpAddr = await lp.getAddress();
             const tok1_addr = await tok1.getAddress();
 
             // setup: deposit 10, borrow 10, accrue once
@@ -249,7 +249,7 @@ describe("LendingProtocol_v4", function () {
         // Run 2: deposit n1+n2
         {
             const { lp, tok0, tok1, actor_a, actor_b, owner } = await loadFixture(deployContract);
-            const lpAddr    = await lp.getAddress();
+            const lpAddr = await lp.getAddress();
             const tok1_addr = await tok1.getAddress();
 
             // setup: deposit 10, borrow 10, accrue once
@@ -268,7 +268,7 @@ describe("LendingProtocol_v4", function () {
             balance_tok1_after_2 = await lp.credit(tok1_addr, actor_a.getAddress());
         }
 
-        expect(balance_tok1_after_1).to.not.equal(balance_tok1_after_2); 
+        expect(balance_tok1_after_1).to.not.equal(balance_tok1_after_2);
 
     });
 
@@ -348,7 +348,7 @@ describe("LendingProtocol_v4", function () {
             const a = 1n;
             const b = 6n;
 
-            await lp.connect(actor_a).redeem(a, tok0);  
+            await lp.connect(actor_a).redeem(a, tok0);
             await lp.connect(actor_a).redeem(b, tok0);
             balEnd1 = await tok0.balanceOf(actor_a);
         }
