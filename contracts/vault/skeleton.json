@@ -2,7 +2,7 @@
     "name": "Vault",
     "specification": "file:spec.md",
     "properties": {
-        "cancel-not-revert": "a `cancel()` transaction does not abort if the signer uses the recovery key, and the state is REQ.",
+        "cancel-not-revert": "a `cancel()` transaction does not revert if the sender uses the recovery key, and the state is REQ.",
         "cancel-revert": "a `cancel()` transaction aborts if the signer uses a key different from the recovery key, or the state is not REQ.",
         "finalize-assets-transfer": "after a non-reverting `finalize()`, exactly `amount` units of T pass from the control of the contract to that of the receiver.",
         "finalize-assets-transfer-receive": "after a non-reverting `finalize()`, if the `receive` method of `receiver` just accepts all ETH, then exactly `amount` units of T pass from the control of the contract to that of the receiver.",
