@@ -14,6 +14,7 @@ non-zero-payees,v2,1,
 non-zero-payees,v3,1,
 non-zero-payees,v4,1,
 non-zero-payees,v5,1,
+non-zero-payees,v6,0,"ZERO_ADDRESS != address(0)"
 positive-shares,v1,1,
 positive-shares,v2,1,
 positive-shares,v3,1,
