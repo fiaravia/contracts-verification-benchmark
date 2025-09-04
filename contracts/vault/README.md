@@ -23,14 +23,14 @@ To this purpose, the vault contract implements a state transition system with st
 ## Properties
 - **cancel-not-revert**: a `cancel()` transaction does not abort if the signer uses the recovery key, and the state is REQ.
 - **cancel-revert**: a `cancel()` transaction aborts if the signer uses a key different from the recovery key, or the state is not REQ.
-- **finalize-assets-transfer**: after a successful `finalize()`, exactly amount units of T pass from the control of the contract to that of the receiver.
-- **finalize-assets-transfer-receive**: after a successful `finalize()`, if the `receive` method of `receiver` just accepts all ETH, then exactly amount units of T pass from the control of the contract to that of the receiver.
-- **finalize-before-deadline-revert**: a `finalize()` transaction called immediately after a successful `withdraw()` aborts if sent before wait_time units have elapsed since the `withdraw()`.
+- **finalize-assets-transfer**: after a non-reverting `finalize()`, exactly amount units of T pass from the control of the contract to that of the receiver.
+- **finalize-assets-transfer-receive**: after a non-reverting `finalize()`, if the `receive` method of `receiver` just accepts all ETH, then exactly amount units of T pass from the control of the contract to that of the receiver.
+- **finalize-before-deadline-revert**: a `finalize()` transaction called immediately after a non-reverting `withdraw()` aborts if sent before wait_time units have elapsed since the `withdraw()`.
 - **finalize-not-revert**: a `finalize()` transaction does not abort if it is sent by the owner, in state REQ, and at least wait_time time units have elapsed after request_timestamp.
 - **finalize-or-cancel-twice-revert**: a `finalize()` or `cancel()` transaction aborts if performed immediately after another `finalize()` or `cancel()`.
 - **finalize-revert**: a `finalize()` transaction aborts if the sender is not the owner, or if the state is not REQ, or wait_time has not passed since request_time.
-- **finalize-sent-eq-amount**: after a successful `finalize()`, the contract balance is decreased by exactly units of T.
-- **finalize-sent-leq-amount**: after a successful `finalize()`, the contract balance is decreased by at most amount units of T.
+- **finalize-sent-eq-amount**: after a non-reverting `finalize()`, the contract balance is decreased by exactly units of T.
+- **finalize-sent-leq-amount**: after a non-reverting `finalize()`, the contract balance is decreased by at most amount units of T.
 - **keys-distinct**: the owner key and the recovery key are distinct.
 - **keys-invariant-inter**: in any blockchain state, the owner key and the recovery key cannot be changed after the contract is deployed.
 - **keys-invariant-intra**: during the execution of a transaction, the owner key and the recovery key cannot be changed after the contract is deployed.
@@ -52,9 +52,9 @@ To this purpose, the vault contract implements a state transition system with st
 - **tx-tx-assets-transfer-eoa**: if `owner` is an EOA, then in state IDLE, someone can fire a sequence of two transactions that transfers the contract balance to the receiver.
 - **tx-tx-assets-transfer-eoa-receive**: if `owner` is an EOA and the `receive` method of `receiver` just accepts all ETH, then in state IDLE, someone can fire a sequence of two transactions that transfers the contract balance to the receiver.
 - **tx-tx-assets-transfer-eoa-receive-private**: if `owner` is an EOA, the `receive` method of `receiver` just accepts all ETH, and the adversary does not know the recovery key, then in state IDLE, the owner can fire a sequence of two transactions that transfers the contract balance to the receiver, regardless of possible transactions fired by the adversary before or in between.
-- **withdraw-finalize-not-revert**: a `finalize()` transaction called immediately after a successful `withdraw()` does not abort if sent after wait_time units have elapsed.
-- **withdraw-finalize-not-revert-receive**: if the `receive` method of `receiver` just accepts all ETH, a `finalize()` transaction called immediately after a successful `withdraw()` does not abort if sent after wait_time units have elapsed.
-- **withdraw-finalize-revert-inter**: a `finalize` transaction called before `wait_time` since a successful `withdraw`, possibly with in-between transactions, reverts.
+- **withdraw-finalize-not-revert**: a `finalize()` transaction called immediately after a non-reverting `withdraw()` does not abort if sent after wait_time units have elapsed.
+- **withdraw-finalize-not-revert-receive**: if the `receive` method of `receiver` just accepts all ETH, a `finalize()` transaction called immediately after a non-reverting `withdraw()` does not abort if sent after wait_time units have elapsed.
+- **withdraw-finalize-revert-inter**: a `finalize` transaction called before `wait_time` since a non-reverting `withdraw`, possibly with in-between transactions, reverts.
 - **withdraw-not-revert**: a `withdraw(amount)` transaction does not abort if amount is less than or equal to the contract balance, the sender is the owner, and the state is IDLE.
 - **withdraw-revert**: a `withdraw(amount)` transaction aborts if amount is more than the contract balance, or if the sender is not the owner, or if the state is not IDLE.
 - **withdraw-withdraw-revert**: a `withdraw()` transaction aborts if performed immediately after another `withdraw()`.

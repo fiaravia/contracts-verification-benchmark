@@ -16,9 +16,12 @@ contract PaymentSplitter {
     mapping(address => uint256) private released;
     address[] private payees;
 
+    // workaround for bug in solc v0.8.30
+    address constant ZERO_ADDRESS = address(0x0000000000000000000000000000000000000000);
+
     constructor(address payee1, address payee2, address payee3) payable {
         require(
-            payee1 != address(0),
+            payee1 != ZERO_ADDRESS,
             "PaymentSplitter: account is the zero address"
         );
         require(
@@ -33,7 +36,7 @@ contract PaymentSplitter {
         numPayees += 1;
 
         require(
-            payee2 != address(0),
+            payee2 != ZERO_ADDRESS,
             "PaymentSplitter: account is the zero address"
         );
         require(
@@ -48,7 +51,7 @@ contract PaymentSplitter {
         numPayees += 1;
 
         require(
-            payee3 != address(0),
+            payee3 != ZERO_ADDRESS,
             "PaymentSplitter: account is the zero address"
         );
         require(

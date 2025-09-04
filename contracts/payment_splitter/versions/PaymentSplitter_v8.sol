@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-/// @custom:version minimal implementation conformant to specification
+/// @custom:version owner can withdraw remining balance
 
 contract PaymentSplitter {
     uint256 private totalShares;
@@ -12,6 +12,7 @@ contract PaymentSplitter {
     mapping(address => uint256) private shares;
     mapping(address => uint256) private released;
     address[] private payees;
+    address payable owner;
 
     // workaround for bug in solc v0.8.30
     address constant ZERO_ADDRESS = address(0x0000000000000000000000000000000000000000);
@@ -22,6 +23,9 @@ contract PaymentSplitter {
             "PaymentSplitter: payees and shares length mismatch"
         );
         require(payees_.length > 0, "PaymentSplitter: no payees");
+
+        require (payees_[0] == msg.sender, "PaymentSplitter: first payee must be the owner");
+        owner = payable(msg.sender);
 
         for (uint256 i = 0; i < payees_.length; i++) {
             addPayee(payees_[i], shares_[i]);
@@ -40,17 +44,21 @@ contract PaymentSplitter {
 
         uint256 payment = releasable(account);
 
-        require(payment != 0, "PaymentSplitter: account is not due payment");
+        if(payment != 0) {
+            // totalReleased is the sum of all values in released.
+            // If "totalReleased += payment" does not overflow, then "released[account] += payment" cannot overflow.
+            totalReleased += payment;
+            unchecked {
+                released[account] += payment;
+            }
 
-        // totalReleased is the sum of all values in released.
-        // If "totalReleased += payment" does not overflow, then "released[account] += payment" cannot overflow.
-        totalReleased += payment;
-        unchecked {
-            released[account] += payment;
+            (bool success, ) = account.call{value: payment}("");
+            require(success);
         }
-
-        (bool success, ) = account.call{value: payment}("");
-        require(success);
+        else {
+            (bool success, ) = owner.call{value: 1}("");
+            require(success);
+        }
     }
 
     function pendingPayment(
