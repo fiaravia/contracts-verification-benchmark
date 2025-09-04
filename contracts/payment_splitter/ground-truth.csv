@@ -19,31 +19,33 @@ non-zero-payees,v2,1,
 non-zero-payees,v3,1,
 non-zero-payees,v4,1,
 non-zero-payees,v5,1,
+non-zero-payees,v5,1,
 non-zero-payees,v6,0,"ZERO_ADDRESS != address(0)"
-positive-shares,v1,1,
+positive-shares,v1,1,"addPayee requires that share is positive"
 positive-shares,v2,1,
 positive-shares,v3,1,
 positive-shares,v4,1,
 positive-shares,v5,1,
+positive-shares,v6,1,
 releasable-balance-check,v1,1,
 releasable-balance-check,v2,1,
 releasable-balance-check,v3,1,
 releasable-balance-check,v4,1,
 releasable-balance-check,v5,1,
-releasable-sum-balance,v1,0,"The balance could be non-divisible by the number of shares, leaving a reminder in the balance"
-releasable-sum-balance,v2,0,"The balance could be non-divisible by the number of shares, leaving a reminder in the balance"
-releasable-sum-balance,v3,0,"The balance could be non-divisible by the number of shares, leaving a reminder in the balance"
-releasable-sum-balance,v4,0,"The balance could be non-divisible by the number of shares, leaving a reminder in the balance"
+releasable-sum-balance,v1,0,"The balance could be non-divisible by the number of shares, leaving a remainder in the balance"
+releasable-sum-balance,v2,0,"The balance could be non-divisible by the number of shares, leaving a remainder in the balance"
+releasable-sum-balance,v3,0,"The balance could be non-divisible by the number of shares, leaving a remainder in the balance"
+releasable-sum-balance,v4,0,"The balance could be non-divisible by the number of shares, leaving a remainder in the balance"
 releasable-sum-balance,v5,0,"`totalReleasable()` is always `0`"
 release-balance-payee,v1,1
 release-balance-payee,v2,1
 release-balance-payee,v3,1
-release-balance-payee,v4,0,"`release()` does not verify the successfulness of the call, so even when it doesn't revert, it is not guaranteed that the call didn't"
+release-balance-payee,v4,0,"`release()` does not verify the success of the call, so even when it doesn't revert, it is not guaranteed that the call didn't"
 release-balance-payee,v5,1
 release-balance-ps,v1,1
 release-balance-ps,v2,1
 release-balance-ps,v3,1
-release-balance-ps,v4,0,"`release()` does not verify the successfulness of the call, so even when it doesn't revert, it is not guaranteed that the call didn't"
+release-balance-ps,v4,0,"`release()` does not verify the success of the call, so even when it doesn't revert, it is not guaranteed that the call didn't"
 release-balance-ps,v5,1
 release-not-revert,v1,0,"The contract could revert when `totalReleased += payment` overflows, or when the external call reverts"
 release-not-revert,v2,0,"The contract could revert when `totalReleased += payment` overflows, or when the external call reverts"
@@ -55,6 +57,8 @@ release-not-revert-receive,v2,1,
 release-not-revert-receive,v3,1,
 release-not-revert-receive,v4,1,
 release-not-revert-receive,v5,1,
+release-not-revert-receive,v6,1,"also address(0) can receive ETH"
+release-not-revert-receive,v7,0,"if the sender is not the account, the function reverts"
 release-release-revert,v1,1,
 release-release-revert,v2,1,
 release-release-revert,v3,1,
@@ -64,4 +68,19 @@ swappable-call-order,v1,0,"If the receivers of the funds send different amounts 
 swappable-call-order,v2,0,"If the receivers of the funds send different amounts of money back to the contract as a fallback, resulting releases may differ"
 swappable-call-order,v3,0,"If the receivers of the funds send different amounts of money back to the contract as a fallback, resulting releases may differ"
 swappable-call-order,v4,0,"If the receivers of the funds send different amounts of money back to the contract as a fallback, resulting releases may differ"
-swappable-call-order,v5,1,"if `payees.length > 1`, given a `payee` `a`, any call to `release(a)` will revert, so the order of the two calls does not matter"
+swappable-call-order,v5,1,"if `payees.length > 1`, given a `payee` `a`, any call to `release(a)` will revert, so the order of the two calls does not matter",
+tx-transfer-releasable-receive,v1,1,
+tx-transfer-releasable-receive,v2,1,
+tx-transfer-releasable-receive,v3,1,
+tx-transfer-releasable-receive,v4,1,
+tx-transfer-releasable-receive,v5,1,
+tx-transfer-releasable-receive,v6,1,"also address(0) can receive ETH",
+tx-transfer-releasable-receive,v7,0,"if `a` is a contract without a function to call `releasable`, then noone cannot fire the required transaction",
+tx-transfer-balance-receive,v1,0,"false if forall a : balance * shares[a] < totalShares",
+tx-transfer-balance-receive,v2,0,
+tx-transfer-balance-receive,v3,0,
+tx-transfer-balance-receive,v4,0,
+tx-transfer-balance-receive,v5,0,
+tx-transfer-balance-receive,v6,0,
+tx-transfer-balance-receive,v7,0,
+tx-transfer-balance-receive,v8,1,"owner can withdraw remaining balance"
