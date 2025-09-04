@@ -59,7 +59,7 @@ def get_ground_truths(contract_path):
                 ground_truths[(parts[0],parts[1].replace("v",""))] = True if parts[2] == "1" else False
     return ground_truths
 
-def choose_verification_tasks(prop, versions, ground_truths, args):
+def choose_verification_tasks(prop, versions, ground_truths : dict, args):
     if args.use_csv_verification_tasks:
         verification_tasks = []
         verification_tasks_from_csv = get_verification_tasks_from_csv(args.use_csv_verification_tasks)
@@ -68,23 +68,27 @@ def choose_verification_tasks(prop, versions, ground_truths, args):
                 verification_tasks.append((property, version))
 
     else:
-        if args.no_sample:
-            verification_tasks = [(prop, v) for v in versions]
-        else:
-            versions_positive = []
-            versions_negative = []
-            #print(ground_truths)
-            for version in versions:
-                #print(version,ground_truths[(prop,version)])
-                if ground_truths[(prop,version)]:
-                    versions_positive.append(version)
-                else:
-                    versions_negative.append(version)
-            #print(versions_positive)
-            #print(versions_negative)
-            k = min(len(versions_positive),len(versions_negative))
+        versions_positive = []
+        versions_negative = []
+        #print(ground_truths)
+        for version in versions:
+            #print(version,ground_truths[(prop,version)])
+            if ground_truths.get((prop,version)) is None:
+                print(f"Warning: ground truth for ({prop}, {version}) not found. Skipping this version.")
+                continue
+            if ground_truths[(prop,version)]:
+                versions_positive.append(version)
+            else:
+                versions_negative.append(version)
+        #print(versions_positive)
+        #print(versions_negative)
 
-            #print(f"{k=}")
+        if args.no_sample:
+            verification_tasks = [(prop, v) for v in versions_positive + versions_negative]
+        else:
+            k = min(len(versions_positive),len(versions_negative))
+            print(prop)
+            print(f"{k=}")
             sampled_versions_positive = random.sample(versions_positive, k)
             sampled_versions_negative = random.sample(versions_negative, k)
             #print(f"{sampled_versions_positive=}")
@@ -332,7 +336,7 @@ def main():
 
     args = parser.parse_args()
 
-    if args.use_csv_verification_tasks and not args.no_sample:
+    if args.use_csv_verification_tasks and args.no_sample:
         print("Warning: --no_sample has no effect when --use_csv_verification_tasks is enabled.")
 
 
@@ -364,14 +368,12 @@ def main():
             print(f"Nessuna versione trovata in {versions_path}", file=sys.stderr)
 
         verification_tasks_prop = choose_verification_tasks(prop, versions, ground_truths, args)
-        print(f"{verification_tasks_prop=}")
+        #print(f"{verification_tasks_prop=}")
         verification_tasks.extend(verification_tasks_prop)  
     print(f"Verification tasks: {verification_tasks}")
     print(len(verification_tasks))
-
     #if args.use_csv_verification_tasks:
     #    verification_tasks = get_verification_tasks_from_csv(args.use_csv_verification_tasks)
-
     csv_ver_tasks_name = f"logs_verification_tasks/verification_tasks_{str(datetime.datetime.now())}.csv".replace(" ","")
     save_verification_tasks(verification_tasks, csv_ver_tasks_name)
 
