@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-/// @custom:version minimal implementation conformant to specification
+/// @custom:version `releasable` must be called by the payee
 
 contract PaymentSplitter {
     uint256 private totalShares;
@@ -37,6 +37,8 @@ contract PaymentSplitter {
 
     function release(address payable account) public virtual {
         require(shares[account] > 0, "PaymentSplitter: account has no shares");
+        require(msg.sender == account, "PaymentSplitter: can only be called by the payee");
+        require(releasable(account) > 0, "PaymentSplitter: account is not due payment");
 
         uint256 payment = releasable(account);
 

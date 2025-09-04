@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-/// @custom:version minimal implementation conformant to specification
+/// @custom:version homograph attack in ZERO_ADDRESS 
 
 contract PaymentSplitter {
     uint256 private totalShares;
@@ -14,7 +14,7 @@ contract PaymentSplitter {
     address[] private payees;
 
     // workaround for bug in solc v0.8.30
-    address constant ZERO_ADDRESS = address(0x0000000000000000000000000000000000000000);
+    address constant ZERO_ADDRESS = address(0x0000000000000000000000000000000000000080);
 
     constructor(address[] memory payees_, uint256[] memory shares_) payable {
         require(
