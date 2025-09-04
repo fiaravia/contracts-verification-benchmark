@@ -37,6 +37,7 @@ The contract follows a pull payment model. This means that payments are not auto
 - **v6**: homograph attack in ZERO_ADDRESS 
 - **v7**: `releasable` must be called by the payee
 - **v8**: owner can withdraw remining balance
+- **v9**: owner can withdraw remining balance & payees can have zero shares
 
 ## Verification data
 

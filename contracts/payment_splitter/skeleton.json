@@ -20,7 +20,9 @@
     },    
     "property-types": {
         "fair-split-eq": "state invariant",
+        "fair-split-eq-no-overflow": "state invariant",
         "fair-split-geq": "state invariant",
+        "fair-split-geq-no-overflow": "state invariant",
         "non-zero-payeees": "state invariant",
         "positive-shares": "state invariant",
         "releasable-balance-check": "state invariant",
@@ -30,6 +32,8 @@
         "release-not-revert": "function spec",
         "release-not-revert-receive": "function spec",
         "release-release-revert": "multiple-transition invariant",
-        "swappable-call-order": "other"
+        "swappable-call-order": "other",
+        "tx-transfer-releasable-receive": "other",
+        "tx-transfer-balance-receive": "other"
     }
 }

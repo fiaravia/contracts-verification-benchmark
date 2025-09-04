@@ -27,6 +27,9 @@ positive-shares,v3,1,
 positive-shares,v4,1,
 positive-shares,v5,1,
 positive-shares,v6,1,
+positive-shares,v7,1,
+positive-shares,v8,1,
+positive-shares,v9,0,"shares can be zero"
 releasable-balance-check,v1,1,
 releasable-balance-check,v2,1,
 releasable-balance-check,v3,1,
@@ -83,4 +86,5 @@ tx-transfer-balance-receive,v4,0,
 tx-transfer-balance-receive,v5,0,
 tx-transfer-balance-receive,v6,0,
 tx-transfer-balance-receive,v7,0,
-tx-transfer-balance-receive,v8,1,"owner can withdraw remaining balance"
+tx-transfer-balance-receive,v8,1,"owner can withdraw remaining balance",
+tx-transfer-balance-receive,v9,1,"all payees can have zero shares"
