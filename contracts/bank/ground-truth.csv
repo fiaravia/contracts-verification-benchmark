@@ -169,6 +169,23 @@ deposit-contract-balance,v6,1,
 deposit-contract-balance,v7,1,
 deposit-contract-balance,v8,1,
 deposit-contract-balance,v9,1,
+deposit-not-revert-exsternal,v1,1,
+deposit-not-revert-exsternal,v10,1,
+deposit-not-revert-exsternal,v11,0,"Deposits may be paused by the owner."
+deposit-not-revert-exsternal,v12,1,
+deposit-not-revert-exsternal,v13,0,"The low-level call to the owner may revert."
+deposit-not-revert-exsternal,v14,0,"The sender may be blacklisted by the owner."
+deposit-not-revert-exsternal,v15,0,"The operation limit per block may be exceeded."
+deposit-not-revert-exsternal,v16,0,
+deposit-not-revert-exsternal,v17,1,
+deposit-not-revert-exsternal,v2,1,
+deposit-not-revert-exsternal,v3,0,
+deposit-not-revert-exsternal,v4,0,"Reverts when credits[msg.sender]==0 and msg.value==0",
+deposit-not-revert-exsternal,v5,0,"Reverts after type(uint256).max calls with msg.value == 0."
+deposit-not-revert-exsternal,v6,1,
+deposit-not-revert-exsternal,v7,0,
+deposit-not-revert-exsternal,v8,1,
+deposit-not-revert-exsternal,v9,1,
 deposit-not-revert,v1,1,
 deposit-not-revert,v10,1,
 deposit-not-revert,v11,0,"Deposits may be paused by the owner."
@@ -185,7 +202,7 @@ deposit-not-revert,v5,0,"Reverts after type(uint256).max calls with msg.value ==
 deposit-not-revert,v6,1,
 deposit-not-revert,v7,0,
 deposit-not-revert,v8,1,
-deposit-not-revert,v9,1,
+deposit-not-revert,v9,0,"withdraw() calls an external contract, whose receive calle deposit(). This reverts, since deposit is non-reentrant."
 deposit-revert,v1,1,"The total amount of wei in circulation will never be enough to make the credits overflow."
 deposit-revert,v10,1,
 deposit-revert,v11,1,
@@ -298,7 +315,7 @@ withdraw-additivity,v15,0,"The variable opsInCurrentBlock changes"
 withdraw-additivity,v16,0
 withdraw-additivity,v17,0
 withdraw-additivity,v2,0,
-withdraw-additivity,v3,1,"Transfer in `withdraw` prevents further calls."
+withdraw-additivity,v3,0,"withdraw(n1) withdraw(n2) with n1+n2 exceeding opLimit."
 withdraw-additivity,v4,0
 withdraw-additivity,v5,0,
 withdraw-additivity,v6,0,
