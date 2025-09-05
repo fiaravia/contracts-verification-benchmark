@@ -22,13 +22,13 @@ rule dep_state {
     uint old_credit_t0_b = currentContract.credit[t0][b];
     uint old_credit_t1_b = currentContract.credit[t1][b];
 
-    uint old_debit_t0_a = currentContract.debit[t0][a];
-    uint old_debit_t1_a = currentContract.debit[t1][a];
-    uint old_debit_t0_b = currentContract.debit[t0][b];
-    uint old_debit_t1_b = currentContract.debit[t1][b];
+    uint old_debit_t0_a = currentContract.getAccruedDebt(e,t0,a);
+    uint old_debit_t1_a = currentContract.getAccruedDebt(e,t1,a);
+    uint old_debit_t0_b = currentContract.getAccruedDebt(e,t0,b);
+    uint old_debit_t1_b = currentContract.getAccruedDebt(e,t1,b);
 
     uint old_sum_credits_t0 = currentContract.sum_credits[t0];
-    uint old_sum_debits_t0 = currentContract.sum_debits[t0];
+    uint old_sum_debits_t0 = currentContract.getUpdatedSumDebits(e, t0);
     uint old_xr_t0 = currentContract.XR(e, t0);
 
     deposit(e, amt, t0);
@@ -42,13 +42,13 @@ rule dep_state {
     uint new_credit_t1_b = currentContract.credit[t1][b];
     uint new_xr_t0 = currentContract.XR(e, t0);
 
-    uint new_debit_t0_a = currentContract.debit[t0][a];
-    uint new_debit_t1_a = currentContract.debit[t1][a];
-    uint new_debit_t0_b = currentContract.debit[t0][b];
-    uint new_debit_t1_b = currentContract.debit[t1][b];
+    uint new_debit_t0_a = currentContract.getAccruedDebt(e,t0,a);
+    uint new_debit_t1_a = currentContract.getAccruedDebt(e,t1,a);
+    uint new_debit_t0_b = currentContract.getAccruedDebt(e,t0,b);
+    uint new_debit_t1_b = currentContract.getAccruedDebt(e,t1,b);
 
     uint new_sum_credits_t0 = currentContract.sum_credits[t0];
-    uint new_sum_debits_t0 = currentContract.sum_debits[t0];
+    uint new_sum_debits_t0 = currentContract.getUpdatedSumDebits(e, t0);
 
     assert(new_reserves_t0 == old_reserves_t0 + amt);
     assert(new_reserves_t1 == old_reserves_t1);

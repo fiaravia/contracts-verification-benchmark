@@ -11,8 +11,8 @@ rule bor_state {
     require(a != b && a!=0 && b!=0 && a!=currentContract && b!=currentContract);
     require(t0 != t1);
 
-    require (e.msg.sender == a);
-    require (currentContract.isValidToken(e, t0));
+    require(e.msg.sender == a);
+    require(currentContract.isValidToken(e, t0));
 
     uint old_reserves_t0 = currentContract.reserves[t0];   
     uint old_reserves_t1 = currentContract.reserves[t1];
@@ -22,13 +22,13 @@ rule bor_state {
     uint old_credit_t0_b = currentContract.credit[t0][b];
     uint old_credit_t1_b = currentContract.credit[t1][b];
 
-    uint old_debit_t0_a = currentContract.debit[t0][a];
-    uint old_debit_t1_a = currentContract.debit[t1][a];
-    uint old_debit_t0_b = currentContract.debit[t0][b];
-    uint old_debit_t1_b = currentContract.debit[t1][b];
+    uint old_debit_t0_a = currentContract.getAccruedDebt(e, t0, a);
+    uint old_debit_t1_a = currentContract.getAccruedDebt(e, t1, a);
+    uint old_debit_t0_b = currentContract.getAccruedDebt(e, t0, b);
+    uint old_debit_t1_b = currentContract.getAccruedDebt(e, t1, b);
 
     uint old_sum_credits_t0 = currentContract.sum_credits[t0];
-    uint old_sum_debits_t0 = currentContract.sum_debits[t0];
+    uint old_sum_debits_t0 = currentContract.getUpdatedSumDebits(e, t0);
 
     borrow(e, amt, t0);
 
@@ -40,13 +40,13 @@ rule bor_state {
     uint new_credit_t0_b = currentContract.credit[t0][b];
     uint new_credit_t1_b = currentContract.credit[t1][b];
 
-    uint new_debit_t0_a = currentContract.debit[t0][a];
-    uint new_debit_t1_a = currentContract.debit[t1][a];
-    uint new_debit_t0_b = currentContract.debit[t0][b];
-    uint new_debit_t1_b = currentContract.debit[t1][b];
+    uint new_debit_t0_a = currentContract.getAccruedDebt(e, t0, a);
+    uint new_debit_t1_a = currentContract.getAccruedDebt(e, t1, a);
+    uint new_debit_t0_b = currentContract.getAccruedDebt(e, t0, b);
+    uint new_debit_t1_b = currentContract.getAccruedDebt(e, t1, b);
 
     uint new_sum_credits_t0 = currentContract.sum_credits[t0];
-    uint new_sum_debits_t0 = currentContract.sum_debits[t0];
+    uint new_sum_debits_t0 = currentContract.getUpdatedSumDebits(e, t0);
 
     assert(new_reserves_t0 == old_reserves_t0 - amt);
     assert(new_reserves_t1 == old_reserves_t1);

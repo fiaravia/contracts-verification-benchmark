@@ -1,3 +1,5 @@
+using LendingProtocol as lp;
+
 rule bor_additivity {
     env e1;
     env e2;
@@ -6,27 +8,26 @@ rule bor_additivity {
     uint amount1;
     uint amount2;
     uint amount3;
+    uint blocknumber;
 
     storage initial = lastStorage;
 
     require e1.msg.sender == e2.msg.sender;
-
     borrow(e1, amount1, token);
     borrow(e2, amount2, token);
-
+    
     storage s12 = lastStorage;
 
     require e3.msg.sender == e1.msg.sender;
     require amount3 == amount1 + amount2;
     borrow(e3, amount3, token) at initial;
+
     storage s3 = lastStorage;
 
-    // checks equality of the following:
-    // - the values in storage for all contracts,
-    // - the balances of all contracts,
-    // - the state of all ghost variables and functions
-    // https://docs.certora.com/en/latest/docs/cvl/expr.html#comparing-storage
-    // however, the experiments show that also the account balances are checked
+    // avoids cheap violation, since the block number that would not normally be saved, is saved in the contract
+    require (e1.block.number == blocknumber);
+    require (e2.block.number == blocknumber);
+    require (e3.block.number == blocknumber);
 
-    assert s12 == s3;
+    assert s12[lp] == s3[lp];
 }

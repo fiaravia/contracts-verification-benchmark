@@ -1,6 +1,6 @@
-The LP contract implements a lending protocol that allows users to deposit tokens as collateral, earn interest on deposits, and borrow tokens.
+The LendingProtocol contract implements a lending protocol that allows users to deposit tokens as collateral, earn interest on deposits, and borrow tokens.
 
-The LP contract handles ERC20-compatible tokens. No ETH is exchanged between the LP and its users. 
+The LendingProtocol contract handles ERC20-compatible tokens. No ETH is exchanged between the LendingProtocol and its users. 
 Credits and debits are not represented as tokens, but as maps within the contract state:
 - **debits** represent debt tokens that track how much users owe. These accrue interest over time.
 - **credits** represent claim tokens that users receive when depositing. They appreciate in value over time as interests accrue on debits.

@@ -1,9 +1,9 @@
-# Lending protocol
+# LendingProtocol
 
 ## Specification
-The LP contract implements a lending protocol that allows users to deposit tokens as collateral, earn interest on deposits, and borrow tokens.
+The LendingProtocol contract implements a lending protocol that allows users to deposit tokens as collateral, earn interest on deposits, and borrow tokens.
 
-The LP contract handles ERC20-compatible tokens. No ETH is exchanged between the LP and its users. 
+The LendingProtocol contract handles ERC20-compatible tokens. No ETH is exchanged between the LendingProtocol and its users. 
 Credits and debits are not represented as tokens, but as maps within the contract state:
 - **debits** represent debt tokens that track how much users owe. These accrue interest over time.
 - **credits** represent claim tokens that users receive when depositing. They appreciate in value over time as interests accrue on debits.
@@ -42,20 +42,31 @@ the sender to repay a debt of `amount` units of token `t_debit` of `debtor`, rec
 
 
 ## Properties
-- **bor-additivity**: if a sender A can perform two (successful) `borrow` of n1 and n2 token units (of the same token T, and in the same interest accrual period), then A can always obtain an equivalent effect (on the state of the contract and on its own token balance) through a single `borrow` of n1+n2 units of token T. Here equivalence neglects transaction fees.
+- **bor-additivity**: if a sender A can perform two consecutive (successful) `borrow()`, without interest accruals in between, of n1 and n2 token units (of the same token T, and in the same interest accrual period), then A can always obtain an equivalent effect (on the state of the contract and on its own token balance) through a single `borrow` of n1+n2 units of token T. Here equivalence neglects transaction fees.
 - **bor-reversibility**: if a sender A performs a (successful) `borrow`, then A can fire a transaction that restores the amount of credits and debts of A to the state before the `borrow`. Here, assume that before performing the first transaction, the interests have already been accrued, for all token and users involved in the transaction.
-- **bor-state**: if a user A performs a successful `borrow(amount,token)`, then after the transaction: (1) the reserves of T in the LP are decreased by `amt`; the debits of A in T are increased by `amt`; (3) the debits of A in all tokens different from T are preserved; (4) the credits of A in all tokens are preserved.
+- **bor-state**: if a user A performs a successful `borrow(amount,token)`, then after the transaction: (1) the reserves of T in the `LendingProtocol` are decreased by `amt`; the debits of A in T are increased by `amt`; (3) the debits of A in all tokens different from T are preserved; (4) the credits of A in all tokens are preserved.
+- **bor-tokens**: if a user A performs a successful `borrow(amount,token)`, then after the transaction: (1) the T balance of the `LendingProtocol` is decreased by `amt`; (2) the T balance of A is incremented by `amt`.
+- **bor-xr-eq**: the XR(T) of any token T handled by the `LendingProtocol` is preserved by any transaction `borrow(amount,token)`
 - **credits-zero**: if the summation of the credits of a token T of all users are zero, then also the summations of the debits of T and of the reserves of T are zero.
 - **dep-additivity**: if a sender A can perform two (successful) `deposit` of n1 and n2 token units (of the same token T), then A can always obtain an equivalent effect (on the state of the contract and on its own token balance) through a single `deposit` of n1+n2 units of token T. Here equivalence neglects transaction fees.
 - **dep-rdm-reverse**: if a sender A performs a (successful) `deposit` of n1 token units and then a (successful) `withdraw` of n1*1000000/XR(token_addr), then the amount of the credits and debts of A is restored to that in the state before the `deposit`. Assume that before performing the first transaction, the interests have already been accrued, for all token and users involved in the transaction.
 - **dep-reversibility**: if a sender A performs a (successful) `deposit`, then A can fire a transaction that restores the amount of credits and debts of A to the state before the `deposit`. Assume that before performing the first transaction, the interests have already been accrued, for all token and users involved in the transaction.
 - **dep-reversibility-collateralized**: if a sender A performs a (successful) `deposit`, and A is collateralized, then A can fire a transaction that restores the amount credits and debts of A to the state before the `deposit`. Here, assume that before performing the first transaction, the interests have already been accrued, for all token and users involved in the transaction.
-- **dep-state**: if a user A performs a successful `deposit(amount,token)`, then after the transaction: (1) the reserves of T in the LP are increased by `amt`; the credits of A in T are increased by `amt` * 1e6 divided by the exchange rate of T the pre state; (3) the credits of A in all tokens different from T are preserved; (4) the debits of A in all tokens are preserved.
-- **dep-tokens**: if a user A performs a successful `deposit(amount,token)`, then after the transaction: (1) the T balance of the LP is increased by `amt`; (2) the T balance of A is decreased by `amt`.
-- **dep-xr**: let XR(T) be the exchange rate of a token T handled by the LP in a given state, and let XR'(T) be the exchange rate after a successful transaction `deposit(amount,token)`. Then, XR(T) <= XR'(T) <= XR(T) + floor((amount * 1e6) / sum_credits[T]) + 1.
-- **dep-xr-eq**: the exchange rate XR(T) of any `token` handled by the LP is preserved by any transaction `deposit(amount,token)`
+- **dep-state**: if a user A performs a successful `deposit(amount,token)`, then after the transaction: (1) the reserves of T in the `LendingProtocol` are increased by `amt`; the credits of A in T are increased by `amt` * 1e6 divided by the exchange rate of T the pre state; (3) the credits of A in all tokens different from T are preserved; (4) the debits of A in all tokens are preserved.
+- **dep-tokens**: if a user A performs a successful `deposit(amount,token)`, then after the transaction: (1) the T balance of the `LendingProtocol` is increased by `amt`; (2) the T balance of A is decreased by `amt`.
+- **dep-xr**: let XR(T) be the exchange rate of a token T handled by the `LendingProtocol` in a given state, and let XR'(T) be the exchange rate after a successful transaction `deposit(amount,token)`. Then, XR(T) <= XR'(T) <= XR(T) + floor((amount * 1e6) / sum_credits[T]) + 1.
+- **dep-xr-eq**: the exchange rate XR(T) of any `token` handled by the `LendingProtocol` is preserved by any transaction `deposit(amount,token)`
+- **expected-interest**: the interest after one single accrual should not be doubled if two borrow() were executed before
+- **rdm-additivity**: if a sender A can perform two consecutive (successful) `redeem()`, without interest accruals in between, of n1 and n2 token units (of the same token T, and in the same interest accrual period), then A can always obtain an equivalent effect (on the state of the contract and on its own token balance) through a single `redeem` of n1+n2 units of token T. Here equivalence neglects transaction fees.
 - **rdm-reversibility**: if a sender A performs a (successful) `redeem`, then A can fire a transaction that restores the amount of credits and debts of A to the state before the `redeem`. Here, assume that before performing the first transaction, the interests have already been accrued, for all token and users involved in the transaction.
+- **rdm-state**: if a user A performs a successful `redeem(amount,token)`, then after the transaction, (1) the `LendingProtocol` reserves of T are increased by `amt * XR(T) / 1e6`; the credits of A in T are decreased by `amt`; (3) the credits of A in all tokens different from T are preserved;
+- **rdm-tokens**: if a user A performs a successful `redeem(amount,token)`, then after the transaction: (1) the T balance of the `LendingProtocol` is decreased by `amt * XR(T) / 1e6`; (2) the T balance of A is increased by `amt * XR(T) / 1e6`.
+- **rdm-xr-eq**: the exchange rate XR(T) of any token T handled by the `LendingProtocol` is preserved by any transaction `redeem(amount,token)`, the property is false because of rounding errors in integer arithmetics
 - **rep-reversibility**: if a user A performs a (successful) `repay`, then after that transaction A can fire another transaction that restores the amount of credits and debts of A to the state before the `repay`. Here, assume that before performing the first transaction, the interests have already been accrued, for all token and users involved in the transaction.
+- **rpy-additivity**: if a sender A can perform two consecutive (successful) `repay()`, without interest accruals in between, of n1 and n2 token units (of the same token T, and in the same interest accrual period), then A can always obtain an equivalent effect (on the state of the contract and on its own token balance) through a single `repay` of n1+n2 units of token T. Here equivalence neglects transaction fees.
+- **rpy-state**: if a user A performs a successful `repay(amount,token)`, then after the transaction: (1) the reserves of T in the `LendingProtocol` are increased by `amt`; the debits of A in T are decreased by `amt`; (3) the debits of A in all tokens different from T are preserved; (4) the credits of A in all tokens are preserved.
+- **rpy-tokens**: if a user A performs a successful `repay(amount,token)`, then after the transaction: (1) the T balance in the `LendingProtocol` is increased by `amt`; the T balance of A is decreased by `amt`; 
+- **rpy-xr-eq**: the exchange rate XR(T) of any token T handled by the `LendingProtocol` is preserved by any transaction `repay(amount,token)`
 - **trace1**: TODO
 - **xr-geq-one**: for each token T handled by the lending protocol, the exchange rate XR(T) is always greater than or equal to 1000000
 - **xr-increasing**: for each token type T handled by the lending protocol, any transaction of type `deposit`, `borrow`, `repay` and `redeem` do not decrease the exchange rate XR(T). The only execption is when a `redeem` is performed, and after that the total credits become zero. Assume that before performing the transaction, the interests have already been accrued, for all token and users involved in the transaction.
@@ -64,6 +75,11 @@ the sender to repay a debt of `amount` units of token `t_debit` of `debtor`, rec
 ## Versions
 - **v1**: minimal implementation without liquidation
 - **v2**: compound interests inspired by Aave v1 
+- **v3**: faulty version that could duplicate borrowers after a borrow() call, leading to incorrect interest accruals
+- **v4**: version that keeps 1 token for itself on redeem (based on v1)
+- **v5**: faulty recreation of v2, token_addr repay is always overwritten to tok1
+- **v6**: version that keeps 1 token for itself on redeem (based on v2)
+- **v7**: faulty version based on v1, token_addr repay is always overwritten to tok1
 
 ## Verification data
 

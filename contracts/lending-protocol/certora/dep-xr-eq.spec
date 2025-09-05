@@ -11,7 +11,7 @@ rule xr_compute(address t) {
 
     uint r_t = currentContract.reserves[t];
     uint c_t = currentContract.sum_credits[t];
-    uint d_t = currentContract.sum_debits[t];
+    uint d_t = currentContract.getUpdatedSumDebits(e, t);
 
     require (r_t + c_t < max_uint);
 
@@ -51,7 +51,7 @@ rule dep_xr_eq {
     uint old_xr_t0 = currentContract.XR(e, t0);
 
     uint old_sum_credits_t0 = currentContract.sum_credits[t0];
-    uint old_sum_debits_t0 = currentContract.sum_debits[t0];
+    uint old_sum_debits_t0 = currentContract.getUpdatedSumDebits(e, t0);
 
     require(old_sum_credits_t0 > 0);
 
@@ -77,7 +77,7 @@ rule dep_xr_eq {
     uint new_xr_t0 = currentContract.XR(e, t0);
 
     uint new_sum_credits_t0 = currentContract.sum_credits[t0];
-    uint new_sum_debits_t0 = currentContract.sum_debits[t0];
+    uint new_sum_debits_t0 = currentContract.getUpdatedSumDebits(e, t0);
 
     mathint new_computed_xr_t0; 
     
