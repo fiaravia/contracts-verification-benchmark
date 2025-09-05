@@ -1,0 +1,17 @@
+property,version,truth,footnote-md
+guardAddressChange,v1,1,
+setGuardReentrant,v1,1,
+txnGuardCalled,v1,1
+moduleGuardAddressChange,v1,1
+setModuleGuardReentrant,v1,1
+execTxnModulePermissions,v1,1
+execTxnModuleReturnDataPermissions,v1,1
+executePermissions,v1,1
+approvedHashesUpdate,v1,1
+approvedHashesSet,v1,1
+transactionHashCantCollide,v1,1,"TODO"
+setupThresholdZeroAndSetsPositiveThreshold,v1,1
+setFallbackIntegrity,v1,1
+fallbackHandlerNeverSelf,v1,1
+simulateAndRevertReverts,v1,1
+handlerCallableIfSet,v1,1
