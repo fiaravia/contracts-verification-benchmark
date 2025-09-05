@@ -16,18 +16,18 @@ rule trace1 {
     require (currentContract.reserves[t1] == 0);
     require (currentContract.sum_credits[t0] == 0);
     require (currentContract.sum_credits[t1] == 0);
-    require (currentContract.sum_debits[t0] == 0);
-    require (currentContract.sum_debits[t1] == 0);
+    require (currentContract.getUpdatedSumDebits(e1, t0) == 0);
+    require (currentContract.getUpdatedSumDebits(e1, t1) == 0);
 
     require (currentContract.credit[t0][a] == 0);
     require (currentContract.credit[t0][b] == 0);
     require (currentContract.credit[t1][a] == 0);
     require (currentContract.credit[t1][b] == 0);
 
-    require (currentContract.debit[t0][a] == 0);
-    require (currentContract.debit[t0][b] == 0);
-    require (currentContract.debit[t1][a] == 0);
-    require (currentContract.debit[t1][b] == 0);
+    require (currentContract.getAccruedDebt(e1, t0, a) == 0);
+    require (currentContract.getAccruedDebt(e1, t0, b) == 0);
+    require (currentContract.getAccruedDebt(e1, t1, a) == 0);
+    require (currentContract.getAccruedDebt(e1, t1, a) == 0);
 
     // A:deposit(50:T0)
 
@@ -59,7 +59,7 @@ rule trace1 {
     uint reserve_t1_2 = currentContract.reserves[t1];
     uint credit_t0_a_2 = currentContract.credit[t0][a];
     uint credit_t1_b_2 = currentContract.credit[t1][b];
-    uint debit_t0_b_2 = currentContract.debit[t0][b];
+    uint debit_t0_b_2 = currentContract.getAccruedDebt(e2, t0, b);
 
     // B:borrow(30:T0)
 
@@ -74,8 +74,8 @@ rule trace1 {
     uint reserve_t1_3 = currentContract.reserves[t1];
     uint credit_t0_a_3 = currentContract.credit[t0][a];
     uint credit_t1_b_3 = currentContract.credit[t1][b];
-    uint debit_t0_b_3 = currentContract.debit[t0][b];
-    uint debit_t1_b_3 = currentContract.debit[t1][b];
+    uint debit_t0_b_3 = currentContract.getAccruedDebt(e3, t0, b);
+    uint debit_t1_b_3 = currentContract.getAccruedDebt(e3, t1, b);
 
     // Asserts
 
