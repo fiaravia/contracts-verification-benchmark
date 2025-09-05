@@ -18,11 +18,12 @@ CONTRACTS_DIR = os.path.join(BASE_DIR, "contracts")
 API_KEY_FILE = os.path.join(SCRIPTS_DIR, "openai_api_key.txt")
 
 
+
 def sanitize_for_csv(text):
     """Raddoppia le virgolette e sostituisce newline reali con \n."""
     if not isinstance(text, str):
         return text
-    #text = text.replace('"', '""')
+    text = text.replace('"', '""')
     text = re.sub(r"\r?\n", r"\\n", text)
     return text
 
@@ -65,6 +66,9 @@ def choose_verification_tasks(prop, versions, ground_truths : dict, args):
         verification_tasks_from_csv = get_verification_tasks_from_csv(args.use_csv_verification_tasks)
         for property, version in verification_tasks_from_csv:
             if property == prop and version in versions:
+                if ground_truths.get((prop,version)) is None:
+                    print(f"Warning: ground truth for ({prop}, {version}) not found. Skipping this version.")
+                    continue
                 verification_tasks.append((property, version))
 
     else:
@@ -95,6 +99,17 @@ def choose_verification_tasks(prop, versions, ground_truths : dict, args):
             #print(f"{sampled_versions_negative=}")
             verification_tasks = [(prop, v) for v in sampled_versions_positive + sampled_versions_negative]
             #print(f"{verification_tasks=}")
+            if args.at_least_n_prop > 0:
+                n = args.at_least_n_prop
+                if len(verification_tasks) < n:
+                    additional_needed = n - len(verification_tasks)
+                    remaining_versions = list(set(versions_positive) | set(versions_negative) - set(v for _, v in verification_tasks))
+                    if len(remaining_versions) < additional_needed:
+                        additional_needed = len(remaining_versions)
+                    if additional_needed > 0:
+                        additional_versions = random.sample(remaining_versions, additional_needed)
+                        verification_tasks.extend([(prop, v) for v in additional_versions])
+                        print(f"Added {additional_needed} more tasks to reach at least {n} tasks for property {prop}.")
     return verification_tasks
 
 def get_verification_tasks_from_csv(filepath,):
@@ -254,6 +269,11 @@ def find_contract_folder(contract_arg: str) -> str:
     print(f"Errore: nessuna cartella trovata per '{contract_arg}' in {CONTRACTS_DIR}", file=sys.stderr)
     sys.exit(1)
 
+def check_all_verification_tasks_have_ground_truth(verification_tasks, ground_truths):
+    for prop, version in verification_tasks:
+        if (prop, version) not in ground_truths:
+            print(f"Error: ground truth for ({prop}, {version}) not found.", file=sys.stderr)
+            sys.exit(1)
 
 def write_results_to_csv(results, output_file, temp=False):
 
@@ -297,6 +317,12 @@ def get_results_from_csv(input_file):
             print(f"Warning: malformed line in {input_file}: {line}", file=sys.stderr)
     return results
 
+def get_previous_verification_tasks(previous_results):
+    previous_verification_tasks = set()
+    for res in previous_results:
+        key = (res['property_id'], res['contract_id'])
+        previous_verification_tasks.add(key)
+    return previous_verification_tasks
 
 def merge_results(old_results, new_results):
     merged_results = []
@@ -333,12 +359,22 @@ def main():
     parser.add_argument("--model", default="gpt-4o", help="Model (default gpt-4o)")
     parser.add_argument("--no_sample", action='store_true', required=False, default=False, help="Disable verification tasks sampling. ")
     parser.add_argument("--use_csv_verification_tasks", required=False, default=False, help="Use verification tasks from a CSV file. ")
+    parser.add_argument("--at_least_n_prop", type=int, default=0, help="Force to pick at least N verification task per property.")
+    parser.add_argument("--force_overwrite", action='store_true', required=False, default=False, help="Don't run verification tasks already present in the results file.")
+
 
     args = parser.parse_args()
 
     if args.use_csv_verification_tasks and args.no_sample:
         print("Warning: --no_sample has no effect when --use_csv_verification_tasks is enabled.")
 
+    if args.use_csv_verification_tasks and args.at_least_n_prop:
+        args.at_least_n_prop = 0
+        print("Warning: --at_least_n_prop is automatically disabled when --use_csv_verification_tasks is enabled.")
+
+    if args.no_sample and args.at_least_n_prop:
+        args.at_least_n_prop = 0
+        print("Warning: --at_least_n_prop has no effect when --no_sample is enabled.")
 
     if args.version and not args.no_sample:
         args.no_sample = True
@@ -352,6 +388,7 @@ def main():
 
     # Se manca property → tutte
     properties = [args.property] if args.property else list_properties(base_path)
+    print(properties)
     if not properties:
         print(f"Nessuna proprietà trovata in {base_path}", file=sys.stderr)
         sys.exit(1)
@@ -359,6 +396,16 @@ def main():
     versions_path = os.path.join(base_path, "versions")
 
     ground_truths = get_ground_truths(base_path)
+
+    output_file = f"llms_results/results_{args.model}_{args.prompt}_{args.contract}_{args.tokens}tok.csv".replace(".txt","")
+    print(f"Results will be saved to {output_file}")
+
+    if os.path.exists(output_file):
+        previous_results = get_results_from_csv(output_file)
+    else:
+        previous_results = []
+
+    previous_verification_tasks = get_previous_verification_tasks(previous_results)
 
     verification_tasks = []
     for prop in properties:
@@ -370,16 +417,23 @@ def main():
         verification_tasks_prop = choose_verification_tasks(prop, versions, ground_truths, args)
         #print(f"{verification_tasks_prop=}")
         verification_tasks.extend(verification_tasks_prop)  
+
     print(f"Verification tasks: {verification_tasks}")
     print(len(verification_tasks))
+
+    if not args.force_overwrite:
+        verification_tasks = [vt for vt in verification_tasks if vt not in previous_verification_tasks]
+        print(f"After skipping already done tasks, {len(verification_tasks)} tasks remain.")
+
+    print(f"Verification tasks: {verification_tasks}")
+
     #if args.use_csv_verification_tasks:
     #    verification_tasks = get_verification_tasks_from_csv(args.use_csv_verification_tasks)
     csv_ver_tasks_name = f"logs_verification_tasks/verification_tasks_{str(datetime.datetime.now())}.csv".replace(" ","")
     save_verification_tasks(verification_tasks, csv_ver_tasks_name)
 
-    output_file = f"llms_results/results_{args.model}_{args.prompt}_{args.contract}_{args.tokens}tok.csv".replace(".txt","")
-    print(f"Results will be saved to {output_file}")
-            
+    check_all_verification_tasks_have_ground_truth(verification_tasks, ground_truths)
+
     results = []
 
     starting_time = str(datetime.datetime.now())
