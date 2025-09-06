@@ -3,6 +3,7 @@
     "specification": "file:spec.md" ,
     "properties": {
         "fair-split-eq": "for every address `a` in `payees`, `released[a] + releasable(a) == (totalReceived * shares[a]) / totalShares`.",
+        "fair-split-eq-no-overflow": "for every address `a` in `payees`, `released[a] + releasable(a) == (totalReceived * shares[a]) / totalShares` whenever the expression does not overflow.",
         "fair-split-geq": "for every address `a` in `payees`, `(totalReceived * shares[a]) / totalShares >= released[a]`.",
         "fair-split-geq-no-overflow": "for every address `a` in `payees`, `(totalReceived * shares[a]) / totalShares >= released[a]` whenever the expression does not overflow.",
         "non-zero-payees": "for all addresses `a` in `payees`, `a != address(0)`.",

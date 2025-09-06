@@ -7,7 +7,7 @@ invariant fair_split_geq (env e,uint index)(
     index < getPayeesLength() => 
 
     ((getBalance() + currentContract.totalReleased) * 
-    currentContract.getShares(currentContract.payees[index])) /
+    currentContract.getShares(currentContract.payees[index]))/
     currentContract.getTotalShares(e) >= currentContract.getReleased(currentContract.payees[index]))
     {
         preserved {
