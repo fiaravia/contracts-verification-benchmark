@@ -1,5 +1,8 @@
 property,version,truth,footnote-md
 guardAddressChange,v1,1,
+REFINED_guardAddressChange,v1,1,
+REFINED2_guardAddressChange,v1,1,
+REFINED3_guardAddressChange,v1,1,
 setGuardReentrant,v1,1,
 txnGuardCalled,v1,1
 moduleGuardAddressChange,v1,1
@@ -15,3 +18,8 @@ setFallbackIntegrity,v1,1
 fallbackHandlerNeverSelf,v1,1
 simulateAndRevertReverts,v1,1
 handlerCallableIfSet,v1,1
+MYonlyOwnersAddModule,v1,1
+MYonlyOwnersAddModule2,v1,1
+MYboundedowners,v1,1
+MYboundedthreshold,v1,1
+MYaddowner,v1,1
