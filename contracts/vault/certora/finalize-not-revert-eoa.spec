@@ -5,7 +5,9 @@
 // 2) in state REQ, and 
 // 3) at least wait_time time units have elapsed after request_timestamp
 
-rule finalize_not_revert {
+/// @custom:run certoraRun versions/Vault_v1.sol:Vault versions/lib/EOA.sol:EOA --verify Vault:certora/finalize-not-revert-eoa.spec --link Vault:receiver=EOA
+
+rule finalize_not_revert_eoa {
     env e;
 
     // technical assumptions: the receiver is not the Vault contract itself

@@ -1,10 +1,14 @@
 /// @custom:ghost
-uint256 old_user_balance;
-uint256 new_user_balance;
 
 /// @custom:preghost function finalize
-old_user_balance = address(receiver).balance;
+uint old_receiver_balance = address(receiver).balance;
+uint old_contract_balance = address(this).balance;
+uint old_amount = amount;
+// technical assumption
+require (receiver != address(this));
 
 /// @custom:postghost function finalize
-new_user_balance = address(receiver).balance;
-assert(new_user_balance == old_user_balance + amount);
+uint new_receiver_balance = address(receiver).balance;
+uint new_contract_balance = address(this).balance;
+assert(new_receiver_balance == old_receiver_balance + old_amount);
+assert(new_contract_balance == old_contract_balance - old_amount);

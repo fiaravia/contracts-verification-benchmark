@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-rule withdraw_finalize_not_revert {
+/// @custom:run certoraRun versions/Vault_v1.sol:Vault versions/lib/EOA.sol:EOA --verify Vault:certora/withdraw-finalize-not-revert-eoa.spec --link Vault:receiver=EOA
+
+rule withdraw_finalize_not_revert_eoa {
     env e1;  
 
     address addr;
