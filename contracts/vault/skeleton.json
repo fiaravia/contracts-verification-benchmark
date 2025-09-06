@@ -21,7 +21,7 @@
         "rkey-no-withdraw": "if some user knows the recovery key, they can always prevent other users from withdrawing funds from the contract.",
         "state-idle-req-inter": "in any blockchain state, the Vault state is IDLE or REQ",
         "state-idle-req-intra": "during the execution of a transaction, the Vault state is always IDLE or REQ.",
-        "state-req-amount-consistent": "if the state is REQ, then the `amount` to be withdrawn is less than or equal to the contract balance.",        
+        "state-req-amount-consistent": "if the state is REQ, then `amount` is less than or equal to the contract balance.",
         "state-update": "the contract implements a state machine with transitions: s -> s upon a `receive` (for any s), IDLE -> REQ upon a `withdraw`, REQ -> IDLE upon a `finalize` or a `cancel`.",
         "state-update-receive": "if the `receive` method of `receiver` just accepts all ETH, the contract implements a state machine with transitions: s -> s upon a receive (for any s), IDLE -> REQ upon a withdraw, REQ -> IDLE upon a finalize or a cancel.",
         "tx-idle-req": "if the state is IDLE, someone can fire a transaction that updates the state to REQ.",
