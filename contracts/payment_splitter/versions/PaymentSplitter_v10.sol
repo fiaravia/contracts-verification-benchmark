@@ -34,7 +34,7 @@ contract PaymentSplitter {
 
     receive() external payable virtual {
         require(stateCheck());
-        require(address(this).balance + totalReleased + msg.value <= MAX_RECEIVED);
+        //require(address(this).balance + totalReleased + msg.value <= MAX_RECEIVED);
     }
 
     function releasable(address account) public view returns (uint256) {
@@ -73,7 +73,6 @@ contract PaymentSplitter {
     }
 
     function addPayee(address account, uint256 shares_) private {
-        require(stateCheck());
         require(
             account != ZERO_ADDRESS,
             "PaymentSplitter: account is the zero address"
@@ -155,7 +154,6 @@ contract PaymentSplitter {
         require(stateCheck());
         return totalShares;
     }
-
 
     function stateCheck() public view returns (bool){
         return (totalShares <= 10000) && (address(this).balance + totalReleased <= MAX_RECEIVED);
