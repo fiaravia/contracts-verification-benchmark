@@ -40,7 +40,7 @@ contract PaymentSplitter {
     }
 
     function release(address payable account) public virtual {
-        require(shares[account] > 0, "PaymentSplitter: account has no shares");
+        // require(shares[account] > 0, "PaymentSplitter: account has no shares"); // should not be checked if  shares can be 0
 
         uint256 payment = releasable(account);
 

@@ -14,6 +14,7 @@ invariant fair_split_geq (env e,uint index)(
             requireInvariant shares_sum_eq_totalShares();
             requireInvariant released_sum_totalReleased();
             requireInvariant payee_shares_gt_zero();
+            requireInvariant out_of_bounds_payee();
         }
     }
 
