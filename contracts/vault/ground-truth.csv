@@ -299,14 +299,14 @@ tx-req-idle,v9,0,
 tx-req-idle-eoa,v1,1,"`cancel` is always possible since `recovery` is a non-zero EOA"
 tx-req-idle-eoa,v10,1, 
 tx-req-idle-eoa,v11,1, 
-tx-req-idle-eoa,v2,1,"`recovery` cannot be the zero address" 
+tx-req-idle-eoa,v2,1,"`recovery` cannot be the zero address"
 tx-req-idle-eoa,v3,1, 
 tx-req-idle-eoa,v4,1, 
 tx-req-idle-eoa,v5,1, 
 tx-req-idle-eoa,v6,1, 
 tx-req-idle-eoa,v7,1, 
 tx-req-idle-eoa,v8,1, 
-tx-req-idle-eoa,v9,0,"`cancel` uses the `owner` key, which could be a contract without a method to call `cancel`" 
+tx-req-idle-eoa,v9,0,"`cancel` uses the `owner` key, which could be a contract without a method to call `cancel`"
 tx-tx-assets-transfer,v1,0,"`owner` is a contract without a method to call `withdraw`"
 tx-tx-assets-transfer,v10,0,
 tx-tx-assets-transfer,v11,0,
