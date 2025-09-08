@@ -23,3 +23,4 @@ MYonlyOwnersAddModule2,v1,1
 MYboundedowners,v1,1
 MYboundedthreshold,v1,1
 MYaddowner,v1,1
+MYnoUnboundedLoops,v1,0

@@ -33,6 +33,7 @@
         "MYonlyOwnersAddModule2" : "Adding and removing a module requires confirmation from at least `threshold` number of owners.",
         "MYboundedowners" : "The number of owners is bounded.",
         "MYboundedthreshold" : "The value of `threshold` is bounded.",
-        "MYaddowner" : "An owner can be added only if at least a `threshold` number of owner agree."
-        }
+        "MYaddowner" : "An owner can be added only if at least a `threshold` number of owner agree.",
+        "MYnoUnboundedLoops" : "The code of the contract does not contain unbounded loops"
+    }
 }
