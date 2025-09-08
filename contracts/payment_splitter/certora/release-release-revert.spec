@@ -5,6 +5,8 @@ rule release_release_revert {
     uint index;
     address addr = getPayee(index);
 
+    require currentContract != addr;
+    require e1.msg.sender != currentContract;
     mathint released = releasable(addr);
     mathint balanceBefore = getBalance();
 
