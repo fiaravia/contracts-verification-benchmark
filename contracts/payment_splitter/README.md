@@ -13,8 +13,9 @@ The contract follows a pull payment model. This means that payments are not auto
 
 ## Properties
 - **fair-split-eq**: for every address `a` in `payees`, `released[a] + releasable(a) == (totalReceived * shares[a]) / totalShares`.
+- **fair-split-eq-no-overflow**: for every address `a` in `payees`, `released[a] + releasable(a) == (totalReceived * shares[a]) / totalShares` whenever the expression does not overflow.
 - **fair-split-geq**: for every address `a` in `payees`, `(totalReceived * shares[a]) / totalShares >= released[a]`.
-- **fair-split-geq-no-overflow**: for every address `a` in `payees`, `(totalReceived * shares[a]) / totalShares >= released[a]` whenever the expression does not overflow.
+- **fair-split-geq-no-overflow**: for every address `a` in `payees`, `(totalReceived * shares[a]) / totalShares >= released[a]` whenever the expression does not overflow. TODO
 - **non-zero-payees**: for all addresses `a` in `payees`, `a != address(0)`.
 - **positive-shares**: for all addresses `addr` in `payees`, `shares[addr] > 0`.
 - **releasable-balance-check**: for all addresses `addr` in `payees`, `releasable(addr)` is less than or equal to the balance of the contract.
@@ -38,6 +39,7 @@ The contract follows a pull payment model. This means that payments are not auto
 - **v7**: `releasable` must be called by the payee
 - **v8**: owner can withdraw remining balance
 - **v9**: owner can withdraw remining balance & payees can have zero shares
+- **v10**: shares capped at 10000, refuses more than 999_999_999_999_999 wei
 
 ## Verification data
 
