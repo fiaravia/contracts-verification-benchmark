@@ -356,10 +356,10 @@ withdraw-assets-transfer-others,v6,0,
 withdraw-assets-transfer-others,v7,0,
 withdraw-assets-transfer-others,v8,0,
 withdraw-assets-transfer-others,v9,0,
-withdraw-contract-balance,v1,0,"The low-level call in `withdraw` can re-entrer and subtract additional wei from the contract."
+withdraw-contract-balance,v1,0,"The low-level call in `withdraw` can re-entrer and subtract additional wei from the contract (or even sent ETH back to the contract)."
 withdraw-contract-balance,v10,0,
 withdraw-contract-balance,v11,0,
-withdraw-contract-balance,v12,0,
+withdraw-contract-balance,v12,0,"The low-level call in `withdraw` can fail, but the `withdraw` does not"
 withdraw-contract-balance,v13,0,
 withdraw-contract-balance,v14,0,
 withdraw-contract-balance,v15,1,"Transfer in `withdraw` prevents further calls."
@@ -372,7 +372,7 @@ withdraw-contract-balance,v5,0,
 withdraw-contract-balance,v6,0,"The low-level call in `withdraw` transfers amount+1 wei."
 withdraw-contract-balance,v7,0,
 withdraw-contract-balance,v8,0,"Even though withdraw is non-reentrant, the low-level call can trigger a transfer of ETH to the contract through a `selfdestruct`."
-withdraw-contract-balance,v9,1,"Even though deposit and withdraw are non-reentrant, the low-level call can trigger a transfer of ETH to the contract through a `selfdestruct`."
+withdraw-contract-balance,v9,0,"Even though deposit and withdraw are non-reentrant, the low-level call can trigger a transfer of ETH to the contract through a `selfdestruct`."
 withdraw-not-revert,v1,0,"The low-level call to `msg.sender` may revert."
 withdraw-not-revert,v10,0,
 withdraw-not-revert,v11,0,
