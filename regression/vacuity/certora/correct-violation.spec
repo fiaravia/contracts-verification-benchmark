@@ -14,5 +14,5 @@ rule correct_violation {
     set(e, x);
 
     // Always false
-    assert false == true;
+    assert false;
 }

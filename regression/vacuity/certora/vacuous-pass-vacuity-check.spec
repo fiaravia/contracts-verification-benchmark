@@ -14,5 +14,5 @@ rule vacuous_pass_vacuity_check {
     set(e, x);
 
     // Always false
-    assert false == true;
+    assert false;
 }

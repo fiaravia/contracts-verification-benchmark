@@ -2,9 +2,9 @@
     "name": "Vacuous Pass",
     "specification": "file:specs.md",
     "properties": {
-        "vacuous-pass": "After an assert(false), when the state is unreachable, the prover finds a violation.",
-        "vacuous-pass-vacuity-check": "After an assert(false), when the state is unreachable, the prover finds a violation.",
-        "correct-violation": "After an assert(false), when the state is reachable, the prover finds a violation.",
-        "correct-pass": "After an assert(true), when the state is reachable, the prover finds no violation."
+        "vacuous-pass": "After calling set() with a value different from 1, the assertion assert(false) is reached and a violation is found",
+        "vacuous-pass-vacuity-check": "After calling set() with a value different from 1, the assertion assert(false) is reached and a violation is found",
+        "correct-violation": "After calling set() with a value of 1, the assertion assert(false) is re and a violation is found",
+        "correct-pass": "After calling set() with a value of 1, the assertion assert(true) is reached and no violation is found"
     }
 }

@@ -22,10 +22,10 @@ Specifically, it is used to check the behavior when a rule is **vacuously true**
 
 
 ## Properties
-- **correct-pass**: After an assert(true), when the state is reachable, the prover finds no violation.
-- **correct-violation**: After an assert(false), when the state is reachable, the prover finds a violation.
-- **vacuous-pass**: After an assert(false), when the state is unreachable, the prover finds a violation.
-- **vacuous-pass-vacuity-check**: After an assert(false), when the state is unreachable, the prover finds a violation.
+- **correct-pass**: After calling set() with a value of 1, the assertion assert(true) is reached and no violation is found
+- **correct-violation**: After calling set() with a value of 1, the assertion assert(false) is re and a violation is found
+- **vacuous-pass**: After calling set() with a value different from 1, the assertion assert(false) is reached and a violation is found
+- **vacuous-pass-vacuity-check**: After calling set() with a value different from 1, the assertion assert(false) is reached and a violation is found
 
 ## Ground truth
 
@@ -35,23 +35,8 @@ Specifically, it is used to check the behavior when a rule is **vacuously true**
 - [Certora](certora.csv)
 
 ## Experiments
-### SolCMC
-#### Z3
-|        | correct-pass               | correct-violation          | vacuous-pass               | vacuous-pass-vacuity-check |
-|--------|----------------------------|----------------------------|----------------------------|----------------------------|
-| **v1** | ND                         | ND                         | ND                         | ND                         |
- 
-
-#### ELD
-|        | correct-pass               | correct-violation          | vacuous-pass               | vacuous-pass-vacuity-check |
-|--------|----------------------------|----------------------------|----------------------------|----------------------------|
-| **v1** | ND                         | ND                         | ND                         | ND                         |
- 
-
 
 ### Certora
 |        | correct-pass               | correct-violation          | vacuous-pass               | vacuous-pass-vacuity-check |
 |--------|----------------------------|----------------------------|----------------------------|----------------------------|
 | **v1** | TP!                        | TN                         | FP!                        | ERR                        |
- 
-
