@@ -8,6 +8,8 @@ rule releasable_sum_balance {
     requireInvariant released_sum_totalReleased();
     requireInvariant payee_shares_gt_zero();
 
+    require currentContract.getPayeesLength() > 0;
+
     assert getTotalReleasable() == getBalance();
 }
 

@@ -1,9 +1,9 @@
 property,version,outcome
-fair-split-eq,v1,UNK
+fair-split-eq,v1,N
 fair-split-eq,v10,N
 fair-split-eq,v2,UNK
 fair-split-eq,v3,UNK
-fair-split-eq,v4,UNK
+fair-split-eq,v4,N
 fair-split-eq,v5,UNK
 fair-split-eq,v6,UNK
 fair-split-eq,v7,N
@@ -22,7 +22,7 @@ fair-split-geq,v9,UNK
 non-zero-payees,v1,UNK
 non-zero-payees,v10,UNK
 non-zero-payees,v2,UNK
-non-zero-payees,v3,UNK
+non-zero-payees,v3,P!
 non-zero-payees,v4,UNK
 non-zero-payees,v5,N
 non-zero-payees,v6,UNK
@@ -32,7 +32,7 @@ non-zero-payees,v9,UNK
 positive-shares,v1,UNK
 positive-shares,v10,UNK
 positive-shares,v2,UNK
-positive-shares,v3,UNK
+positive-shares,v3,P!
 positive-shares,v4,UNK
 positive-shares,v5,UNK
 positive-shares,v6,UNK
@@ -42,7 +42,7 @@ positive-shares,v9,N!
 releasable-balance-check,v1,N
 releasable-balance-check,v10,N
 releasable-balance-check,v2,UNK
-releasable-balance-check,v3,UNK
+releasable-balance-check,v3,P!
 releasable-balance-check,v4,N
 releasable-balance-check,v5,UNK
 releasable-balance-check,v6,N
