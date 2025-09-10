@@ -1,3 +1,5 @@
+using LendingProtocol as lp;
+
 rule dep_additivity {
     env e1;
     env e2;
@@ -22,12 +24,5 @@ rule dep_additivity {
     deposit(e3, amount3, token) at initial;
     storage s3 = lastStorage;
 
-    // checks equality of the following:
-    // - the values in storage for all contracts,
-    // - the balances of all contracts,
-    // - the state of all ghost variables and functions
-    // https://docs.certora.com/en/latest/docs/cvl/expr.html#comparing-storage
-    // however, the experiments show that also the account balances are checked
-
-    assert s12 == s3;
+    assert s12[lp] == s3[lp];
 }

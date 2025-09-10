@@ -48,10 +48,10 @@ contract Vault {
 
     function cancel() public {
         require(state == States.REQ);
-	address old_recovery = recovery;
-	recovery = owner;
+	    address old_recovery = recovery;
+	    recovery = owner;
         require(msg.sender == recovery);
-	recovery = old_recovery;
+	    recovery = old_recovery;
         state = States.IDLE;
     }
 }

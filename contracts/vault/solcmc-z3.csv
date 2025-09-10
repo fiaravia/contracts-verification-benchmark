@@ -1,5 +1,7 @@
 property,version,outcome
 cancel-revert,v1,P!
+cancel-revert,v10,P!
+cancel-revert,v11,P!
 cancel-revert,v2,P!
 cancel-revert,v3,P!
 cancel-revert,v4,P!
@@ -8,16 +10,20 @@ cancel-revert,v6,P!
 cancel-revert,v7,P!
 cancel-revert,v8,P!
 cancel-revert,v9,N!
-finalize-assets-transfer,v1,N!
-finalize-assets-transfer,v2,N!
+finalize-assets-transfer,v1,UNK
+finalize-assets-transfer,v10,N!
+finalize-assets-transfer,v11,UNK
+finalize-assets-transfer,v2,UNK
 finalize-assets-transfer,v3,N!
-finalize-assets-transfer,v4,N!
+finalize-assets-transfer,v4,UNK
 finalize-assets-transfer,v5,N!
-finalize-assets-transfer,v6,N!
+finalize-assets-transfer,v6,UNK
 finalize-assets-transfer,v7,N!
 finalize-assets-transfer,v8,N!
 finalize-assets-transfer,v9,N!
 finalize-revert,v1,P!
+finalize-revert,v10,P!
+finalize-revert,v11,P!
 finalize-revert,v2,P!
 finalize-revert,v3,N!
 finalize-revert,v4,P!
@@ -27,6 +33,8 @@ finalize-revert,v7,N!
 finalize-revert,v8,P!
 finalize-revert,v9,P!
 finalize-sent-eq-amount,v1,UNK
+finalize-sent-eq-amount,v10,N!
+finalize-sent-eq-amount,v11,UNK
 finalize-sent-eq-amount,v2,UNK
 finalize-sent-eq-amount,v3,N!
 finalize-sent-eq-amount,v4,UNK
@@ -36,6 +44,8 @@ finalize-sent-eq-amount,v7,UNK
 finalize-sent-eq-amount,v8,N!
 finalize-sent-eq-amount,v9,N!
 finalize-sent-leq-amount,v1,UNK
+finalize-sent-leq-amount,v10,UNK
+finalize-sent-leq-amount,v11,UNK
 finalize-sent-leq-amount,v2,UNK
 finalize-sent-leq-amount,v3,UNK
 finalize-sent-leq-amount,v4,P!
@@ -45,6 +55,8 @@ finalize-sent-leq-amount,v7,UNK
 finalize-sent-leq-amount,v8,P!
 finalize-sent-leq-amount,v9,UNK
 keys-distinct,v1,P!
+keys-distinct,v10,P!
+keys-distinct,v11,P!
 keys-distinct,v2,N!
 keys-distinct,v3,P!
 keys-distinct,v4,N
@@ -54,6 +66,8 @@ keys-distinct,v7,P!
 keys-distinct,v8,P!
 keys-distinct,v9,P!
 keys-invariant-inter,v1,P!
+keys-invariant-inter,v10,P!
+keys-invariant-inter,v11,P!
 keys-invariant-inter,v2,P!
 keys-invariant-inter,v3,P!
 keys-invariant-inter,v4,P!
@@ -63,6 +77,8 @@ keys-invariant-inter,v7,P!
 keys-invariant-inter,v8,P!
 keys-invariant-inter,v9,P!
 state-idle-req-inter,v1,P!
+state-idle-req-inter,v10,P!
+state-idle-req-inter,v11,P!
 state-idle-req-inter,v2,P!
 state-idle-req-inter,v3,P!
 state-idle-req-inter,v4,P!
@@ -72,6 +88,8 @@ state-idle-req-inter,v7,P!
 state-idle-req-inter,v8,P!
 state-idle-req-inter,v9,P!
 state-req-amount-consistent,v1,P!
+state-req-amount-consistent,v10,N!
+state-req-amount-consistent,v11,N!
 state-req-amount-consistent,v2,P!
 state-req-amount-consistent,v3,P!
 state-req-amount-consistent,v4,P!
@@ -81,6 +99,8 @@ state-req-amount-consistent,v7,P!
 state-req-amount-consistent,v8,P!
 state-req-amount-consistent,v9,P!
 state-update,v1,N!
+state-update,v10,N!
+state-update,v11,N!
 state-update,v2,N!
 state-update,v3,N!
 state-update,v4,N!
@@ -90,6 +110,8 @@ state-update,v7,N!
 state-update,v8,P!
 state-update,v9,N!
 withdraw-revert,v1,P!
+withdraw-revert,v10,P!
+withdraw-revert,v11,P!
 withdraw-revert,v2,P!
 withdraw-revert,v3,P!
 withdraw-revert,v4,UNK

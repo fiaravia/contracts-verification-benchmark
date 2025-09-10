@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 // import "erc20.spec";
-
 rule trace2 {
     env e1;
     address t0;
@@ -16,18 +15,19 @@ rule trace2 {
     require (currentContract.reserves[t1] == 0);
     require (currentContract.sum_credits[t0] == 0);
     require (currentContract.sum_credits[t1] == 0);
-    require (currentContract.sum_debits[t0] == 0);
-    require (currentContract.sum_debits[t1] == 0);
+    require (currentContract.getUpdatedSumDebits(e1, t0) == 0);
+    require (currentContract.getUpdatedSumDebits(e1, t1) == 0);
 
     require (currentContract.credit[t0][a] == 0);
     require (currentContract.credit[t0][b] == 0);
     require (currentContract.credit[t1][a] == 0);
     require (currentContract.credit[t1][b] == 0);
 
-    require (currentContract.debit[t0][a] == 0);
-    require (currentContract.debit[t0][b] == 0);
-    require (currentContract.debit[t1][a] == 0);
-    require (currentContract.debit[t1][b] == 0);
+    require (currentContract.getAccruedDebt(e1, t0, a) == 0);
+    require (currentContract.getAccruedDebt(e1, t0, b) == 0);
+    require (currentContract.getAccruedDebt(e1, t1, a) == 0);
+    require (currentContract.getAccruedDebt(e1, t1, b) == 0);
+    require (currentContract.getBorrowersLength(e1) == 0); // no borrowers
 
     // Warning: Certora is not able to infer the (constant) value of ratePerPeriod, so we require it 
     require(currentContract.ratePerPeriod == 100000); // 10% interest rate
@@ -62,7 +62,7 @@ rule trace2 {
     uint reserve_t1_2 = currentContract.reserves[t1];
     uint credit_t0_a_2 = currentContract.credit[t0][a];
     uint credit_t1_b_2 = currentContract.credit[t1][b];
-    uint debit_t0_b_2 = currentContract.debit[t0][b];
+    uint debit_t0_b_2 = currentContract.getAccruedDebt(e2, t0, b);
 
     // B:borrow(30:T0)
 
@@ -77,11 +77,12 @@ rule trace2 {
     uint reserve_t1_3 = currentContract.reserves[t1];
     uint credit_t0_a_3 = currentContract.credit[t0][a];
     uint credit_t1_b_3 = currentContract.credit[t1][b];
-    uint debit_t0_b_3 = currentContract.debit[t0][b];
-    uint debit_t1_b_3 = currentContract.debit[t1][b];
+    uint debit_t0_b_3 = currentContract.getAccruedDebt(e3, t0, b);
+    uint debit_t1_b_3 = currentContract.getAccruedDebt(e3, t1, b);
 
     // accrueInt()
     env e4;
+    require(e4.block.number == e3.block.number + 1000000);
     accrueInt(e4);
 
     uint reserve_t0_4 = currentContract.reserves[t0];
@@ -89,8 +90,8 @@ rule trace2 {
     uint xr_t0_4 = currentContract.XR(e4, t0);
     uint credit_t0_a_4 = currentContract.credit[t0][a];
     uint credit_t1_b_4 = currentContract.credit[t1][b];
-    uint debit_t0_b_4 = currentContract.debit[t0][b];
-    uint debit_t1_b_4 = currentContract.debit[t1][b];
+    uint debit_t0_b_4 = currentContract.getAccruedDebt(e4, t0, b);
+    uint debit_t1_b_4 = currentContract.getAccruedDebt(e4, t1, b);
 
     // B:repay(5:T0)
 
@@ -102,7 +103,7 @@ rule trace2 {
 
     uint reserve_t0_5 = currentContract.reserves[t0];
     uint credit_t0_a_5 = currentContract.credit[t0][a];
-    uint debit_t0_b_5 = currentContract.debit[t0][b];
+    uint debit_t0_b_5 = currentContract.getAccruedDebt(e5, t0, b);
 
     // Asserts
 

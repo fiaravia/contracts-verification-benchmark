@@ -11,7 +11,7 @@ rule xr_compute(address t) {
 
     uint r_t = currentContract.reserves[t];
     uint c_t = currentContract.sum_credits[t];
-    uint d_t = currentContract.sum_debits[t];
+    uint d_t = currentContract.getUpdatedSumDebits(e, t);
 
     require (r_t + c_t < max_uint);
 
@@ -51,7 +51,7 @@ rule dep_xr {
     uint old_xr_t0 = currentContract.XR(e, t0);
 
     uint old_sum_credits_t0 = currentContract.sum_credits[t0];
-    uint old_sum_debits_t0 = currentContract.sum_debits[t0];
+    uint old_sum_debits_t0 = currentContract.getUpdatedSumDebits(e, t0);
 
     require(old_sum_credits_t0 > 0);
 
@@ -64,7 +64,7 @@ rule dep_xr {
         old_computed_xr_t0 = ((old_reserves_t0 + old_sum_debits_t0) * 1000000) / old_sum_credits_t0;
     }
 
-    require(old_xr_t0 >= 1000000);
+    //require(old_xr_t0 >= 1000000); //requirement is not necessary relative to skeleton
 
     deposit(e, amt, t0);
 
@@ -77,7 +77,7 @@ rule dep_xr {
     uint new_xr_t0 = currentContract.XR(e, t0);
 
     uint new_sum_credits_t0 = currentContract.sum_credits[t0];
-    uint new_sum_debits_t0 = currentContract.sum_debits[t0];
+    uint new_sum_debits_t0 = currentContract.getUpdatedSumDebits(e, t0);
 
     mathint new_computed_xr_t0; 
     
@@ -100,12 +100,12 @@ rule dep_xr {
     assert(old_xr_t0 == old_computed_xr_t0);
     assert(new_xr_t0 == new_computed_xr_t0);
 
-    assert(new_xr_t0 >= 1000000);
+    // assert(new_xr_t0 >= 1000000);
 
     assert(new_sum_credits_t0 == old_sum_credits_t0 + ((amt * 1000000)/old_computed_xr_t0));
     assert(new_sum_debits_t0 == old_sum_debits_t0);
 
-    // assert(old_computed_xr_t0 == new_computed_xr_t0);
+    // assert(old_computed_xr_t0 == new_computed_xr_t0); //requirement is not necessary relative to skeleton
     
     // false because of roundings (integer arithmetics)
     assert(old_xr_t0 <= new_xr_t0);

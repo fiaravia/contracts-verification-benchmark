@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >= 0.8.2;
 
-/// @custom:version wrong time constraint in `finalize`.
+/// @custom:version time constraint in `finalize` set to <= instead of >=.
 contract Vault {
     enum States{IDLE, REQ}
 

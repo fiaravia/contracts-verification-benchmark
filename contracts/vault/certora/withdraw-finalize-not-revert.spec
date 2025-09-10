@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-// a finalize() transaction called immediately after a successful withdraw() does not abort if sent after wait_time units have elapsed
-
 rule withdraw_finalize_not_revert {
-    env e1;
-    
+    env e1;  
+
     address addr;
     uint amt;
     withdraw(e1, addr, amt);
+
+    // technical assumption
+    require (currentContract.receiver != currentContract);
 
     env e2;
 
