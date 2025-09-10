@@ -1,0 +1,5 @@
+property,version,truth,footnote-md
+vacuous-pass,v1,0,"The property is a require false"
+vacuous-pass-vacuity-check,v1,0,"The property is a require false"
+correct-violation,v1,0,"The property is a require false"
+correct-pass,v1,1,"The property is a require true"

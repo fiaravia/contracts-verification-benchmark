@@ -1,0 +1,10 @@
+{
+    "name": "Vacuous Pass",
+    "specification": "file:specs.md",
+    "properties": {
+        "vacuous-pass": "After an assert(false), when the state is unreachable, the prover finds a violation.",
+        "vacuous-pass-vacuity-check": "After an assert(false), when the state is unreachable, the prover finds a violation.",
+        "correct-violation": "After an assert(false), when the state is reachable, the prover finds a violation.",
+        "correct-pass": "After an assert(true), when the state is reachable, the prover finds no violation."
+    }
+}
