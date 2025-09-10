@@ -23,7 +23,7 @@ Specifically, it is used to check the behavior when a rule is **vacuously true**
 
 ## Properties
 - **correct-pass**: After calling set() with a value of 1, the assertion assert(true) is reached and no violation is found
-- **correct-violation**: After calling set() with a value of 1, the assertion assert(false) is re and a violation is found
+- **correct-violation**: After calling set() with a value of 1, the assertion assert(false) is reached and a violation is found
 - **vacuous-pass**: After calling set() with a value different from 1, the assertion assert(false) is reached and a violation is found
 - **vacuous-pass-vacuity-check**: After calling set() with a value different from 1, the assertion assert(false) is reached and a violation is found
 
