@@ -30,7 +30,7 @@ finalize-assets-transfer-receive,v4,1,
 finalize-assets-transfer-receive,v5,1,
 finalize-assets-transfer-receive,v6,1,
 finalize-assets-transfer-receive,v7,1,
-finalize-assets-transfer-receive,v8,1,
+finalize-assets-transfer-receive,v8,0,"`finalize` sends to `owner` instead of `receiver`"
 finalize-assets-transfer-receive,v9,1,
 finalize-assets-transfer,v1,0,"The low-level call can trigger further transfers"
 finalize-assets-transfer,v10,0,
@@ -41,7 +41,7 @@ finalize-assets-transfer,v4,0,
 finalize-assets-transfer,v5,0,
 finalize-assets-transfer,v6,0,
 finalize-assets-transfer,v7,0,
-finalize-assets-transfer,v8,1,"`finalize` uses `transfer` instead of low-level call."
+finalize-assets-transfer,v8,0,"`finalize` sends to `owner` instead of `receiver`"
 finalize-assets-transfer,v9,0,
 finalize-before-deadline-revert,v1,1,
 finalize-before-deadline-revert,v10,1,

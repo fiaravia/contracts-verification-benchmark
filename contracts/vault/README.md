@@ -67,7 +67,7 @@ To this purpose, the vault contract implements a state transition system with st
 - **v5**: missing access control that `msg.sender == recovery` in `cancel`. 
 - **v6**: missing check `amount_ <= address(this).balance` in `withdraw`.
 - **v7**: time constraint in `finalize` set to <= instead of >=.
-- **v8**: `finalize` uses `transfer` instead of low-level call.
+- **v8**: `finalize` transfers to `owner` instead of receiver (using `transfer` instead of low-level call).
 - **v9**: `cancel` updates the recovery key before checking `msg.sender`, and then restores it
 - **v10**: `finalize` transfers `amount`-1.
 - **v11**: `finalize` does not update the state, so it can be called twice consecutively.
