@@ -228,7 +228,7 @@ state-update-receive,v4,1,
 state-update-receive,v5,1,
 state-update-receive,v6,1,
 state-update-receive,v7,1,
-state-update-receive,v8,1,
+state-update-receive,v8,0,"if owner is a contract whose `receive` reverts, then the transition REQ ---finalize---> IDLE is not possible"
 state-update-receive,v9,1,
 state-update,v1,0,"the receiver of `finalize` has a `receive` that calls `withdraw`. Transition REQ -> REQ"
 state-update,v10,0,
@@ -283,7 +283,7 @@ tx-owner-assets-transfer-eoa,v4,1,
 tx-owner-assets-transfer-eoa,v5,1,
 tx-owner-assets-transfer-eoa,v6,0,"missing check `amount_ <= address(this).balance` in `withdraw`"
 tx-owner-assets-transfer-eoa,v7,0,"wrong time constraint in `finalize`"
-tx-owner-assets-transfer-eoa,v8,1,  
+tx-owner-assets-transfer-eoa,v8,0,"`finalize` sends to `owner` instead of `receiver`"
 tx-owner-assets-transfer-eoa,v9,1,
 tx-req-idle,v1,0,"`owner` and `recovery` are contracts without a method to call `finalize` or `cancel`"
 tx-req-idle,v10,0,
