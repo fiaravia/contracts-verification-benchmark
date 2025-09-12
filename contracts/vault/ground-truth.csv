@@ -307,6 +307,17 @@ tx-req-idle-eoa,v6,1,
 tx-req-idle-eoa,v7,1, 
 tx-req-idle-eoa,v8,1, 
 tx-req-idle-eoa,v9,0,"`cancel` uses the `owner` key, which could be a contract without a method to call `cancel`"
+tx-tx-amount-transfer-eoa-private,v1,1,
+tx-tx-amount-transfer-eoa-private,v10,0,"Not possible to transfer the entire balance, because `finalize` transfers `amount`-1 wei"
+tx-tx-amount-transfer-eoa-private,v11,1,
+tx-tx-amount-transfer-eoa-private,v2,1,
+tx-tx-amount-transfer-eoa-private,v3,1,
+tx-tx-amount-transfer-eoa-private,v4,1,
+tx-tx-amount-transfer-eoa-private,v5,0,"Anyone can call `cancel`"
+tx-tx-amount-transfer-eoa-private,v6,1,
+tx-tx-amount-transfer-eoa-private,v7,1,
+tx-tx-amount-transfer-eoa-private,v8,1,
+tx-tx-amount-transfer-eoa-private,v9,1,
 tx-tx-assets-transfer,v1,0,"`owner` is a contract without a method to call `withdraw`"
 tx-tx-assets-transfer,v10,0,
 tx-tx-assets-transfer,v11,0,
@@ -326,20 +337,20 @@ tx-tx-assets-transfer-eoa,v3,0,
 tx-tx-assets-transfer-eoa,v4,0,
 tx-tx-assets-transfer-eoa,v5,0,
 tx-tx-assets-transfer-eoa,v6,0,
-tx-tx-assets-transfer-eoa,v7,1,"wrong time constraint in `finalize` makes it possible two fire withdraw() and finalize() atomically"
+tx-tx-assets-transfer-eoa,v7,0,"even though wrong time constraint in `finalize` would make it possible two fire withdraw() and finalize() atomically, since owner is an EOA it does not have code to fire this atomic sequence"
 tx-tx-assets-transfer-eoa,v8,0,
 tx-tx-assets-transfer-eoa,v9,0,
-tx-tx-assets-transfer-eoa-private,v1,1,
+tx-tx-assets-transfer-eoa-private,v1,0,"Adversary can send wei to the contract between `withdraw` and `finalize`, the the contract balance is not entirely transferred."
 tx-tx-assets-transfer-eoa-private,v10,0,"Not possible to transfer the entire balance, because `finalize` transfers `amount`-1 wei"
-tx-tx-assets-transfer-eoa-private,v11,1,
-tx-tx-assets-transfer-eoa-private,v2,1,
-tx-tx-assets-transfer-eoa-private,v3,1,
-tx-tx-assets-transfer-eoa-private,v4,1,
+tx-tx-assets-transfer-eoa-private,v11,0,
+tx-tx-assets-transfer-eoa-private,v2,0,
+tx-tx-assets-transfer-eoa-private,v3,0,
+tx-tx-assets-transfer-eoa-private,v4,0,
 tx-tx-assets-transfer-eoa-private,v5,0,"Anyone can call `cancel`"
-tx-tx-assets-transfer-eoa-private,v6,1,
-tx-tx-assets-transfer-eoa-private,v7,1,
-tx-tx-assets-transfer-eoa-private,v8,1,
-tx-tx-assets-transfer-eoa-private,v9,1,
+tx-tx-assets-transfer-eoa-private,v6,0,
+tx-tx-assets-transfer-eoa-private,v7,0,"Even though wrong time constraint in `finalize` would make it possible two fire withdraw() and finalize() atomically, since owner is an EOA it does not have code to fire this atomic sequence"
+tx-tx-assets-transfer-eoa-private,v8,0,"`finalize` sends to `owner` instead of `receiver`"
+tx-tx-assets-transfer-eoa-private,v9,0,
 withdraw-finalize-not-revert,v1,0,"`receiver` can be a contract whose `receive` method reverts"
 withdraw-finalize-not-revert,v10,0,
 withdraw-finalize-not-revert,v11,0,
