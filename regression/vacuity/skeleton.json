@@ -1,5 +1,5 @@
 {
-    "name": "Vacuous Pass",
+    "name": "Vacuity",
     "specification": "file:specs.md",
     "properties": {
         "vacuous-pass": "After calling set() with a value different from 1, the assertion assert(false) is reached and a violation is found",
