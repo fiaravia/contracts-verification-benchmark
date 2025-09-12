@@ -1,4 +1,4 @@
-# Vacuous Pass
+# Vacuity
 
 ## Specification
 ## Vacuity Smart Contract
