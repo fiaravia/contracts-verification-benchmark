@@ -154,14 +154,14 @@ keys-invariant-intra,v7,1,
 keys-invariant-intra,v8,1,
 keys-invariant-intra,v9,0,"`cancel` updates the recovery key before checking `msg.sender`, and then restores it"
 okey-rkey-private-withdraw,v1,1,
-okey-rkey-private-withdraw,v10,1,
+okey-rkey-private-withdraw,v10,0,"`finalize` transfers `amount`-1 wei"
 okey-rkey-private-withdraw,v11,1,
 okey-rkey-private-withdraw,v2,1,
 okey-rkey-private-withdraw,v3,0,"The adversary can fire atomically withdraw() finalize()"
 okey-rkey-private-withdraw,v4,1,
 okey-rkey-private-withdraw,v5,0,"The adversary can cancel any withdrawal request"
 okey-rkey-private-withdraw,v6,1,
-okey-rkey-private-withdraw,v7,0,"`finalize` cannot be performed because of the wrong time constraint"
+okey-rkey-private-withdraw,v7,0,"if `owner` can be a contract with a function to call `withdraw` and `finalize` atomically, then an adversary who knows only the owner key can withdraw"
 okey-rkey-private-withdraw,v8,1,
 okey-rkey-private-withdraw,v9,0,"The adversary can cancel any withdrawal request"
 receive-not-revert,v1,1,
