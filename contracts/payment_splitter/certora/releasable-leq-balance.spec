@@ -1,7 +1,7 @@
 import "helper/methods.spec";
 import "helper/invariants.spec";
 
-rule releasable_balance_check {
+rule releasable_leq_balance {
     
     requireInvariant shares_sum_eq_totalShares();
     requireInvariant released_sum_totalReleased();
