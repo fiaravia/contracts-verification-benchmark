@@ -17,19 +17,25 @@ SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
 CONTRACTS_DIR = os.path.join(BASE_DIR, "contracts")
 API_KEY_FILE = os.path.join(SCRIPTS_DIR, "openai_api_key.txt")
 
-
+# Ensures text does not contain excessively long sequence of quotes
+def remove_repeated_quotes(text):
+    if not isinstance(text, str):
+        return text
+    while '""""""""""' in text:
+        text = text.replace('""""""""""', '""')
+    return text
 
 def sanitize_for_csv(text):
-    """Raddoppia le virgolette e sostituisce newline reali con \n."""
     if not isinstance(text, str):
         return text
     text = text.replace('"', '""')
     text = re.sub(r"\r?\n", r"\\n", text)
+    text = remove_repeated_quotes(text)
     return text
 
 def load_api_key(path=API_KEY_FILE):
     if not os.path.exists(path):
-        print(f"Errore: il file {path} non esiste.", file=sys.stderr)
+        print(f"Error: file {path} does not exists.", file=sys.stderr)
         sys.exit(1)
     with open(path, "r", encoding="utf-8") as f:
         return f.read().strip()
@@ -38,7 +44,7 @@ def load_api_key(path=API_KEY_FILE):
 def list_properties(contract_path):
     skeleton_path = os.path.join(contract_path, "skeleton.json")
     if not os.path.exists(skeleton_path):
-        print(f"Errore: {skeleton_path} non trovato.", file=sys.stderr)
+        print(f"Error: {skeleton_path} not found.", file=sys.stderr)
         sys.exit(1)
 
     with open(skeleton_path, "r", encoding="utf-8") as f:
@@ -149,10 +155,8 @@ def list_versions(versions_path):
 def load_contract_code(contract, version):
     version_folder = os.path.join(CONTRACTS_DIR, contract, "versions")
 
-    # Normalizziamo il target da cercare
     target = f"{normalize_name(contract)}v{normalize_name(version)}"
 
-    # Cerchiamo tra i file .sol quello che matcha
     for fname in os.listdir(version_folder):
         if fname.endswith(".sol"):
             candidate = normalize_name(fname.replace(".sol", ""))
@@ -160,13 +164,13 @@ def load_contract_code(contract, version):
                 filepath = os.path.join(version_folder, fname)
                 break
     else:
-        print(f"Errore: nessun file solidity trovato per {contract} v{version} in {version_folder}", file=sys.stderr)
+        print(f"Error: no solidity file found for {contract} v{version} in {version_folder}", file=sys.stderr)
         sys.exit(1)
 
     with open(filepath, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
-    # Rimuove tutte le righe che iniziano con "/// @custom:"
+    # Removes all lines which  start with "/// @custom:"
     cleaned_lines = [line for line in lines if not line.strip().startswith("/// @custom:")]
     return "".join(cleaned_lines)
 
@@ -175,7 +179,7 @@ def load_contract_code(contract, version):
 def load_property_description(contract, property_name):
     skeleton_path = os.path.join(CONTRACTS_DIR, contract, "skeleton.json")
     if not os.path.exists(skeleton_path):
-        print(f"Errore: {skeleton_path} non trovato.", file=sys.stderr)
+        print(f"Error: {skeleton_path} not found.", file=sys.stderr)
         sys.exit(1)
 
     with open(skeleton_path, "r", encoding="utf-8") as f:
@@ -183,7 +187,7 @@ def load_property_description(contract, property_name):
 
     props = data.get("properties", {})
     if property_name not in props:
-        print(f"Errore: proprietà {property_name} non trovata in {skeleton_path}.", file=sys.stderr)
+        print(f"Error: property {property_name} not found in {skeleton_path}.", file=sys.stderr)
         sys.exit(1)
 
     return props[property_name]
@@ -204,31 +208,30 @@ def parse_llm_output(text):
     return answer, explanation, counterexample
 
 def run_experiment(contract, prop, version, prompt_file, token_limit, model):
-    # Carica prompt
+    # Load prompt
     prompt_path = os.path.join(SCRIPTS_DIR, f"prompt_templates/{prompt_file}")
     if not os.path.exists(prompt_path):
-        print(f"Errore: prompt file {prompt_path} non trovato.", file=sys.stderr)
+        print(f"Error: prompt file {prompt_path} non found.", file=sys.stderr)
         sys.exit(1)
     with open(prompt_path, "r", encoding="utf-8") as f:
         prompt_template = f.read()
 
-    # Carica codice Solidity e descrizione proprietà
+    # Load  Solidity code and property description
     code = load_contract_code(contract, version)
     property_desc = load_property_description(contract, prop)
 
-    # Sostituisci placeholders
+    # Replace placeholders
     prompt_text = prompt_template.replace("{code}", code).replace("{property_desc}", property_desc)
 
     #with open(f"logs_prompt/prompt{str(datetime.datetime.now())}.txt", "w", encoding="utf-8") as f:
     #    f.write(prompt_text)
 
     start_time = time.time()
-    # Inizializza client OpenAI
+    # Inizialize client OpenAI
     client = openai.OpenAI(api_key=load_api_key())
 
     try:
         if model.startswith("gpt-4o") or model.startswith("gpt-3.5"):
-            # Modelli chat classici
             response = client.chat.completions.create(
                 model=model,
                 messages=[{"role": "user", "content": prompt_text}],
@@ -236,7 +239,7 @@ def run_experiment(contract, prop, version, prompt_file, token_limit, model):
             )
             output_text = response.choices[0].message.content
         else:
-            # Modelli nuovi (gpt-5, gpt-4.1, ecc.)
+            # New models (gpt-5, gpt-4.1, ecc.)
             response = client.responses.create(
                 model=model,
                 input=[{"role": "user", "content": prompt_text}],
@@ -251,22 +254,21 @@ def run_experiment(contract, prop, version, prompt_file, token_limit, model):
         #print("\n")
 
     except Exception as e:
-        print(f"Errore durante la chiamata API: {e}", file=sys.stderr)
+        print(f"Error during API call: {e}", file=sys.stderr)
         sys.exit(1)
 
 
 def normalize_name(name: str) -> str:
-    """Rende il nome uniforme: minuscolo, senza caratteri speciali."""
+    """Uniform name: lower case, no special characters."""
     return re.sub(r'[^a-z0-9]', '', name.lower())
 
 def find_contract_folder(contract_arg: str) -> str:
-    """Trova la cartella giusta in base al nome normalizzato."""
     target = normalize_name(contract_arg)
     for folder in os.listdir(CONTRACTS_DIR):
         if os.path.isdir(os.path.join(CONTRACTS_DIR, folder)):
             if normalize_name(folder) == target:
                 return folder
-    print(f"Errore: nessuna cartella trovata per '{contract_arg}' in {CONTRACTS_DIR}", file=sys.stderr)
+    print(f"Error: no folder found per '{contract_arg}' in {CONTRACTS_DIR}", file=sys.stderr)
     sys.exit(1)
 
 def check_all_verification_tasks_have_ground_truth(verification_tasks, ground_truths):
@@ -285,7 +287,7 @@ def write_results_to_csv(results, output_file, temp=False):
     text = "\"contract_id\",\"property_id\",\"ground_truth\",\"llm_answer\",\"llm_explanation\",\"llm_counterexample\",\"time\",\"tokens\",\"raw_output\"\n"
 
     for result in results:
-        # Sanitizza i campi di testo
+        # Sanitize text fields
         result["llm_explanation"] = sanitize_for_csv(result["llm_explanation"])
         result["llm_counterexample"] = sanitize_for_csv(result["llm_counterexample"])
         result["raw_output"] = sanitize_for_csv(result["raw_output"])
@@ -309,7 +311,6 @@ def get_results_from_csv(input_file):
         parts = line.strip().split('","')
         if len(parts) == len(header):
             entry = {header[i].strip('"'): parts[i].strip('"') for i in range(len(header))}
-            # Converti tipi appropriati
             #entry["ground_truth"] = entry["ground_truth"] == "True"
             #entry["time"] = float(entry["time"])
             results.append(entry)
@@ -386,11 +387,11 @@ def main():
 
     base_path = os.path.join(CONTRACTS_DIR, contract_folder)
 
-    # Se manca property → tutte
+    # If `property` not specified → consider all properties
     properties = [args.property] if args.property else list_properties(base_path)
     print(properties)
     if not properties:
-        print(f"Nessuna proprietà trovata in {base_path}", file=sys.stderr)
+        print(f"No property found in {base_path}", file=sys.stderr)
         sys.exit(1)
 
     versions_path = os.path.join(base_path, "versions")
@@ -409,10 +410,10 @@ def main():
 
     verification_tasks = []
     for prop in properties:
-        # Se manca version → tutte
+        # If `version` not specified → consider all versions
         versions = [args.version] if args.version else list_versions(versions_path)
         if not versions:
-            print(f"Nessuna versione trovata in {versions_path}", file=sys.stderr)
+            print(f"No versions found in {versions_path}", file=sys.stderr)
 
         verification_tasks_prop = choose_verification_tasks(prop, versions, ground_truths, args)
         #print(f"{verification_tasks_prop=}")
@@ -425,12 +426,15 @@ def main():
         verification_tasks = [vt for vt in verification_tasks if vt not in previous_verification_tasks]
         print(f"After skipping already done tasks, {len(verification_tasks)} tasks remain.")
 
-    print(f"Verification tasks: {verification_tasks}")
+    if len(verification_tasks) < 10:
+        print(f"Verification tasks: {verification_tasks}")
 
     #if args.use_csv_verification_tasks:
     #    verification_tasks = get_verification_tasks_from_csv(args.use_csv_verification_tasks)
     csv_ver_tasks_name = f"logs_verification_tasks/verification_tasks_{str(datetime.datetime.now())}.csv".replace(" ","")
     save_verification_tasks(verification_tasks, csv_ver_tasks_name)
+
+
 
     check_all_verification_tasks_have_ground_truth(verification_tasks, ground_truths)
 

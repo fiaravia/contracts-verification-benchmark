@@ -4,7 +4,7 @@
     "properties": {
         "assets-dec-onlyif-deposit": "if the ETH balance of a user A is decreased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.",
         "assets-inc-onlyif-withdraw": "if the ETH balance of a user A is increased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender.",
-        "credit-dec-onlyif-withdraw": "if the credit of a user A is decreased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender",
+        "credit-dec-onlyif-withdraw": "if the credit of a user A is decreased after a transaction (of the Bank contract), then that transaction must be a `withdraw` where A is the sender.",
         "credit-inc-onlyif-deposit": "if the credit of a user A is increased after a transaction (of the Bank contract), then that transaction must be a `deposit` where A is the sender.",
         "credits-leq-balance": "the wei balance stored in the contract is greater than or equal to the sum of all the users' credits", 
         "deposit-additivity": "two non-reverting consecutive (i.e., not interleaved with other transactions) `deposit` of n1 and n2 wei performed by the same sender are equivalent to a single `deposit` of n1+n2 wei of T.",
