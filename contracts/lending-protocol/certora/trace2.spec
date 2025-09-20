@@ -19,5 +19,5 @@ rule trace2 {
     // B:repay(5:T0)
     repay(e5, 5, t0);
 
-    // Asserts on the final state
+    // Assert sullo stato finale
 }
